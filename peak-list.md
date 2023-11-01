@@ -50,7 +50,7 @@ peaklist-delta-schema =
 }
 ```
 
-Example of peaklist of delta functions:
+Example of peak a list of delta functions:
 
 ```json
 example-delta_peaklist = 
@@ -58,14 +58,16 @@ example-delta_peaklist =
   "peaklist-delta": {
     "source": "here will come the source - possibly a simulator",
     "positions": [
-      10.99
+      2.0, 3.0, 4.0
     ],
     "factors": [
-      0.1
+      0.25, 0.5, 0.25
     ]
   }
 }
 ```
+Requirement: the sum of the factors should be one for one spin (correspond to normlized integral in experimental spectrum)
+
 
 ## peaklist-shape schema
 Different shapes are allowed. see [peak-type](peak-type.md)s
