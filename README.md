@@ -12,5 +12,3 @@ Schema location:
 ```
   "$id": "https://chemedata.github.io/schema/peaklist-delta.schema.json",
 ```
-
-[Scripts](scripts.md) for developers.
