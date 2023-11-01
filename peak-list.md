@@ -76,7 +76,7 @@ Different shapes are allowed. see [peak-type](peak-type.md)s
 peaklist-shape-schema = 
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://chemdata.org/draft/2023-12/spectra/peaklist/peaklist-shape.schema.json",
+  "$id": "https://chemedata.github.io/schema/peaklist-shape.schema.json",
   "title": "peaklist-shape",
   "description": "various shape peaklist",
   "type": "object",
@@ -84,12 +84,12 @@ peaklist-shape-schema =
     "peaklist-shape": {
       "type": "object",
       "properties": {
-        "peak-typeREFERENCEREFERENCEREFERENCEREFERENCE": {
-          "type": "string"
+        "peak-type": {
+          "$ref": "https://chemedata.github.io/schema/peak-norm-equ.schema.json" 
         },
         "source": {
            "type": "string"
-        }
+        },
         "x": {
           "type": "array",
           "items": {
@@ -119,7 +119,8 @@ peaklist-shape-schema =
         "x",
         "y",
   		"fwhm",
-      "source"
+      "source",
+      "peak-type"
       ]
     }
   },

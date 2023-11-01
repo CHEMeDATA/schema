@@ -15,7 +15,7 @@ The width is given by the FWHM parameter.
 peak-norm-equ-schema = 
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "https://chemdata.org/draft/2023-12/spectra/peaklist/peak-norm-equ.schema.json",
+ "$id": "https://chemedata.github.io/schema/peak-norm-equ.schema.json",
  "title": "peak-norm-equ",
  "description": "Peak defined with an equation string",
  "type": "object",

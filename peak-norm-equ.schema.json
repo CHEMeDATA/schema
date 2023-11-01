@@ -1,0 +1,25 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://chemedata.github.io/schema/peak-norm-equ.schema.json",
+ "title": "peak-norm-equ",
+ "description": "Peak defined with an equation string",
+ "type": "object",
+ "properties": {
+  "peak-norm-equ": {
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string"
+    },
+    "comment": {
+     "type": "string"
+    },
+    "equation": {
+     "type": "string"
+    }
+   },
+   "required": ["equation", "name"]
+  }
+ },
+ "required": ["peak-norm-equ"]
+}
