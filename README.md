@@ -8,10 +8,9 @@ Let's start with [peak-list](peak-list.md)s.
 
 [peaklist-delta.schema.json](https://chemedata.github.io/schema/peaklist-delta.schema.json)
 
+Schema location:
 ```
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://chemedata.github.io/schema/peaklist-delta.schema.json",
 ```
-
 
 [Scripts](scripts.md) for developers.
