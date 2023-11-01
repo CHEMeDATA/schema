@@ -71,7 +71,7 @@ example-delta_peaklist =
 Different shapes are allowed. see [peak-type](peak-type.md)s
 
 ```json
-peaklist-delta-schema = 
+peaklist-shape-schema = 
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://chemdata.org/draft/2023-12/spectra/peaklist/peaklist-shape.schema.json",
