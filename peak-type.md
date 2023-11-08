@@ -55,7 +55,33 @@ peak-norm-equ-schema =
       "then": {
         "properties": {
           "equation": {
+            "const": "(0.63661977236758138243 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "name": { "const": "Gaussian/Lorentzian shape" }
+        }
+      },
+      "then": {
+        "properties": {
+          "equation": {
             "const": "0.63661977236758138243 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "name": { "const": "Generalized Lorentzian shape" }
+        }
+      },
+      "then": {
+        "properties": {
+          "equation": {
+            "const": "(0.63661977236758138243 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"}
         }
       }
     }
