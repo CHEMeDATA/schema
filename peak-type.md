@@ -42,7 +42,7 @@ peak-norm-equ-schema =
       },
       "then": {
         "properties": {
-          "equation": { "const": "1 / ((0.42466090014400953434 * FWHM() * sqrt(2 * 3.141592653589793)) * exp(-((x) * (x)) / (2 * (0.42466090014400953434 * FWHM) * (0.42466090014400953434 * FWHM)))"}
+          "equation": { "const": "(0.63661977236758138243 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))"}
         }
       }
     },
@@ -55,7 +55,7 @@ peak-norm-equ-schema =
       "then": {
         "properties": {
           "equation": {
-            "const": "(1 / 3.141592653589793) * ((0.5 * FWHM) / ((x) * (x) + (0.5 * FWHM) * (0.5 * FWHM)))"}
+            "const": "0.63661977236758138243 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"}
         }
       }
     }
@@ -78,7 +78,7 @@ gaussian-peak-type =
   "peak-norm-equ": {
     "name": "Gaussian shape",
     "equation": 
-      "1 / ((0.42466090014400953434 * FWHM() * sqrt(2 * 3.141592653589793)) * exp(-((x) * (x)) / (2 * (0.42466090014400953434 * FWHM) * (0.42466090014400953434 * FWHM)))",
+      "(0.63661977236758138243 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))",
   }
 }
 ```
@@ -92,9 +92,44 @@ lorentzian-peak-type =
   "peak-norm-equ": {
     "name": "Lorentzian shape",
     "equation": 
-      "(1 / 3.141592653589793) * ((0.5 * FWHM) / ((x) * (x) + (0.5 * FWHM) * (0.5 * FWHM)))"
+      "0.63661977236758138243 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"
+  }
+}
+```
+## lorentzian-peak
+
+Approx of Vogt function.
+Kurtosis = 0; pure Gaussian
+Kurtosis = 1; pure Lorentzian
+Range of kurtosis (0 to 1)
+
+
+```json
+lorGau-peak-type = 
+{
+  "peak-norm-equ": {
+    "name": "Gaussian/Lorentzian shape",
+    "equation": 
+      "(0.63661977236758138243 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"
   }
 }
 ```
 
-ADDINFO ABOUT TOP, check line width...
+## generalized lorentzian-peak
+
+Kurtosis = 0; pure Lorentzian
+Kurtosis = 0.75; top of the shape similar to the one of Gaussian shape
+Range of kurtosis (c.a. -1 to 2)
+```json
+lorentzian-peak-type = 
+{
+  "peak-norm-equ": {
+    "name": "Generalized Lorentzian shape",
+    "equation": 
+      "(0.63661977236758138243 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"
+  }
+}
+```
+## Notes
+For all peak the top at the center of the shape is (2 / pi) / FWHM = 0.63661977236758138243 / FWHM
+The integral depends on the shape.
