@@ -16,5 +16,7 @@ Some links to schema (hope this is maintained.)
 
 You can check `peak-type/genlor-peak-type.json` over `peak-type/peak-norm-equ.schema.json` ...
 
+You can check [peak-type/genlor-peak-type.json](https://chemedata.github.io/schema/peak-type/genlor-peak-type.schema.json) over [peak-type/peak-norm-equ.json](https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json)
+
 
 Automatic tests are using [json-schema-validator](https://github.com/pboettch/json-schema-validator).
