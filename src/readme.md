@@ -1,12 +1,18 @@
+ The equation of the shapes were tested in shapes.c program and the equations extracted from it to create the md files and json using the following script.
+ 
  Compile and use:
 
  ```bash
- gcc main.c -lm 
+ echo "compile and test shapes.c"
+ gcc shapes.c -lm 
  ./a.out
- lorE=$(cat main.c | grep lorentzian-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
- gauE=$(cat main.c | grep gaussian-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
- genlorE=$(cat main.c | grep genlor-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
- gausslorenE=$(cat main.c | grep gaussloren-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
+ echo "Extract equations from shapes.c"
+ lorE=$(cat shapes.c | grep lorentzian-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
+ gauE=$(cat shapes.c | grep gaussian-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
+ genlorE=$(cat shapes.c | grep genlor-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
+ gausslorenE=$(cat shapes.c | grep gaussloren-peak-type | cut -d';' -f1 | sed s/return//g | sed 's/^[ \t]*//' | sed 's/[\/&]/\\&/g')
+
+ echo "Set shape names"
  lorentzian="Lorentzian shape"
  gaussian="Gaussian shape"
  genlor="Generalized Lorentzian shape"
