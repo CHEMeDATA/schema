@@ -1,6 +1,6 @@
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "https://chemedata.github.io/schema/peak-norm-equ.schema.json",
+ "$id": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
  "title": "peak-norm-equ",
  "description": "Peak defined with an equation string",
  "type": "object",

@@ -13,7 +13,7 @@ The integral over a peak defined in the equation is 1.0 (as demonstrated by the 
 peak-norm-equ-schema = 
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "https://chemedata.github.io/schema/peak-norm-equ.schema.json",
+ "$id": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
  "title": "peak-norm-equ",
  "description": "Peak defined with an equation string",
  "type": "object",
@@ -104,7 +104,7 @@ gaussian-peak-type =
   "peak-norm-equ": {
     "name": "__gaussian__",
     "equation": 
-      "__gaussian-peak-type__",
+      "__gaussian-peak-type__"
   }
 }
 ```
@@ -131,7 +131,7 @@ Range of kurtosis (0 to 1)
 
 
 ```json
-gaussLoren-peak-type = 
+gaussloren-peak-type = 
 {
   "peak-norm-equ": {
     "name": "__gaussloren__",
@@ -157,5 +157,5 @@ genlor-peak-type =
 }
 ```
 ## Notes
-For all peak the top at the center of the shape is (2 / pi) / FWHM = 0.63661977236758138243 / FWHM
+For all peak the top at the center of the shape is 1.0.
 The integral depends on the shape.

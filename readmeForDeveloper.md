@@ -5,3 +5,4 @@ Test manually that schema are valid
 
 possible problem: normalization.
 
+testing https://github.com/pboettch/json-schema-validator as validator

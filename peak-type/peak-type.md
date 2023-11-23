@@ -13,7 +13,7 @@ The integral over a peak defined in the equation is 1.0 (as demonstrated by the 
 peak-norm-equ-schema = 
 {
  "$schema": "https://json-schema.org/draft/2020-12/schema",
- "$id": "https://chemedata.github.io/schema/peak-norm-equ.schema.json",
+ "$id": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
  "title": "peak-norm-equ",
  "description": "Peak defined with an equation string",
  "type": "object",
@@ -23,7 +23,7 @@ peak-norm-equ-schema =
    "properties": {
     "name": {
      "type": "string",
-     "enum": ["Gaussian shape", "Lorentzian shape"]
+     "enum": ["Gaussian shape", "Lorentzian shape", "Gaussian-Lorentzian shape", "Generalized Lorentzian shape"]
     },
     "comment": {
      "type": "string"
@@ -42,7 +42,7 @@ peak-norm-equ-schema =
       },
       "then": {
         "properties": {
-          "equation": { "const": "(0.63661977236758138243 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))"}
+          "equation": { "const": "(1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))"}
         }
       }
     },
@@ -62,13 +62,13 @@ peak-norm-equ-schema =
     {
       "if": {
         "properties": {
-          "name": { "const": "Gaussian/Lorentzian shape" }
+          "name": { "const": "Gaussian-Lorentzian shape" }
         }
       },
       "then": {
         "properties": {
           "equation": {
-            "const": "0.63661977236758138243 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"}
+            "const": "(1.0 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"}
         }
       }
     },
@@ -81,7 +81,7 @@ peak-norm-equ-schema =
       "then": {
         "properties": {
           "equation": {
-            "const": "(0.63661977236758138243 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"}
+            "const": "(1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"}
         }
       }
     }
@@ -104,7 +104,7 @@ gaussian-peak-type =
   "peak-norm-equ": {
     "name": "Gaussian shape",
     "equation": 
-      "(0.63661977236758138243 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))",
+      "(1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))"
   }
 }
 ```
@@ -131,12 +131,12 @@ Range of kurtosis (0 to 1)
 
 
 ```json
-gaussLoren-peak-type = 
+gaussloren-peak-type = 
 {
   "peak-norm-equ": {
-    "name": "Generalized shape",
+    "name": "Gaussian-Lorentzian shape",
     "equation": 
-      "(0.63661977236758138243 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"
+      "(1.0 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"
   }
 }
 ```
@@ -152,10 +152,10 @@ genlor-peak-type =
   "peak-norm-equ": {
     "name": "Generalized Lorentzian shape",
     "equation": 
-      "(0.63661977236758138243 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"
+      "(1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"
   }
 }
 ```
 ## Notes
-For all peak the top at the center of the shape is (2 / pi) / FWHM = 0.63661977236758138243 / FWHM
+For all peak the top at the center of the shape is 1.0
 The integral depends on the shape.

@@ -84,7 +84,7 @@ double integral_approximationL(double mu, double sigma, double lower_limit, doub
         sum +=  curVal * delta_x;
     }
     const double I0 = lorentzian(0, mu, sigma);
-    printf("Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
+    printf("Val for x = 0 : 1.0 \n");
     if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH lorentzian  *****************************************\n");
     return sum;
@@ -119,7 +119,7 @@ double integral_approximationG(double mu, double sigma, double lower_limit, doub
         sum +=  curVal * delta_x;
     }
     const double I0 = gaussian(0, mu, sigma);
-    printf("Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
+    printf("Val for x = 0 : 1.0 \n");
     if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH  lorentzian  *****************************************\n");
     return sum;
@@ -175,7 +175,7 @@ double integral_approximationLG(double mu, double FWHM, double lower_limit, doub
         sum +=  curVal * delta_x;
     }
     const double I0 =  lorGau(0.0, mu, FWHM, balance);
-    printf("integral_approximationLG Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
+    printf("Val for x = 0 : 1.0 \n");
     if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH  integral_approximationLG  *****************************************\n");
     return sum;
@@ -281,7 +281,7 @@ double integral_approximationGeneralized(double mu, double sigma, double lower_l
         sum +=  curVal * delta_x;
     }
     const double I0 = genLorentzian(0, mu, sigma, balance);
-    printf("integral_approximationLG Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
+    printf("Val for x = 0 : 1.0 \n");
     if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH  integral_approximationLG  *****************************************\n");
     return sum;
