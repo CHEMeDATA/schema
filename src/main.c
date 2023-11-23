@@ -4,20 +4,23 @@
 double lorentzian(double x, double mu, double FWHM) {
     //  return (1 / 3.141592653589793) * ((0.5 * FWHM) / ((x) * (x) + (0.5 * FWHM) * (0.5 * FWHM)));
     //  return (1 / (3.141592653589793 * 0.5 * FWHM)) / ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1);
-      return 0.63661977236758138243 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1));
-     
+    //  return 0.63661977236758138243 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1));
+    return 1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)); // lorentzian-peak-type IMPORTANT: Don't remove this comment: this line is automatically extracted to generate the schema using the peak-type keyword
 }
+
 double gaussian(double x, double mu, double FWHM) {
     // 1 / (2*SQRT(2*LN(2))) = 0.42466090014400953434
     // return 1.0 / (0.42466090014400953434  * FWHM * sqrt(2 * 3.141592653589793)) * exp(-((x) * (x)) / (2 * 0.42466090014400953434  * 0.42466090014400953434 * FWHM * FWHM));
     //return (0.636619772367581 / 0.939437278699651) / (0.42466090014400953434  * FWHM * sqrt(2 * 3.141592653589793)) * exp(-((x) * (x)) / (2 * 0.42466090014400953434  * 0.42466090014400953434 * FWHM * FWHM));
    
    // return (0.636619772367581 / 0.939437278699651) / (0.42466090014400953434  * FWHM * sqrt(2 * 3.141592653589793)) * exp(-((x) * (x)) / (0.36067376022224084675 * FWHM * FWHM));
-    return (0.63661977236758138243 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM));
+    //return (0.63661977236758138243 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM));
+    return (1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)); // gaussian-peak-type IMPORTANT: Don't remove this comment: this line is automatically extracted to generate the schema using the peak-type keyword
 }
 
 double lorGau(double x, double mu, double FWHM, double kurtosis) {
-return (0.63661977236758138243 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)));
+    // return (0.63661977236758138243 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)));
+    return (1.0 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))); // gaussloren-peak-type IMPORTANT: Don't remove this comment: this line is automatically extracted to generate the schema using the peak-type keyword
 }
 
 /*
@@ -38,7 +41,11 @@ double genLorentzian(double x, double mu, double FWHM, double kurtosis) {
     //return (a + b) * (1 / (3.141592653589793 * 0.5 * FWHM));
 
 
-    return (0.63661977236758138243 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)));
+    //return (0.63661977236758138243 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)));
+  
+  
+  
+    return (1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)));// genlor-peak-type IMPORTANT: Don't remove this comment: this line is automatically extracted to generate the schema using the peak-type keyword
 
     //const double b = 
 // 		val = ( (1.0 - kurtosis)/lx + kurtosis*(1.0+0.5*x)/(lx + x*x) );
@@ -78,7 +85,7 @@ double integral_approximationL(double mu, double sigma, double lower_limit, doub
     }
     const double I0 = lorentzian(0, mu, sigma);
     printf("Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
-    if (fabs(I0 - 2.0 / 3.141592653589793) > 0.00001) status = false;
+    if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH lorentzian  *****************************************\n");
     return sum;
 }
@@ -113,7 +120,7 @@ double integral_approximationG(double mu, double sigma, double lower_limit, doub
     }
     const double I0 = gaussian(0, mu, sigma);
     printf("Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
-    if (fabs(I0 - 2.0 / 3.141592653589793) > 0.00001) status = false;
+    if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH  lorentzian  *****************************************\n");
     return sum;
 }
@@ -169,7 +176,7 @@ double integral_approximationLG(double mu, double FWHM, double lower_limit, doub
     }
     const double I0 =  lorGau(0.0, mu, FWHM, balance);
     printf("integral_approximationLG Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
-    if (fabs(I0 - 2.0 / 3.141592653589793) > 0.00001) status = false;
+    if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH  integral_approximationLG  *****************************************\n");
     return sum;
 }
@@ -275,7 +282,7 @@ double integral_approximationGeneralized(double mu, double sigma, double lower_l
     }
     const double I0 = genLorentzian(0, mu, sigma, balance);
     printf("integral_approximationLG Val for x = 0 :  %.15f =  2 / pi = %.15f \n", I0, 2.0 / 3.141592653589793);
-    if (fabs(I0 - 2.0 / 3.141592653589793) > 0.00001) status = false;
+    if (fabs(I0 - 1.0) > 0.00001) status = false;
     if (! status) printf("PROBLEM WITH  integral_approximationLG  *****************************************\n");
     return sum;
 }
@@ -315,11 +322,11 @@ int main() {
         printf("\n");
     }
     printf("\n");
+    printf("1 / (2 * sqrt( 2 * log(2))) =  %.20f \n", 1.0 / (2 * sqrt( 2 * log(2))));
+
     printf ("2 * 0.42466090014400953434  * 0.42466090014400953434 = %.20f \n", 2 * 0.42466090014400953434  * 0.42466090014400953434);
     printf ("(0.636619772367581 / 0.939437278699651) / (0.42466090014400953434 * sqrt(2 * 3.141592653589793)) = %.20f \n", (0.636619772367581 / 0.939437278699651) / (0.42466090014400953434 * sqrt(2 * 3.141592653589793)));
-    printf ("(1 / (3.141592653589793 * 0.5)) = %.20f \n", (1 / (3.141592653589793 * 0.5)));
-   
-   
+    // printf ("(1 / (3.141592653589793 * 0.5)) = %.20f \n", (1 / (3.141592653589793 * 0.5)));
    
     return 0;
 }

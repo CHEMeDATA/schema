@@ -23,7 +23,7 @@ peak-norm-equ-schema =
    "properties": {
     "name": {
      "type": "string",
-     "enum": ["Gaussian shape", "Lorentzian shape", "Gaussian-Lorentzian shape", "Generalized Lorentzian shape"]
+     "enum": ["__gaussian__", "__lorentzian__", "__gaussloren__", "__genlor__"]
     },
     "comment": {
      "type": "string"
@@ -37,51 +37,51 @@ peak-norm-equ-schema =
     {
       "if": {
         "properties": {
-          "name": { "const": "Gaussian shape" }
+          "name": { "const": "__gaussian__" }
         }
       },
       "then": {
         "properties": {
-          "equation": { "const": "(1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))"}
+          "equation": { "const": "__gaussian-peak-type__"}
         }
       }
     },
     {
       "if": {
         "properties": {
-          "name": { "const": "Lorentzian shape" }
+          "name": { "const": "__lorentzian__" }
         }
       },
       "then": {
         "properties": {
           "equation": {
-            "const": "1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"}
+            "const": "__lorentzian-peak-type__"}
         }
       }
     },
     {
       "if": {
         "properties": {
-          "name": { "const": "Gaussian-Lorentzian shape" }
+          "name": { "const": "__gaussloren__" }
         }
       },
       "then": {
         "properties": {
           "equation": {
-            "const": "(1.0 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"}
+            "const": "__gaussloren-peak-type__"}
         }
       }
     },
     {
       "if": {
         "properties": {
-          "name": { "const": "Generalized Lorentzian shape" }
+          "name": { "const": "__genlor__" }
         }
       },
       "then": {
         "properties": {
           "equation": {
-            "const": "(1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"}
+            "const": "__genlor-peak-type__"}
         }
       }
     }
@@ -102,9 +102,9 @@ In all equation, FWHM is the full-width at half maximum amplitude.
 gaussian-peak-type = 
 {
   "peak-norm-equ": {
-    "name": "Gaussian shape",
+    "name": "__gaussian__",
     "equation": 
-      "(1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))",
+      "__gaussian-peak-type__",
   }
 }
 ```
@@ -116,9 +116,9 @@ Note about the equation : sigma is equal to ​FWHM​ / (2 * sqrt( 2 * log(2)))
 lorentzian-peak-type = 
 {
   "peak-norm-equ": {
-    "name": "Lorentzian shape",
+    "name": "__lorentzian__",
     "equation": 
-      "1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"
+      "__lorentzian-peak-type__"
   }
 }
 ```
@@ -134,9 +134,9 @@ Range of kurtosis (0 to 1)
 gaussLoren-peak-type = 
 {
   "peak-norm-equ": {
-    "name": "Gaussian-Lorentzian shape",
+    "name": "__gaussloren__",
     "equation": 
-      "(1.0 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"
+      "__gaussloren-peak-type__"
   }
 }
 ```
@@ -150,9 +150,9 @@ Range of kurtosis (c.a. -1 to 2)
 genlor-peak-type = 
 {
   "peak-norm-equ": {
-    "name": "Generalized Lorentzian shape",
+    "name": "__genlor__",
     "equation": 
-      "(1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"
+      "__genlor-peak-type__"
   }
 }
 ```

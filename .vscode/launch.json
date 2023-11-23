@@ -6,8 +6,8 @@
       "type": "lldb",
       "request": "launch",
       "args": [],
-      "cwd": "/Users/djeanner/git/schema",
-      "program": "/Users/djeanner/git/schema/build/Debug/outDebug"
+      "cwd": "/Users/djeanner/git/schema/src",
+      "program": "/Users/djeanner/git/schema/src/build/Debug/outDebug"
     }
   ]
 }

@@ -134,8 +134,8 @@ peaklist-shape-schema =
 example-peaklist-shape = 
 {
   "peaklist-shape": {
-    "peakType-name" : "Lorentzian shape",
-    "peakType-equation" : "1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))",
+    "peakType-name" : "__lorentzian__",
+    "peakType-equation" : "__lorentzian-peak-type__",
     "x": [
       2.0, 3.0, 4.0
     ],
@@ -148,11 +148,11 @@ example-peaklist-shape =
   }
 }
 ```
-All shapes:  `Lorentzian shape`, `Gaussian shape`, `Generalized Lorentzian shape`, `Gaussian-Lorentzian shape`.
+All shapes:  `__lorentzian__`, `__gaussian__`, `__genlor__`, `__gaussloren__`.
 All equations:  
 ```
-Lorentzian shape : 1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))
-Gaussian shape : (1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))
-Generalized Lorentzian shape : (1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))
-Gaussian-Lorentzian shape : (1.0 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))
+__lorentzian__ : __lorentzian-peak-type__
+__gaussian__ : __gaussian-peak-type__
+__genlor__ : __genlor-peak-type__
+__gaussloren__ : __gaussloren-peak-type__
 ```
