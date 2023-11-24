@@ -55,19 +55,62 @@ awk '/gaussloren-peak-type = /,/```/{if(!/```/) print}' ../peak-type/peak-type.m
 
 exitStatus="0"
 
-cat ../peak-type/lorentzian-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+ echo "Validate peak-type json with the schema file"
+
+# cat ../peak-type/lorentzian-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+# lastStatus=$?
+# exitStatus=$((exitStatus + lastStatus))
+
+# cat ../peak-type/gaussian-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+# lastStatus=$?
+# exitStatus=$((exitStatus + lastStatus))
+
+# cat ../peak-type/genlor-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+# lastStatus=$?
+# exitStatus=$((exitStatus + lastStatus))
+
+# cat ../peak-type/gaussloren-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+# lastStatus=$?
+# exitStatus=$((exitStatus + lastStatus))
+
+echo "Validate peak-type json with the included schema"
+
+./extract_schema_from_Json.zsh ../peak-type/lorentzian-peak-type.json > tmp.schema.json
+cat ../peak-type/lorentzian-peak-type.json | json-schema-validate tmp.schema.json
 lastStatus=$?
 exitStatus=$((exitStatus + lastStatus))
 
-cat ../peak-type/gaussian-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+
+./extract_schema_from_Json.zsh ../peak-type/gaussian-peak-type.json > tmp.schema.json
+cat ../peak-type/gaussian-peak-type.json | json-schema-validate tmp.schema.json
 lastStatus=$?
 exitStatus=$((exitStatus + lastStatus))
 
-cat ../peak-type/genlor-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+
+./extract_schema_from_Json.zsh ../peak-type/genlor-peak-type.json > tmp.schema.json
+cat ../peak-type/genlor-peak-type.json | json-schema-validate tmp.schema.json
 lastStatus=$?
 exitStatus=$((exitStatus + lastStatus))
 
-cat ../peak-type/gaussloren-peak-type.json | json-schema-validate ../peak-type/peak-norm-equ.schema.json 
+./extract_schema_from_Json.zsh ../peak-type/gaussloren-peak-type.json > tmp.schema.json
+cat ../peak-type/gaussloren-peak-type.json | json-schema-validate tmp.schema.json
+lastStatus=$?
+exitStatus=$((exitStatus + lastStatus))
+
+echo "Note that the validation of remote schema is made through the local copy pointerd by the symbolic link of schema"
+## Error message with the ln -s .. ./schema : 
+##could not open https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json tried with .//schema/peak-type/peak-norm-equ.schema.json
+
+echo "Validate peak-list json with with the explicit schema file"
+
+cat ../example-peaklist-shape.json | json-schema-validate ../peaklist-shape.schema.json 
+lastStatus=$?
+exitStatus=$((exitStatus + lastStatus))
+
+echo "Validate peak-list json with the included schema"
+
+./extract_schema_from_Json.zsh ../example-peaklist-shape.json > tmp.schema.json
+cat ../example-peaklist-shape.json | json-schema-validate tmp.schema.json
 lastStatus=$?
 exitStatus=$((exitStatus + lastStatus))
 
