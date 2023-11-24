@@ -134,19 +134,19 @@ peaklist-shape-schema =
 example-peaklist-shape = 
 {
   "peaklist-shape": {
-    "peakType-name" : "__lorentzian__",
-    "peakType-equation" : "__lorentzian-peak-type__",
-    "x": [
-      2.0, 3.0, 4.0
-    ],
-    "y": [
-      0.25, 0.5, 0.25
-    ],
-    "fwhm": [
-      1.0, 1.0, 1.0
-    ]
+    "peak-type": {
+      "peak-norm-equ": {
+        "name": "Lorentzian shape",
+        "equation": "1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"
+      }
+    },
+    "source": "toto",
+    "x": [2.0, 3.0, 4.0],
+    "y": [0.25, 0.5, 0.25],
+    "fwhm": [1.0, 1.0, 1.0]
   }
 }
+
 ```
 All shapes:  `__lorentzian__`, `__gaussian__`, `__genlor__`, `__gaussloren__`.
 All equations:  
