@@ -15,38 +15,32 @@ We have two types of peak lists:
 ```json
 peaklist-delta-schema = 
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://chemedata.github.io/schema/peaklist-delta.schema.json",
-  "title": "peaklist-delta",
-  "description": "delta function peak",
-  "type": "object",
-  "properties": {
-    "peaklist-delta": {
-      "type": "object",
-      "properties": {
-        "positions": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "factors": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        }
-      },
-      "required": [
-        "positions",
-        "factors",
-  		"source"
-      ]
-    }
-  },
-  "required": [
-    "peaklist-delta"
-  ]
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://chemedata.github.io/schema/peaklist-delta.schema.json",
+	"title": "peaklist-delta",
+	"description": "delta function peak",
+	"type": "object",
+	"properties": {
+		"peaklist-delta": {
+			"type": "object",
+			"properties": {
+				"positions": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				},
+				"factors": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				}
+			},
+			"required": ["positions", "factors", "source"]
+		}
+	},
+	"required": ["peaklist-delta"]
 }
 ```
 
@@ -75,59 +69,52 @@ Different shapes are allowed. see [peak-type](peak-type.md)s
 ```json
 peaklist-shape-schema = 
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://chemedata.github.io/schema/peaklist-shape.schema.json",
-  "title": "peaklist-shape",
-  "description": "various shape peaklist",
-  "type": "object",
-  "properties": {
-    "peaklist-shape": {
-      "type": "object",
-      "properties": {
-        "peak-type": {
-          "$ref": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json" 
-        },
-        "source": {
-           "type": "string"
-        },
-        "x": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "y": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "fwhm": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "ID": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      },
-      "required": [
-        "x",
-        "y",
-  		"fwhm",
-      "source",
-      "peak-type"
-      ]
-    }
-  },
-  "required": [
-    "peaklist-shape"
-  ]
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://chemedata.github.io/schema/peaklist-shape.schema.json",
+	"title": "peaklist-shape",
+	"description": "various shape peaklist",
+	"type": "object",
+	"properties": {
+		"peaklist-shape": {
+			"type": "object",
+			"properties": {
+				"peak-type": {
+					"$ref": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json"
+				},
+				"source": {
+					"type": "string"
+				},
+				"x": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				},
+				"y": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				},
+				"fwhm": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				},
+				"ID": {
+					"type": "array",
+					"items": {
+						"type": "string"
+					}
+				}
+			},
+			"required": ["x", "y", "fwhm", "source", "peak-type"]
+		}
+	},
+	"required": ["peaklist-shape"]
 }
+
 ```
 
 ```json

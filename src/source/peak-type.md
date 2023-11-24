@@ -101,6 +101,7 @@ In all equation, FWHM is the full-width at half maximum amplitude.
 ```json
 gaussian-peak-type = 
 {
+  "$schema": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
   "peak-norm-equ": {
     "name": "__gaussian__",
     "equation": 
@@ -115,6 +116,7 @@ Note about the equation : sigma is equal to ​FWHM​ / (2 * sqrt( 2 * log(2)))
 ```json
 lorentzian-peak-type = 
 {
+  "$schema": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
   "peak-norm-equ": {
     "name": "__lorentzian__",
     "equation": 
@@ -133,6 +135,7 @@ Range of kurtosis (0 to 1)
 ```json
 gaussloren-peak-type = 
 {
+  "$schema": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
   "peak-norm-equ": {
     "name": "__gaussloren__",
     "equation": 
@@ -149,6 +152,7 @@ Range of kurtosis (c.a. -1 to 2)
 ```json
 genlor-peak-type = 
 {
+  "$schema": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
   "peak-norm-equ": {
     "name": "__genlor__",
     "equation": 
