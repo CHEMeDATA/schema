@@ -85,7 +85,7 @@ peaklist-shape-schema =
       "type": "object",
       "properties": {
         "peak-type": {
-          "$ref": "https://chemedata.github.io/schema/peak-norm-equ.schema.json" 
+          "$ref": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json" 
         },
         "source": {
            "type": "string"

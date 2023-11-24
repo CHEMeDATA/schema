@@ -39,15 +39,15 @@ cat source/peak-list.md | \
  sed s/__gaussian__/$gaussian/g | \
  sed s/__gaussloren__/$gaussloren/g | \
  sed s/__genlor__/$genlor/g | \
- cat > ../peak-type/peak-list.md
+ cat > ../peak-list.md
 
 echo "extracting json from peak-list.md file"
 
-awk '/peaklist-delta-schema = /,/```/{if(!/```/) print}' ../peak-type/peak-list.md | tail -n +2 > ../peaklist-delta.schema.json
-awk '/peaklist-shape-schema = /,/```/{if(!/```/) print}' ../peak-type/peak-list.md | tail -n +2 > ../peaklist-shape.schema.json
-awk '/peak-norm-equ-schema = /,/```/{if(!/```/) print}' ../peak-type/peak-type.md | tail -n +2 > ../peak-type/peak-norm-equ.schema.json
-awk '/example-peaklist-shape = /,/```/{if(!/```/) print}' ../peak-type/peak-list.md | tail -n +2 > ../example-peaklist-shape.json
+awk '/peaklist-delta-schema = /,/```/{if(!/```/) print}' ../peak-list.md | tail -n +2 > ../peaklist-delta.schema.json
+awk '/peaklist-shape-schema = /,/```/{if(!/```/) print}' ../peak-list.md | tail -n +2 > ../peaklist-shape.schema.json
+awk '/example-peaklist-shape = /,/```/{if(!/```/) print}' ../peak-list.md | tail -n +2 > ../example-peaklist-shape.json
 
+awk '/peak-norm-equ-schema = /,/```/{if(!/```/) print}' ../peak-type/peak-type.md | tail -n +2 > ../peak-type/peak-norm-equ.schema.json
 awk '/lorentzian-peak-type = /,/```/{if(!/```/) print}' ../peak-type/peak-type.md | tail -n +2 > ../peak-type/lorentzian-peak-type.json
 awk '/gaussian-peak-type = /,/```/{if(!/```/) print}' ../peak-type/peak-type.md | tail -n +2 > ../peak-type/gaussian-peak-type.json
 awk '/genlor-peak-type = /,/```/{if(!/```/) print}' ../peak-type/peak-type.md | tail -n +2 > ../peak-type/genlor-peak-type.json

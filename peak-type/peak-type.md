@@ -157,5 +157,5 @@ genlor-peak-type =
 }
 ```
 ## Notes
-For all peak the top at the center of the shape is 1.0
+For all peak the top at the center of the shape is 1.0.
 The integral depends on the shape.
