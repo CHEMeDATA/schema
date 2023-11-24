@@ -1,4 +1,5 @@
 {
+  "$schema": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
   "peak-norm-equ": {
     "name": "Gaussian shape",
     "equation": 

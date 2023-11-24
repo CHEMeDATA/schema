@@ -1,34 +1,28 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://chemedata.github.io/schema/peaklist-delta.schema.json",
-  "title": "peaklist-delta",
-  "description": "delta function peak",
-  "type": "object",
-  "properties": {
-    "peaklist-delta": {
-      "type": "object",
-      "properties": {
-        "positions": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        },
-        "factors": {
-          "type": "array",
-          "items": {
-            "type": "number"
-          }
-        }
-      },
-      "required": [
-        "positions",
-        "factors",
-  		"source"
-      ]
-    }
-  },
-  "required": [
-    "peaklist-delta"
-  ]
+	"$schema": "https://json-schema.org/draft/2020-12/schema",
+	"$id": "https://chemedata.github.io/schema/peaklist-delta.schema.json",
+	"title": "peaklist-delta",
+	"description": "delta function peak",
+	"type": "object",
+	"properties": {
+		"peaklist-delta": {
+			"type": "object",
+			"properties": {
+				"positions": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				},
+				"factors": {
+					"type": "array",
+					"items": {
+						"type": "number"
+					}
+				}
+			},
+			"required": ["positions", "factors", "source"]
+		}
+	},
+	"required": ["peaklist-delta"]
 }

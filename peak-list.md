@@ -120,20 +120,21 @@ peaklist-shape-schema =
 ```json
 example-peaklist-shape = 
 {
+  "$schema": "https://chemedata.github.io/schema/peaklist-shape.schema.json",
   "peaklist-shape": {
-    "peakType-name" : "Lorentzian shape",
-    "peakType-equation" : "1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))",
-    "x": [
-      2.0, 3.0, 4.0
-    ],
-    "y": [
-      0.25, 0.5, 0.25
-    ],
-    "fwhm": [
-      1.0, 1.0, 1.0
-    ]
+    "peak-type": {
+      "peak-norm-equ": {
+        "name": "Lorentzian shape",
+        "equation": "1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"
+      }
+    },
+    "source": "toto",
+    "x": [2.0, 3.0, 4.0],
+    "y": [0.25, 0.5, 0.25],
+    "fwhm": [1.0, 1.0, 1.0]
   }
 }
+
 ```
 All shapes:  `Lorentzian shape`, `Gaussian shape`, `Generalized Lorentzian shape`, `Gaussian-Lorentzian shape`.
 All equations:  
