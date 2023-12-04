@@ -2,7 +2,7 @@
 
 json-schema for CHEMeDATA
 
-***Under developments ... please be patient***
+***Under developments ... please be patient !***
 
 Let's start with [peak-list](peak-list.md)s.
 
