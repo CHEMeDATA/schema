@@ -21,9 +21,3 @@ You can check [peak-type/genlor-peak-type.json](https://chemedata.github.io/sche
 
 
 Automatic tests are using the c++ [json-schema-validator](https://github.com/pboettch/json-schema-validator).
-
-[![build status][ci-image]][ci-url]
-
-[![npm download][download-image]][download-url]
-
-[![DOI](https://www.zenodo.org/badge/192117023.svg)](https://www.zenodo.org/badge/latestdoi/192117023)
