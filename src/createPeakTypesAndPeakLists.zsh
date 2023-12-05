@@ -74,7 +74,8 @@ exitStatus="0"
 # exitStatus=$((exitStatus + lastStatus))
 
 echo "Validate peak-type json with the included schema"
-
+echo "ln -s .. schema"
+ln -s .. schema
 ./extract_schema_from_Json.zsh ../peak-type/lorentzian-peak-type.json > tmp.schema.json
 cat ../peak-type/lorentzian-peak-type.json | json-schema-validate tmp.schema.json
 lastStatus=$?
@@ -120,3 +121,5 @@ else
 	echo -n "ERROR: Not all peak-type schema were validated to peak-norm-equ.schema.json "
 	echo $exitStatus " errors"
 fi
+echo "rm schema"
+rm schema
