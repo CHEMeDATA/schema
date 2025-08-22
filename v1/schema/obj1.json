@@ -1,0 +1,19 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://raw.githubusercontent.com/CHEMeDATA/schema/main/v1/schema/obj1.json",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "age": {
+            "type": "integer"
+        },
+        "toto": {
+            "type": "integer"
+        }
+    },
+    "required": [
+        "name"
+    ]
+}
