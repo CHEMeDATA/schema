@@ -1,8 +1,0 @@
-{
-  "$schema": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
-  "peak-norm-equ": {
-    "name": "Generalized Lorentzian shape",
-    "equation": 
-      "(1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"
-  }
-}
