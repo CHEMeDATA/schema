@@ -1,0 +1,79 @@
+{
+ "$schema": "https://json-schema.org/draft/2020-12/schema",
+ "$id": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
+ "title": "peak-norm-equ",
+ "description": "Peak defined with an equation string",
+ "type": "object",
+ "properties": {
+  "peak-norm-equ": {
+   "type": "object",
+   "properties": {
+    "name": {
+     "type": "string",
+     "enum": ["Gaussian shape", "Lorentzian shape", "Gaussian-Lorentzian shape", "Generalized Lorentzian shape"]
+    },
+    "comment": {
+     "type": "string"
+    },
+    "equation": {
+     "type": "string"
+    }
+   },
+   "required": ["equation", "name"],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "name": { "const": "Gaussian shape" }
+        }
+      },
+      "then": {
+        "properties": {
+          "equation": { "const": "(1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "name": { "const": "Lorentzian shape" }
+        }
+      },
+      "then": {
+        "properties": {
+          "equation": {
+            "const": "1.0 / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1))"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "name": { "const": "Gaussian-Lorentzian shape" }
+        }
+      },
+      "then": {
+        "properties": {
+          "equation": {
+            "const": "(1.0 / FWHM) * (kurtosis / (FWHM * ((x/(FWHM/2.0)) * (x/(FWHM/2.0)) + 1)) + (1.0 - kurtosis) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM)))"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "name": { "const": "Generalized Lorentzian shape" }
+        }
+      },
+      "then": {
+        "properties": {
+          "equation": {
+            "const": "(1.0 / FWHM) * ((1.0 - kurtosis) / (x/(FWHM/2.0) * x/(FWHM/2.0) + 1)  +  kurtosis * (1.0 + 0.5 * x/(FWHM/2.0) * x/(FWHM/2.0)) / ( (x/(FWHM/2.0) * x/(FWHM/2.0) + 1) + x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0) * x/(FWHM/2.0)))"}
+        }
+      }
+    }
+  ]
+  }
+ },
+ "required": ["peak-norm-equ"]
+}

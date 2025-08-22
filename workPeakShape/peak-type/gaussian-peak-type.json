@@ -1,0 +1,8 @@
+{
+  "$schema": "https://chemedata.github.io/schema/peak-type/peak-norm-equ.schema.json",
+  "peak-norm-equ": {
+    "name": "Gaussian shape",
+    "equation": 
+      "(1.0 / FWHM) * exp(-x * x / (0.36067376022224084675 * FWHM * FWHM))"
+  }
+}
