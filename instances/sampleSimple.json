@@ -1,0 +1,4 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schema/liquidSample.json",
+    "volumeL" : 1.2
+}
