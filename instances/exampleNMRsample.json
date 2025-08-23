@@ -1,0 +1,5 @@
+{
+  "$schema": "https://chemedata.github.io/schema/v1/schema/NMRliquidSample.json",
+  "volumeL": 500E-6,
+  "tubeDiameter_mm": 5
+}
