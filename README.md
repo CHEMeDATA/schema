@@ -13,6 +13,7 @@ echo '****** Create the schema for the objects in v1/schema'
 echo
 rm -r v1/schema
 mkdir -p v1/schema
+rm derivations.json
 node scripts/updateSchema.js
 
 echo
