@@ -10,7 +10,7 @@
             "type": "number"
         },
         "tubeDiameter_mm": {
-            "type": "string"
+            "type": "number"
         }
     },
     "required": [
