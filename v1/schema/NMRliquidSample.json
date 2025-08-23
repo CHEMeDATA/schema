@@ -8,11 +8,11 @@
         }
     ],
     "properties": {
-        "tubeDiameter": {
+        "tubeDiameter_mm": {
             "type": "string"
         }
     },
     "required": [
-        "tubeDiameter"
+        "tubeDiameter_mm"
     ]
 }

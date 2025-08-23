@@ -183,11 +183,11 @@ createNewTypeSchema("sample", [
 ]);
 
 deriveSchema("sample", "liquidSample", [
-	{ name: "volumeL", mandatory: true, type: "number" },
+	{ name: "volume_L", mandatory: true, type: "number" },
 ]);
 
 deriveSchema("liquidSample", "NMRliquidSample", [
-	{ name: "tubeDiameter", mandatory: true, type: "string" },
+	{ name: "tubeDiameter_mm", mandatory: true, type: "string" },
 ]);
 
 

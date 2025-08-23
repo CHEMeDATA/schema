@@ -6,11 +6,11 @@
         "origin": {
             "$ref": "https://chemedata.github.io/schema/v1/schema/sample.json"
         },
-        "volumeL": {
+        "volume_L": {
             "type": "number"
         }
     },
     "required": [
-        "volumeL"
+        "volume_L"
     ]
 }
