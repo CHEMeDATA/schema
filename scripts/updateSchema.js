@@ -179,7 +179,7 @@ createNewTypeSchema("sample", [
 ]);
 
 deriveSchema("sample", "liquidSample", [
-	{ name: "volume", mandatory: true, type: "number" },
+	{ name: "volumeL", mandatory: true, type: "number" },
 ]);
 
 deriveSchema("liquidSample", "NMRliquidSample", [

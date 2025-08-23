@@ -353,7 +353,7 @@ class Obj1Handler {
 		const obj2 = this.#getValOrDefault(dataObj, "param2");
 		const obj3 = this.#getValOrDefault(dataObj, "param3");
 		const groupObj = {
-			$schema: `https://raw.githubusercontent.com/NMReDATAInitiative/J-graph/main/testSchema/schemaNoLinkData/${targetObjType}.json`,
+			$schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
 			members: [this.obj, objm1, objm2],
 			param1: obj1,
 			param2: obj2,
@@ -362,7 +362,7 @@ class Obj1Handler {
 
 		const content = { content: groupObj };
 		const encodedContent = JSON.stringify(content);
-		const linkUrl = `https://nmredatainitiative.github.io/J-graph/testSchema/html/${targetObjType}.html#data=${encodedContent}`;
+		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
 
 		document.getElementById(
 			`mergeOutput${dataObj.uniqueHTMLcode}`

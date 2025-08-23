@@ -30,60 +30,55 @@ function getHtmlLink(ref) {
 }
 
 function createHandlerForFile(fileName) {
-		const shortName = path.basename(fileName, ".json");
-		const refCap =
-			shortName.charAt(0).toUpperCase() + shortName.slice(1) + "Handler";
-		const handlerPath = path.join(
-			htmlDir,
-			classHandlerFolderRelativeToRootHTMLNoDot
-		);
-		const handlerPathGeneric = path.join(handlerPath, "GENERIChandler.js");
-		const handlerPathOut = path.join(handlerPath, `${shortName}Handler.js`);
-		const handlerClassName = `${shortName}Handler`;
+	const shortName = path.basename(fileName, ".json");
+	const refCap =
+		shortName.charAt(0).toUpperCase() + shortName.slice(1) + "Handler";
+	const handlerPath = path.join(
+		htmlDir,
+		classHandlerFolderRelativeToRootHTMLNoDot
+	);
+	const handlerPathGeneric = path.join(handlerPath, "GENERIChandler.js");
+	const handlerPathOut = path.join(handlerPath, `${shortName}Handler.js`);
+	const handlerClassName = `${shortName}Handler`;
 
-		if (this.verbose) console.log(
+	if (this.verbose)
+		console.log(
 			"objectHandler for",
 			fileName,
 			classHandlerFolderRelativeToRootHTMLNoDot
 		);
-	
 
-		// 1. Read the generic template
-		let content = fs.readFileSync(handlerPathGeneric, "utf8");
+	// 1. Read the generic template
+	let content = fs.readFileSync(handlerPathGeneric, "utf8");
 
-		// Add auto-generated comment at the top
-		content =
-			`// ⚠️ This file was automatically generated. Do not edit manually.\n` +
-			content;
+	// Add auto-generated comment at the top
+	content =
+		`// ⚠️ This file was automatically generated. Do not edit manually.\n` +
+		content;
 
-		// 2. Replace all occurrences of "GENERIChandler" with handlerClassName
-		content = content.replace(/GENERIChandler/g, refCap);
+	// 2. Replace all occurrences of "GENERIChandler" with handlerClassName
+	content = content.replace(/GENERIChandler/g, refCap);
 
-		// 3. Merge content into output file
-		fs.writeFileSync(handlerPathOut, content, { flag: "w" });
+	// 3. Merge content into output file
+	fs.writeFileSync(handlerPathOut, content, { flag: "w" });
 
-		// 3. Merge content into output file
-		fs.writeFileSync(handlerPathOut, content, { flag: "w" });
+	// 3. Merge content into output file
+	fs.writeFileSync(handlerPathOut, content, { flag: "w" });
 
-		// 4. Conditionally append the supplemental file (e.g., supObj1.js)
-		if (shortName) {
-			const supFileName = `sup${shortName}.js`;
-			const supFilePath = path.join(
-				path.dirname(handlerPathGeneric),
-				supFileName
-			);
+	// 4. Conditionally append the supplemental file (e.g., supObj1.js)
+	const supFileName = `sup${shortName}.js`;
+	const supFilePath = path.join(path.dirname(handlerPathGeneric), supFileName);
 
-			if (fs.existsSync(supFilePath)) {
-				const supContent = fs.readFileSync(supFilePath, "utf8");
-				fs.appendFileSync(handlerPathOut, "\n" + supContent);
-			} else {
-				console.warn(`Supplemental file not found: ${supFileName}`);
-			}
-		}
-
-		// 5. Append closing bracket if needed
-		fs.appendFileSync(handlerPathOut, "\n}\n");
+	if (fs.existsSync(supFilePath)) {
+		const supContent = fs.readFileSync(supFilePath, "utf8");
+		fs.appendFileSync(handlerPathOut, "\n" + supContent);
+	} else {
+		console.log(`Supplemental file not found: ${supFileName}`);
 	}
+
+	// 5. Append closing bracket
+	fs.appendFileSync(handlerPathOut, "\n}\n");
+}
 
 /**
  * Generates an HTML page for a given schema
@@ -236,7 +231,7 @@ ${instanceOptions}
 		"utf8"
 	);
 
-		createHandlerForFile(fileName);
+	createHandlerForFile(fileName);
 
 	schemaList.push({
 		name: fileName,

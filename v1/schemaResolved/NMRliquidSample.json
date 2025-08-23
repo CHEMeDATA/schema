@@ -6,7 +6,7 @@
         "origin": {
             "$ref": "https://chemedata.github.io/schema/v1/schema/sample.json"
         },
-        "volume": {
+        "volumeL": {
             "type": "number"
         },
         "tubeDiameter": {
@@ -14,7 +14,7 @@
         }
     },
     "required": [
-        "volume",
+        "volumeL",
         "tubeDiameter"
     ]
 }

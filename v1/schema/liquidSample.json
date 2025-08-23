@@ -8,11 +8,11 @@
         }
     ],
     "properties": {
-        "volume": {
+        "volumeL": {
             "type": "number"
         }
     },
     "required": [
-        "volume"
+        "volumeL"
     ]
 }
