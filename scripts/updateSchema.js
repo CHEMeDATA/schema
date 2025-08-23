@@ -156,7 +156,11 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 createNewTypeSchema("obj1", [
 	{ name: "name", required: true, array: false, type: "string" },
 	{ name: "age", required: false, array: false, type: "integer" },
-	{ name: "toto", required: false, array: false, type: "integer" },
+]);
+
+createNewTypeSchema("obj2", [
+	{ name: "name", required: true, array: false, type: "string" },
+	{ name: "age", required: true, array: false, type: "integer" },
 ]);
 
 deriveSchema("obj1", "obj1size", [

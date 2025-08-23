@@ -9,9 +9,6 @@
         "age": {
             "type": "integer"
         },
-        "toto": {
-            "type": "integer"
-        },
         "size": {
             "type": "number"
         }
