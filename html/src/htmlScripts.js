@@ -117,7 +117,7 @@ document.addEventListener("DOMContentLoaded", function () {
             loadInstance(selector.value);
         });
     } else {
-        console.error("No element with id 'instanceSelector' found in DOM");
+        console.log("No element with id 'instanceSelector' found in DOM, no example for this object type in the instances folder");
     }
     
     // Live validation on user input
