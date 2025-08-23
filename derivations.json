@@ -8,7 +8,12 @@
                 {
                     "name": "size",
                     "mandatory": true,
-                    "type": "float"
+                    "type": "float",
+                    "userRequest": "Enter a value in m (default 1.91m)",
+                    "defaultValue": 1.91,
+                    "randomFrom": 1.4,
+                    "randomTo": 2.1,
+                    "show": true
                 }
             ]
         },
@@ -19,7 +24,12 @@
                 {
                     "name": "volume_L",
                     "mandatory": true,
-                    "type": "float"
+                    "type": "float",
+                    "userRequest": "Enter a value in L (default 500 ul)",
+                    "defaultValue": 0.0005,
+                    "randomFrom": 1,
+                    "randomTo": 10,
+                    "show": true
                 }
             ]
         },

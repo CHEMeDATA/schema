@@ -179,7 +179,12 @@ createNewTypeSchema("obj2", [
 ]);
 
 deriveSchema("obj1", "obj1size", [
-	{ name: "size", mandatory: true, type: "float" },
+	{ name: "size", mandatory: true, type: "float" , 
+						userRequest: "Enter a value in m (default 1.91m)",
+						defaultValue: 1.91,
+						randomFrom: 1.4,
+						randomTo: 2.1,
+						show: true},
 ]);
 
 createNewTypeSchema("groupObject1", [
@@ -198,7 +203,12 @@ createNewTypeSchema("sample", [
 ]);
 
 deriveSchema("sample", "liquidSample", [
-	{ name: "volume_L", mandatory: true, type: "float" },
+	{ name: "volume_L", mandatory: true, type: "float" , 
+						userRequest: "Enter a value in L (default 500 ul)",
+						defaultValue: 500e-6,
+						randomFrom: 1,
+						randomTo: 10,
+						show: true},
 ]);
 
 deriveSchema("liquidSample", "NMRliquidSample", [

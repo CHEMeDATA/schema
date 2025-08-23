@@ -288,22 +288,23 @@ class SampleHandler {
 // Auto-generated supplement file for sample
 sample_DataEnrichment(targetObjType, dataObj = {}) {
     const myName = "sample_DataEnrichment"; // don't automatize in case 'use strict'
+    const myName2 = "sample_DataEnrichment"; // don't automatize in case 'use strict'
     if (targetObjType == "info") {
         return {
             sourceObjType: "sample",
             targetObjType: "liquidSample",
-            uniqueHTMLcode: myName,
+            uniqueHTMLcode: myName2,
             elevatorMethod: myName,
             arrayOfItems: [
                 {
             type: "baseType",
             htmlID: "volume_L",
             baseType: "float",
-            comment: "undefined",
-            defaultValue: undefined,
-            randomFrom: undefined,
-            randomTo: undefined,
-            show: undefined
+            comment: "Enter a value in L (default 500 ul)",
+            defaultValue: 0.0005,
+            randomFrom: 1,
+            randomTo: 10,
+            show: true
         }
             ],
         };

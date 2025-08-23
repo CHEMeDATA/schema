@@ -432,22 +432,23 @@ class Obj1Handler {
 // Auto-generated supplement file for obj1
 obj1_DataEnrichment(targetObjType, dataObj = {}) {
     const myName = "obj1_DataEnrichment"; // don't automatize in case 'use strict'
+    const myName2 = "obj1_DataEnrichment"; // don't automatize in case 'use strict'
     if (targetObjType == "info") {
         return {
             sourceObjType: "obj1",
             targetObjType: "obj1size",
-            uniqueHTMLcode: myName,
+            uniqueHTMLcode: myName2,
             elevatorMethod: myName,
             arrayOfItems: [
                 {
             type: "baseType",
             htmlID: "size",
             baseType: "float",
-            comment: "undefined",
-            defaultValue: undefined,
-            randomFrom: undefined,
-            randomTo: undefined,
-            show: undefined
+            comment: "Enter a value in m (default 1.91m)",
+            defaultValue: 1.91,
+            randomFrom: 1.4,
+            randomTo: 2.1,
+            show: true
         }
             ],
         };

@@ -38,11 +38,12 @@ function generateSupplementFile(config) {
 // Auto-generated supplement file for ${className}
 ${className}_DataEnrichment(targetObjType, dataObj = {}) {
     const myName = "${className}_DataEnrichment"; // don't automatize in case 'use strict'
+    const myName2 = "${className}_DataEnrichment"; // don't automatize in case 'use strict'
     if (targetObjType == "info") {
         return {
             sourceObjType: "${base}",
             targetObjType: "${derived}",
-            uniqueHTMLcode: myName,
+            uniqueHTMLcode: myName2,
             elevatorMethod: myName,
             arrayOfItems: [
                 ${arrayOfItems}

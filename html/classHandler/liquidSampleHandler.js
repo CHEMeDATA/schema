@@ -347,11 +347,12 @@ class LiquidSampleHandler {
 // Auto-generated supplement file for liquidSample
 liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
     const myName = "liquidSample_DataEnrichment"; // don't automatize in case 'use strict'
+    const myName2 = "liquidSample_DataEnrichment"; // don't automatize in case 'use strict'
     if (targetObjType == "info") {
         return {
             sourceObjType: "liquidSample",
             targetObjType: "NMRliquidSample",
-            uniqueHTMLcode: myName,
+            uniqueHTMLcode: myName2,
             elevatorMethod: myName,
             arrayOfItems: [
                 {
