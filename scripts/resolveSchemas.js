@@ -13,10 +13,10 @@ if (!fs.existsSync(outputDir)) {
 }
 
 // Load all schemas into memory for resolving $refs
-const schemaCache = {};
 
 // Load schemas from inputDir
 function loadSchemas() {
+	const schemaCache = {};
 	const files = fs.readdirSync(inputDir);
 	files.forEach((file) => {
 		if (file.endsWith(".json")) {
@@ -28,12 +28,15 @@ function loadSchemas() {
 			}
 		}
 	});
+	return schemaCache;
 }
 
 // Resolve $ref references
 function resolveRefs(schema, seen = new Set()) {
 	if (!schema || typeof schema !== "object") return schema;
-	if (seen.has(schema)) return schema; // skip circular objects
+	if (seen.has(schema)) {
+		return schema.$id ? { $ref: schema.$id, $refKEEP: schema.$id } : schema;
+	}
 	seen.add(schema);
 
 	if (Array.isArray(schema)) {
@@ -51,13 +54,19 @@ function resolveRefs(schema, seen = new Set()) {
 			delete resolvedSchema["$ref"];
 		}
 	}
-
 	if (schema["allOf"]) {
+		let allRelated = resolvedSchema.related
+			? resolvedSchema.related.slice()
+			: [];
 		schema["allOf"].forEach((ref) => {
 			const resolvedRef = resolveRefs(ref, seen);
 			if (resolvedRef) {
+				// Collect related IDs but don't lose previous ones
+				if (resolvedRef.$id && allRelated.indexOf(resolvedRef.$id) === -1) {
+					allRelated.push(resolvedRef.$id);
+				}
+				// Merge properties, required, etc.
 				resolvedSchema = {
-                    related: resolvedSchema.$id,
 					...resolvedRef,
 					...resolvedSchema,
 					properties: {
@@ -73,6 +82,7 @@ function resolveRefs(schema, seen = new Set()) {
 				};
 			}
 		});
+
 		delete resolvedSchema["allOf"];
 	}
 
@@ -105,21 +115,36 @@ function safeStringify(obj, space = 4) {
 	);
 }
 
+//! replace keys "$refKEEP" with "$ref"
+function replaceRefKeep(obj) {
+	if (Array.isArray(obj)) {
+		return obj.map(replaceRefKeep);
+	} else if (obj && typeof obj === "object") {
+		const newObj = {};
+		for (const [key, value] of Object.entries(obj)) {
+			const newKey = key === "$refKEEP" ? "$ref" : key;
+			newObj[newKey] = replaceRefKeep(value);
+		}
+		return newObj;
+	}
+	return obj;
+}
+
 // Process all schemas and generate effective versions
 function processSchemas() {
-	loadSchemas();
-
 	Object.keys(schemaCache).forEach((file) => {
 		console.log(`🛠️ Processing ${file}...`);
-
-		const resolvedSchema = resolveRefs(schemaCache[file]);
-
+		curSchema = schemaCache[file];
+		const resolvedSchema = resolveRefs(curSchema);
 		// Write the resolved schema
 		const outputFilePath = path.join(outputDir, file);
-		fs.writeFileSync(outputFilePath, safeStringify(resolvedSchema, 4), "utf8");
+		const finalSchema = replaceRefKeep(resolvedSchema);
+		fs.writeFileSync(outputFilePath, safeStringify(finalSchema, 4), "utf8");
 		console.log(`✅ Resolved schema written to ${outputFilePath}`);
 	});
 }
 
 // Run script
+const schemaCache = loadSchemas();
+var curSchema = "";
 processSchemas();

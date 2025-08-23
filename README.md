@@ -10,8 +10,11 @@ run:
 rm -r v1/schema
 rm -r v1/schemaResolved
 mkdir -p v1/schema
+echo '****** Create the schema for the objects in v1/schema'
+
 node scripts/updateSchema.js
 
+echo '****** In v1/schemResolved, write a copy of each schema but removed all "allOf" and explicit "$refs" except if would be recursive (which would make infinitely long file)'
 mkdir -p v1/schemaResolved
 
 node scripts/resolveSchemas.js
