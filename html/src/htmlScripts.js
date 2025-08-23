@@ -1,9 +1,3 @@
-// Define globally (outside DOMContentLoaded)
-const editor = document.getElementById("jsonEditor");
-    const selector = document.getElementById("instanceSelector");
-    const validationMessage = document.getElementById("validationMessage");
-
-
 
     function updateFeatureOfObject(data) {
       if (!data || typeof data !== 'object') return;
@@ -107,9 +101,16 @@ async function loadInstance(fileName) {
     }
    
 document.addEventListener("DOMContentLoaded", function () {
+  
+   // Now the DOM is guaranteed to be ready
     const editor = document.getElementById("jsonEditor");
     const selector = document.getElementById("instanceSelector");
     const validationMessage = document.getElementById("validationMessage");
+
+    // Make them global if other functions need them
+    window.editor = editor;
+    window.selector = selector;
+    window.validationMessage = validationMessage;
 
     selector.addEventListener("change", function () {
         loadInstance(selector.value);
@@ -128,25 +129,30 @@ document.addEventListener("DOMContentLoaded", function () {
             validationMessage.style.color = "red";
         }
     });
-
+    
     loadFromURL();
+
 });
 
  
-window.processJSONData = async function (data, schemas, validationMessage) {
+window.processJSONData = async function (data, validationMessage) {
     if (!data) return;
 
     try {
         // Parse schemas if already stored
-       /* let schemas = {};
+        let schemas = {};
         if (data && data.$schema) {
             schemas = await fetchSchemas(data);
         } else if (validationMessage && validationMessage.dataset?.schema) {
             schemas = JSON.parse(validationMessage.dataset.schema);
         }
-*/
+
         // Validate
-        validateJSON(data, schemas, validationMessage);
+console.log ("window.processJSONData ",data)    
+console.log ("window.processJSONData schemas",schemas)    
+console.log ("window.processJSONData ",validationMessage)    
+
+    validateJSON(data, schemas, validationMessage);
 
         // Update main object if exists
         if (window.mainObject) {

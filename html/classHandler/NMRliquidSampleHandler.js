@@ -78,8 +78,9 @@ class NMRliquidSampleHandler {
 			const newAge = parseInt(inputVal, 10);
 			this.obj.age = newAge; // Update the object's age
 			document.getElementById("ageDisplay").textContent = inputVal; // Update display
-			const validationMessage = document.getElementById("validationMessage");
-			window.processJSONData(this.obj, this.obj.schema, validationMessage); // Trigger processing
+			const validationMessage = document.getElementById("validationMessage");                    validateJSON(parsedData.content, schemas, validationMessage);
+
+			window.processJSONData(this.obj, validationMessage); // Trigger processing
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
 		});
@@ -105,7 +106,7 @@ class NMRliquidSampleHandler {
 				this.obj.age = newAge; // Update or create age
 				ageDisplay.textContent = newAge; // Update display
 				editor.value = JSON.stringify(this.obj, null, 4); // Update editor
-				window.processJSONData(this.obj, this.obj.schema, validationMessage); // Trigger processing
+				window.processJSONData(this.obj, validationMessage); // Trigger processing
 			}
 		});
 	}
