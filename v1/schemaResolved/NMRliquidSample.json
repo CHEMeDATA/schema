@@ -1,0 +1,20 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://raw.githubusercontent.com/CHEMeDATA/schema/main/v1/schema/NMRliquidSample.json",
+    "properties": {
+        "origin": {
+            "$ref": "https://raw.githubusercontent.com/CHEMeDATA/schema/main/v1/schema/sample.json"
+        },
+        "volume": {
+            "type": "number"
+        },
+        "tubeDiameter": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "volume",
+        "tubeDiameter"
+    ]
+}
