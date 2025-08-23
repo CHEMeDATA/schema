@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "$id": "https://raw.githubusercontent.com/CHEMeDATA/schema/main/v1/schema/obj1size.json",
+    "$id": "https://chemedata.github.io/schema/v1/schema/obj1size.json",
     "properties": {
         "name": {
             "type": "string"

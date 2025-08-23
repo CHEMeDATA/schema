@@ -1,0 +1,72 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Schema: groupObject1.json</title>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"></script>
+            <script src="./objectsJS/validateSchema.js"></script>
+            <script src="./objectsJS/htmlScripts.js" defer></script>
+            <script src="./classHandler/groupObject1Handler.js" defer></script>
+            <script src="https://d3js.org/d3.v7.min.js"></script>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { padding: 10px; border: 1px solid black; text-align: left; }
+                th { background-color: #f2f2f2; }
+                textarea { width: 100%; height: 200px; font-family: monospace; }
+                #validationMessage { font-weight: bold; }
+                .frame { padding: 20px; margin: 10px 0; border-radius: 5px; }
+                .blue-frame { background-color: #cce5ff; border: 1px solid #007bff; }
+                .red-frame { background-color: #f8d7da; border: 1px solid #dc3545; }
+                .green-frame { background-color: #d4edda; border: 1px solid #28a745; }
+                #returnButton { display: inline-block; padding: 10px 15px; background-color: #007BFF; 
+                color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+            </style>
+
+        </head>
+        <body>
+
+            <h1>Schema: groupObject1.json</h1>
+            <p><strong>Schema ID:</strong> 
+                <a href="https://chemedata.github.io/schema/v1/schema/groupObject1.json" target="_blank">https://chemedata.github.io/schema/v1/schema/groupObject1.json</a>
+            </p>
+
+            <h2>Properties:</h2>
+            <table>
+                <tr>  <th>Property</th>  <th>Type</th>  <th>Schema Reference</th>  <th>Required</th>  </tr>
+                <tr>  <td>members</td>  <td>array</td>  <td><a href="obj1.html">obj1.html</a></td>  <td>✅ Yes</td>  </tr>
+            </table>
+            
+            <h2>Load JSON Instance</h2>
+            <select id="instanceSelector">
+                <option value="">Select an instance...</option>
+                <option value="exampleGroupObj1.json">exampleGroupObj1.json</option>
+            </select>
+    
+            <h2>Edit JSON Instance</h2>
+            <textarea id="jsonEditor"></textarea>
+            <p id="validationMessage"></p>
+            <div id="dynamicContent"></div>
+            <p>
+                <a href="index.html" id="returnButton">⬅ Return to Object List</a>
+            </p>
+            
+            <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                try {
+                    if (typeof GroupObject1Handler !== "function") {
+                        console.log("❌ GroupObject1Handler is not found. Probably ./classHandler/groupObject1Handler.js does not exist. This may be normal if not implemented.");
+                    } else {
+                      window.mainObject = new GroupObject1Handler({});
+                      console.log("✅ mainObject initialized.");
+                    }  
+                } catch (error) {
+                    console.error(error.message);
+                }
+            });
+            </script>
+        </body>
+        </html>
+    

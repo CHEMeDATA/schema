@@ -1,0 +1,25 @@
+{
+	"$schema": "https://chemedata.github.io/schema/v1/schema/nmrProp.json",
+    "spins": [
+        {
+			"spinSystemIndices" : [0],
+            "name": "H1",
+            "value": 2.0,
+            "typeVariableString": "chemicalShift"
+        },
+		{
+			"spinSystemIndices" : [1],
+            "name": "H2",
+            "value": 1.05,
+            "typeVariableString": "chemicalShift"
+        }
+    ],
+    "interactions": [
+        {
+			"spinSystemIndices" : [[0, 1]],
+            "name": "H1",
+            "value": 7.2,
+            "typeVariableString": "Jcoupling"
+        }
+    ]
+}

@@ -3,7 +3,8 @@ const path = require("path");
 
 // Directories
 const schemaDir = "v1/schema";
-const schemaRoot = `https://raw.githubusercontent.com/CHEMeDATA/schema/main/${schemaDir}/`;
+//const schemaRoot = `https://raw.githubusercontent.com/CHEMeDATA/schema/main/${schemaDir}/`;
+const schemaRoot = `https://chemedata.github.io/schema/${schemaDir}/`;
 
 function ensureDerivationsFile(derivationsFile) {
 	if (!fs.existsSync(derivationsFile)) {

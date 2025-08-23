@@ -1,0 +1,12 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schema/pairObj1.json",
+    "object1": {
+        "$schema": "https://chemedata.github.io/schema/v1/schema/obj1.json",
+        "name": "Alice"
+    },
+    "object2": {
+        "$schema": "https://chemedata.github.io/schema/v1/schema/obj2.json",
+        "name": "Bob",
+        "age": 53
+    }
+}

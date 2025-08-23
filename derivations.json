@@ -12,6 +12,66 @@
         {
             "base": "liquidSample",
             "derived": "NMRliquidSample"
+        },
+        {
+            "base": "obj1",
+            "derived": "obj1size"
+        },
+        {
+            "base": "sample",
+            "derived": "liquidSample"
+        },
+        {
+            "base": "liquidSample",
+            "derived": "NMRliquidSample"
+        },
+        {
+            "base": "obj1",
+            "derived": "obj1size"
+        },
+        {
+            "base": "sample",
+            "derived": "liquidSample"
+        },
+        {
+            "base": "liquidSample",
+            "derived": "NMRliquidSample"
+        },
+        {
+            "base": "obj1",
+            "derived": "obj1size"
+        },
+        {
+            "base": "sample",
+            "derived": "liquidSample"
+        },
+        {
+            "base": "liquidSample",
+            "derived": "NMRliquidSample"
+        },
+        {
+            "base": "obj1",
+            "derived": "obj1size"
+        },
+        {
+            "base": "sample",
+            "derived": "liquidSample"
+        },
+        {
+            "base": "liquidSample",
+            "derived": "NMRliquidSample"
+        },
+        {
+            "base": "obj1",
+            "derived": "obj1size"
+        },
+        {
+            "base": "sample",
+            "derived": "liquidSample"
+        },
+        {
+            "base": "liquidSample",
+            "derived": "NMRliquidSample"
         }
     ]
 }
