@@ -1,17 +1,18 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const path = require("path");
 
 // Directories
 const schemaDir = "./v1/schema";
-const instanceDir = './instances';
-const htmlDir = './html';
-const classHandlerFolderRelativeToRootHTML = './classHandler'; // could be absolute path
-const locationsJavascript = './src'; 
+const instanceDir = "./instances";
+const htmlDir = "./html";
+const classHandlerFolderRelativeToRootHTMLNoDot = "classHandler"; // could be absolute path
+const classHandlerFolderRelativeToRootHTML = `./${classHandlerFolderRelativeToRootHTMLNoDot}`; // could be absolute path
+const locationsJavascript = "./src";
 
 const displayTableProperties = true;
 // Ensure the HTML output directory exists
 if (!fs.existsSync(htmlDir)) {
-  fs.mkdirSync(htmlDir, { recursive: true });
+	fs.mkdirSync(htmlDir, { recursive: true });
 }
 
 // List to track generated HTML pages for index.html
@@ -23,95 +24,150 @@ let schemaList = [];
  * @returns {string} - The HTML file name (e.g., "schema.html") or original ref
  */
 function getHtmlLink(ref) {
-  if (!ref) return '-';
-  const fileName = path.basename(ref, '.json') + '.html';
-  return `<a href="${fileName}">${fileName}</a>`;
+	if (!ref) return "-";
+	const fileName = path.basename(ref, ".json") + ".html";
+	return `<a href="${fileName}">${fileName}</a>`;
 }
+
+function createHandlerForFile(fileName) {
+		const shortName = path.basename(fileName, ".json");
+		const refCap =
+			shortName.charAt(0).toUpperCase() + shortName.slice(1) + "Handler";
+		const handlerPath = path.join(
+			htmlDir,
+			classHandlerFolderRelativeToRootHTMLNoDot
+		);
+		const handlerPathGeneric = path.join(handlerPath, "GENERIChandler.js");
+		const handlerPathOut = path.join(handlerPath, `${shortName}Handler.js`);
+		const handlerClassName = `${shortName}Handler`;
+
+		if (this.verbose) console.log(
+			"objectHandler for",
+			fileName,
+			classHandlerFolderRelativeToRootHTMLNoDot
+		);
+	
+
+		// 1. Read the generic template
+		let content = fs.readFileSync(handlerPathGeneric, "utf8");
+
+		// Add auto-generated comment at the top
+		content =
+			`// ⚠️ This file was automatically generated. Do not edit manually.\n` +
+			content;
+
+		// 2. Replace all occurrences of "GENERIChandler" with handlerClassName
+		content = content.replace(/GENERIChandler/g, refCap);
+
+		// 3. Merge content into output file
+		fs.writeFileSync(handlerPathOut, content, { flag: "w" });
+
+		// 3. Merge content into output file
+		fs.writeFileSync(handlerPathOut, content, { flag: "w" });
+
+		// 4. Conditionally append the supplemental file (e.g., supObj1.js)
+		if (shortName) {
+			const supFileName = `sup${shortName}.js`;
+			const supFilePath = path.join(
+				path.dirname(handlerPathGeneric),
+				supFileName
+			);
+
+			if (fs.existsSync(supFilePath)) {
+				const supContent = fs.readFileSync(supFilePath, "utf8");
+				fs.appendFileSync(handlerPathOut, "\n" + supContent);
+			} else {
+				console.warn(`Supplemental file not found: ${supFileName}`);
+			}
+		}
+
+		// 5. Append closing bracket if needed
+		fs.appendFileSync(handlerPathOut, "\n}\n");
+	}
 
 /**
  * Generates an HTML page for a given schema
  * @param {string} fileName - Schema file name (e.g., "groupObject1.json")
  */
 function generateHtmlForSchema(fileName, ref) {
-  const filePath = path.join(schemaDir, fileName);
-  const schema = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+	const filePath = path.join(schemaDir, fileName);
+	const schema = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
-  const refCap = ref.charAt(0).toUpperCase() + ref.slice(1);
+	const refCap = ref.charAt(0).toUpperCase() + ref.slice(1);
 
-  // Generate table of components
-  let propertiesTable = ``;
-  if (displayTableProperties) {
-  
-  // Check if schema extends another schema using "allOf"
-  let baseSchemaRows = '';
-  if (schema['allOf'] && Array.isArray(schema['allOf'])) {
-    schema['allOf'].forEach((item) => {
-      if (item['$ref']) {
-        const baseSchemaLink = getHtmlLink(item['$ref']);
-        baseSchemaRows += `
+	// Generate table of components
+	let propertiesTable = ``;
+	if (displayTableProperties) {
+		// Check if schema extends another schema using "allOf"
+		let baseSchemaRows = "";
+		if (schema["allOf"] && Array.isArray(schema["allOf"])) {
+			schema["allOf"].forEach((item) => {
+				if (item["$ref"]) {
+					const baseSchemaLink = getHtmlLink(item["$ref"]);
+					baseSchemaRows += `
                 <tr>  <td><strong>Derived from</strong></td>  <td>Object</td>  <td>${baseSchemaLink}</td>  <td>✅ Yes</td>  </tr>`;
-      }
-    });
-  }
-  propertiesTable = `<h2>Properties:</h2>
+				}
+			});
+		}
+		propertiesTable = `<h2>Properties:</h2>
             <table>
                 <tr>  <th>Property</th>  <th>Type</th>  <th>Schema Reference</th>  <th>Required</th>  </tr>${baseSchemaRows}`;
-  if (schema.properties) {
-    Object.keys(schema.properties).forEach((key) => {
-    const property = schema.properties[key];
-    let type = property.type ? property.type : 'Object';
-    let schemaRef = property['$ref'] ? getHtmlLink(property['$ref']) : '-';
-    const isRequired = schema.required && schema.required.includes(key) ? '✅ Yes' : '❌ No';
+		if (schema.properties) {
+			Object.keys(schema.properties).forEach((key) => {
+				const property = schema.properties[key];
+				let type = property.type ? property.type : "Object";
+				let schemaRef = property["$ref"] ? getHtmlLink(property["$ref"]) : "-";
+				const isRequired =
+					schema.required && schema.required.includes(key) ? "✅ Yes" : "❌ No";
 
-    if (type === 'array' && property.items) {
-        if (property.items.type) {
-            schemaRef = property.items.type; // Use the type of array items
-        } else if (property.items['$ref']) {
-            schemaRef = getHtmlLink(property.items['$ref']); // Use the reference of array items
-        }
-    }
+				if (type === "array" && property.items) {
+					if (property.items.type) {
+						schemaRef = property.items.type; // Use the type of array items
+					} else if (property.items["$ref"]) {
+						schemaRef = getHtmlLink(property.items["$ref"]); // Use the reference of array items
+					}
+				}
 
-    propertiesTable += `
+				propertiesTable += `
                 <tr>  <td>${key}</td>  <td>${type}</td>  <td>${schemaRef}</td>  <td>${isRequired}</td>  </tr>`;
-    });
-  } else {
-    propertiesTable += `
+			});
+		} else {
+			propertiesTable += `
                 <tr><td colspan="4">No properties defined.</td></tr>`;
-  }
-  propertiesTable += `
+		}
+		propertiesTable += `
             </table>`;
-  } 
+	}
 
-  // Scan instances folder for matching instances
-  const instanceFiles = fs.existsSync(instanceDir)
-    ? fs.readdirSync(instanceDir).filter(file => file.endsWith('.json'))
-    : [];
+	// Scan instances folder for matching instances
+	const instanceFiles = fs.existsSync(instanceDir)
+		? fs.readdirSync(instanceDir).filter((file) => file.endsWith(".json"))
+		: [];
 
-  const matchingInstances = instanceFiles.filter((instanceFile) => {
-    const instancePath = path.join(instanceDir, instanceFile);
-    console.log("reading : ", instancePath)
-    const instanceData = JSON.parse(fs.readFileSync(instancePath, 'utf8'));
-    return instanceData['$schema'] === schema['$id'];
-  });
+	const matchingInstances = instanceFiles.filter((instanceFile) => {
+		const instancePath = path.join(instanceDir, instanceFile);
+		if (this.verbose) console.log("reading : ", instancePath);
+		const instanceData = JSON.parse(fs.readFileSync(instancePath, "utf8"));
+		return instanceData["$schema"] === schema["$id"];
+	});
 
-  let instanceOptions = matchingInstances
-    .map((file) => `                <option value="${file}">${file}</option>`)
-    .join('\n');
+	let instanceOptions = matchingInstances
+		.map((file) => `                <option value="${file}">${file}</option>`)
+		.join("\n");
 
-  let instanceSelector =
-    matchingInstances.length > 0
-      ? `
+	let instanceSelector =
+		matchingInstances.length > 0
+			? `
             <h2>Load JSON Instance</h2>
             <select id="instanceSelector">
                 <option value="">Select an instance...</option>
 ${instanceOptions}
             </select>
     `
-      : `            <p>No instances found for this schema.</p>`;
+			: `            <p>No instances found for this schema.</p>`;
 
-
-  // Generate HTML content
-  const htmlContent = `
+	// Generate HTML content
+	const htmlContent = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -143,7 +199,7 @@ ${instanceOptions}
 
             <h1>Schema: ${fileName}</h1>
             <p><strong>Schema ID:</strong> 
-                <a href="${schema['$id']}" target="_blank">${schema['$id']}</a>
+                <a href="${schema["$id"]}" target="_blank">${schema["$id"]}</a>
             </p>
 
             ${propertiesTable}
@@ -174,31 +230,34 @@ ${instanceOptions}
         </html>
     `;
 
-  fs.writeFileSync(
-    path.join(htmlDir, `${path.basename(fileName, '.json')}.html`),
-    htmlContent,
-    'utf8',
-  );
-  schemaList.push({
-    name: fileName,
-    link: path.basename(fileName, '.json') + '.html',
-  });
+	fs.writeFileSync(
+		path.join(htmlDir, `${path.basename(fileName, ".json")}.html`),
+		htmlContent,
+		"utf8"
+	);
+
+		createHandlerForFile(fileName);
+
+	schemaList.push({
+		name: fileName,
+		link: path.basename(fileName, ".json") + ".html",
+	});
 }
 
 // Generate HTML for all schemas
 fs.readdirSync(schemaDir).forEach((file) => {
-  if (file.endsWith('.json')) {
-    console.log('Generating HTML for', file);
-    let ref = path.basename(file, '.json');//file.replace(".json","");
-    generateHtmlForSchema(file, ref);
-  }
+	if (file.endsWith(".json")) {
+		console.log("Generating HTML for", file);
+		let ref = path.basename(file, ".json"); //file.replace(".json","");
+		generateHtmlForSchema(file, ref);
+	}
 });
 
 /**
  * Generates an index.html file listing all schemas
  */
 function generateIndexPage() {
-    let indexContent = `
+	let indexContent = `
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -211,19 +270,21 @@ function generateIndexPage() {
             <ul>
 `;
 
-    schemaList.forEach((schema) => {
-        indexContent += `                <li><a href="${schema.link}">${schema.name.replace('.json', '')}</a></li>\n`;
-    });
+	schemaList.forEach((schema) => {
+		indexContent += `                <li><a href="${
+			schema.link
+		}">${schema.name.replace(".json", "")}</a></li>\n`;
+	});
 
-    indexContent += `            </ul>
+	indexContent += `            </ul>
         <a href="./index.html">On-line list</a>
         
         </body>
         </html>
     `;
 
-    fs.writeFileSync(path.join(htmlDir, "index.html"), indexContent, "utf8");
-    console.log("✅ index.html generated successfully!");
+	fs.writeFileSync(path.join(htmlDir, "index.html"), indexContent, "utf8");
+	console.log("✅ index.html generated successfully!");
 }
 
 // Call the function after generating all schema pages
