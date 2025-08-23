@@ -111,12 +111,15 @@ document.addEventListener("DOMContentLoaded", function () {
     window.editor = editor;
     window.selector = selector;
     window.validationMessage = validationMessage;
-
-    selector.addEventListener("change", function () {
-        loadInstance(selector.value);
-    });
-
-
+        
+    if (selector) {
+        selector.addEventListener("change", function () {
+            loadInstance(selector.value);
+        });
+    } else {
+        console.error("No element with id 'instanceSelector' found in DOM");
+    }
+    
     // Live validation on user input
     editor.addEventListener("input", function () {
         try {
@@ -129,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
             validationMessage.style.color = "red";
         }
     });
-    
+
     loadFromURL();
 
 });
