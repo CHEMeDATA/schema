@@ -79,8 +79,7 @@ class Obj1Handler {
 			this.obj.age = newAge; // Update the object's age
 			document.getElementById("ageDisplay").textContent = inputVal; // Update display
 			const validationMessage = document.getElementById("validationMessage");
-
-			window.processJSONData(this.obj, validationMessage);
+			window.processJSONData(this.obj, this.obj.schema, validationMessage); // Trigger processing
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
 		});
@@ -106,7 +105,7 @@ class Obj1Handler {
 				this.obj.age = newAge; // Update or create age
 				ageDisplay.textContent = newAge; // Update display
 				editor.value = JSON.stringify(this.obj, null, 4); // Update editor
-				window.processJSONData(this.obj, validationMessage); // Trigger processing
+				window.processJSONData(this.obj, this.obj.schema, validationMessage); // Trigger processing
 			}
 		});
 	}
@@ -412,7 +411,7 @@ class Obj1Handler {
 		}
 
 		const pairObj = {
-			$schema: `https://raw.githubusercontent.com/NMReDATAInitiative/J-graph/main/testSchema/schemaNoLinkData/${targetObjType}.json`,
+			$schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
 			object1: this.obj,
 			object2: objm,
 			param1: obj1,
@@ -420,8 +419,7 @@ class Obj1Handler {
 
 		const content = { content: pairObj };
 		const encodedContent = JSON.stringify(content);
-		const linkUrl = `https://nmredatainitiative.github.io/J-graph/testSchema/html/${targetObjType}.html#data=${encodedContent}`;
-
+		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
 		document.getElementById(
 			`mergeOutput${dataObj.uniqueHTMLcode}`
 		).textContent = JSON.stringify(pairObj, null, 2);

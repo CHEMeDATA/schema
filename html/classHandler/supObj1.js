@@ -126,7 +126,7 @@
 		}
 
 		const pairObj = {
-			$schema: `https://raw.githubusercontent.com/NMReDATAInitiative/J-graph/main/testSchema/schemaNoLinkData/${targetObjType}.json`,
+			$schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
 			object1: this.obj,
 			object2: objm,
 			param1: obj1,
@@ -134,8 +134,7 @@
 
 		const content = { content: pairObj };
 		const encodedContent = JSON.stringify(content);
-		const linkUrl = `https://nmredatainitiative.github.io/J-graph/testSchema/html/${targetObjType}.html#data=${encodedContent}`;
-
+		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
 		document.getElementById(
 			`mergeOutput${dataObj.uniqueHTMLcode}`
 		).textContent = JSON.stringify(pairObj, null, 2);

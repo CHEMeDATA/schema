@@ -185,3 +185,23 @@ deriveSchema("sample", "liquidSample", [
 deriveSchema("liquidSample", "NMRliquidSample", [
 	{ name: "tubeDiameter", mandatory: true, type: "string" },
 ]);
+
+
+
+createNewTypeSchema("pairObj1", [
+	{
+		name: "object1",
+		required: true,
+		array: false,
+		type: "object",
+		ref: "obj1",
+	},
+	{
+		name: "object2",
+		required: true,
+		array: false,
+		type: "object",
+		ref: "obj2",
+	}
+	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
+]);

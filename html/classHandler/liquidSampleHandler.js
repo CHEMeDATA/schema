@@ -79,8 +79,7 @@ class LiquidSampleHandler {
 			this.obj.age = newAge; // Update the object's age
 			document.getElementById("ageDisplay").textContent = inputVal; // Update display
 			const validationMessage = document.getElementById("validationMessage");
-
-			window.processJSONData(this.obj, validationMessage);
+			window.processJSONData(this.obj, this.obj.schema, validationMessage); // Trigger processing
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
 		});
@@ -106,7 +105,7 @@ class LiquidSampleHandler {
 				this.obj.age = newAge; // Update or create age
 				ageDisplay.textContent = newAge; // Update display
 				editor.value = JSON.stringify(this.obj, null, 4); // Update editor
-				window.processJSONData(this.obj, validationMessage); // Trigger processing
+				window.processJSONData(this.obj, this.obj.schema, validationMessage); // Trigger processing
 			}
 		});
 	}
@@ -305,34 +304,32 @@ class LiquidSampleHandler {
 					}
 				],
 			};
-		}
+		}		
+		var targetObj = {
+		    ...this.obj, // start with all fields from this.obj
+		    $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
+		};
 
 		// optional escape
-	/*	const curField = "tubeDiameter";
-		if (
-			!document.getElementById(`${curField}${dataObj.uniqueHTMLcode}`).dataset.content
-		) {
-			const errorMessage = `Failed because of missing ${curField}`;
-			document.getElementById(
-				`mergeOutput${dataObj.uniqueHTMLcode}`
-			).textContent = errorMessage;
-			return;
-		}
-*/
-	
-
-	const obj1 = this.#getValOrDefault(dataObj, "tubeDiameter");
-		
+		const curField = "tubeDiameter";
+		/*	if (
+					!document.getElementById(`${curField}${dataObj.uniqueHTMLcode}`).dataset.content
+				) {
+					const errorMessage = `Failed because of missing ${curField}`;
+					document.getElementById(
+						`mergeOutput${dataObj.uniqueHTMLcode}`
+					).textContent = errorMessage;
+					return;
+				}
+		*/
 			
-var targetObj = {
-    ...this.obj, // start with all fields from this.obj
-    $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
-};
 
-// Override or add fields if they exist
-if (obj1 !== undefined) targetObj.param1 = obj1;
+		// Override or add fields if they exist
+		const obj1 = this.#getValOrDefault(dataObj, curField);
 
-	
+		if (obj1 !== undefined) targetObj[curField] = obj1;
+
+			
 		const content = { content: targetObj };
 		const encodedContent = JSON.stringify(content);
 		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;

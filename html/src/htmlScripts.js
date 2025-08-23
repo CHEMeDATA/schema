@@ -1,42 +1,9 @@
 // Define globally (outside DOMContentLoaded)
-window.processJSONData = async function (data, validationMessage) {
-    if (!data) return;
-    console.log(`window.processJSONData:Updated age to: ${data}`,data);
-    console.log(`window.processJSONData:Updated age to: ${data}`);
-
-    try {
-        // Parse schemas if already stored
-        let schemas = {};
-        if (data && data.$schema) {
-            schemas = await fetchSchemas(data);
-        } else if (validationMessage && validationMessage.dataset?.schema) {
-            schemas = JSON.parse(validationMessage.dataset.schema);
-        }
-
-        // Validate
-        validateJSON(data, schemas, validationMessage);
-
-        // Update main object if exists
-        if (window.mainObject) {
-            window.mainObject.updateContent(data);
-            const container = document.getElementById("dynamicContent");
-            if (container) {
-                window.mainObject.showAllOptionsInHTML(container);
-            }
-        }
-    } catch (err) {
-        console.error("Error processing JSON data:", err);
-        if (validationMessage) {
-            validationMessage.textContent = "❌ Failed to process JSON data";
-            validationMessage.style.color = "red";
-        }
-    }
-};
-
-document.addEventListener("DOMContentLoaded", function () {
-    const editor = document.getElementById("jsonEditor");
+const editor = document.getElementById("jsonEditor");
     const selector = document.getElementById("instanceSelector");
     const validationMessage = document.getElementById("validationMessage");
+
+
 
     function updateFeatureOfObject(data) {
       if (!data || typeof data !== 'object') return;
@@ -102,7 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
                     editor.value = JSON.stringify(parsedData.content, null, 4);
 
                     const schemas = await fetchSchemas(parsedData.content);
-                    window.processJSONData(data, validationMessage);
+                    validateJSON(parsedData.content, schemas, validationMessage);         
+                    updateFeatureOfObject(parsedData.content);
                     editor.dataset.schema = JSON.stringify(schemas);
                 } else {
                     validationMessage.textContent = "⚠ No 'content' field found in URL data";
@@ -114,11 +82,9 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-    selector.addEventListener("change", function () {
-        loadInstance(selector.value);
-    });
+  
 
-    async function loadInstance(fileName) {
+async function loadInstance(fileName) {
         if (!fileName) return;
 
         try {
@@ -129,7 +95,8 @@ document.addEventListener("DOMContentLoaded", function () {
             editor.value = JSON.stringify(data, null, 4);
 
             const schemas = await fetchSchemas(data);
-            window.processJSONData(data, validationMessage);
+            validateJSON(data, schemas, validationMessage);
+            updateFeatureOfObject(data);
             // Store schemas in dataset for live validation
             editor.dataset.schema = JSON.stringify(schemas);
         } catch (err) {
@@ -138,13 +105,24 @@ document.addEventListener("DOMContentLoaded", function () {
             console.error("Error loading instance:", err);
         }
     }
+   
+document.addEventListener("DOMContentLoaded", function () {
+    const editor = document.getElementById("jsonEditor");
+    const selector = document.getElementById("instanceSelector");
+    const validationMessage = document.getElementById("validationMessage");
+
+    selector.addEventListener("change", function () {
+        loadInstance(selector.value);
+    });
+
 
     // Live validation on user input
     editor.addEventListener("input", function () {
         try {
             const jsonData = JSON.parse(editor.value);
             const schemas = JSON.parse(editor.dataset.schema || "{}");
-            window.processJSONData(data, validationMessage);
+            validateJSON(jsonData, schemas, validationMessage);
+            updateFeatureOfObject(jsonData);
         } catch (error) {
             validationMessage.textContent = "❌ Invalid JSON format";
             validationMessage.style.color = "red";
@@ -153,3 +131,37 @@ document.addEventListener("DOMContentLoaded", function () {
 
     loadFromURL();
 });
+
+ 
+window.processJSONData = async function (data, schemas, validationMessage) {
+    if (!data) return;
+
+    try {
+        // Parse schemas if already stored
+       /* let schemas = {};
+        if (data && data.$schema) {
+            schemas = await fetchSchemas(data);
+        } else if (validationMessage && validationMessage.dataset?.schema) {
+            schemas = JSON.parse(validationMessage.dataset.schema);
+        }
+*/
+        // Validate
+        validateJSON(data, schemas, validationMessage);
+
+        // Update main object if exists
+        if (window.mainObject) {
+            window.mainObject.updateContent(data);
+            const container = document.getElementById("dynamicContent");
+            if (container) {
+                window.mainObject.showAllOptionsInHTML(container);
+            }
+        }
+    } catch (err) {
+        console.error("Error processing JSON data:", err);
+        if (validationMessage) {
+            validationMessage.textContent = "❌ Failed to process JSON data";
+            validationMessage.style.color = "red";
+        }
+    }
+};
+

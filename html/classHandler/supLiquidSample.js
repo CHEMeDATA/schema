@@ -19,34 +19,32 @@
 					}
 				],
 			};
-		}
+		}		
+		var targetObj = {
+		    ...this.obj, // start with all fields from this.obj
+		    $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
+		};
 
 		// optional escape
-	/*	const curField = "tubeDiameter";
-		if (
-			!document.getElementById(`${curField}${dataObj.uniqueHTMLcode}`).dataset.content
-		) {
-			const errorMessage = `Failed because of missing ${curField}`;
-			document.getElementById(
-				`mergeOutput${dataObj.uniqueHTMLcode}`
-			).textContent = errorMessage;
-			return;
-		}
-*/
-	
-
-	const obj1 = this.#getValOrDefault(dataObj, "tubeDiameter");
-		
+		const curField = "tubeDiameter";
+		/*	if (
+					!document.getElementById(`${curField}${dataObj.uniqueHTMLcode}`).dataset.content
+				) {
+					const errorMessage = `Failed because of missing ${curField}`;
+					document.getElementById(
+						`mergeOutput${dataObj.uniqueHTMLcode}`
+					).textContent = errorMessage;
+					return;
+				}
+		*/
 			
-var targetObj = {
-    ...this.obj, // start with all fields from this.obj
-    $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
-};
 
-// Override or add fields if they exist
-if (obj1 !== undefined) targetObj.param1 = obj1;
+		// Override or add fields if they exist
+		const obj1 = this.#getValOrDefault(dataObj, curField);
 
-	
+		if (obj1 !== undefined) targetObj[curField] = obj1;
+
+			
 		const content = { content: targetObj };
 		const encodedContent = JSON.stringify(content);
 		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
