@@ -1,3 +1,38 @@
+// Define globally (outside DOMContentLoaded)
+window.processJSONData = async function (data, validationMessage) {
+    if (!data) return;
+    console.log(`window.processJSONData:Updated age to: ${data}`,data);
+    console.log(`window.processJSONData:Updated age to: ${data}`);
+
+    try {
+        // Parse schemas if already stored
+        let schemas = {};
+        if (data && data.$schema) {
+            schemas = await fetchSchemas(data);
+        } else if (validationMessage && validationMessage.dataset?.schema) {
+            schemas = JSON.parse(validationMessage.dataset.schema);
+        }
+
+        // Validate
+        validateJSON(data, schemas, validationMessage);
+
+        // Update main object if exists
+        if (window.mainObject) {
+            window.mainObject.updateContent(data);
+            const container = document.getElementById("dynamicContent");
+            if (container) {
+                window.mainObject.showAllOptionsInHTML(container);
+            }
+        }
+    } catch (err) {
+        console.error("Error processing JSON data:", err);
+        if (validationMessage) {
+            validationMessage.textContent = "❌ Failed to process JSON data";
+            validationMessage.style.color = "red";
+        }
+    }
+};
+
 document.addEventListener("DOMContentLoaded", function () {
     const editor = document.getElementById("jsonEditor");
     const selector = document.getElementById("instanceSelector");
@@ -67,8 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     editor.value = JSON.stringify(parsedData.content, null, 4);
 
                     const schemas = await fetchSchemas(parsedData.content);
-                    validateJSON(parsedData.content, schemas, validationMessage);
-                    updateFeatureOfObject(parsedData.content);
+                    window.processJSONData(data, validationMessage);
                     editor.dataset.schema = JSON.stringify(schemas);
                 } else {
                     validationMessage.textContent = "⚠ No 'content' field found in URL data";
@@ -95,8 +129,7 @@ document.addEventListener("DOMContentLoaded", function () {
             editor.value = JSON.stringify(data, null, 4);
 
             const schemas = await fetchSchemas(data);
-            validateJSON(data, schemas, validationMessage);
-            updateFeatureOfObject(data);
+            window.processJSONData(data, validationMessage);
             // Store schemas in dataset for live validation
             editor.dataset.schema = JSON.stringify(schemas);
         } catch (err) {
@@ -111,8 +144,7 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const jsonData = JSON.parse(editor.value);
             const schemas = JSON.parse(editor.dataset.schema || "{}");
-            validateJSON(jsonData, schemas, validationMessage);
-            updateFeatureOfObject(jsonData);
+            window.processJSONData(data, validationMessage);
         } catch (error) {
             validationMessage.textContent = "❌ Invalid JSON format";
             validationMessage.style.color = "red";
