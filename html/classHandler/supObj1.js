@@ -33,8 +33,10 @@
 						type: "baseType",
 						htmlID: "param2",
 						baseType: "float",
-						comment: "Enter a Float - this dummy test, not required by schema",
-						defaultValue: 5.5,
+						comment: "Enter a value in mm",
+						defaultValue: 5.0,
+						randomFrom: 1,
+						randomTo: 10,
 						show: true,
 					},
 					{

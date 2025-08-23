@@ -30,6 +30,7 @@ mkdir -p objectsJS
 mkdir -p classHandler
 mkdir -p instances
 
+node scripts/makeElevators.js
 node scripts/generateHtmlForSchema.js
 
 

@@ -1,14 +1,15 @@
 const fs = require("fs");
 const path = require("path");
-
+const location = "./html/classHandler/"
 /**
  * Generates a supplement file for the given className and config.
  * @param {string} className - The class name for the function and file.
  * @param {Object} config - Configuration object containing base, derived, and fieldsToAdd.
  */
-function generateSupplementFile(className, config) {
-    const fileName = `supplement${className}.js`;
+function generateSupplementFile(config) {
     const { base, derived, fieldsToAdd } = config;
+	const className = base;
+	const fileName = `supplement${className}.js`;
 
     // Generate arrayOfItems content from fieldsToAdd
     const arrayOfItems = fieldsToAdd.map(field => {
@@ -26,6 +27,7 @@ function generateSupplementFile(className, config) {
 
     // Generate field handling loop
     const fieldLoop = fieldsToAdd.map(field => {
+		console.log("fsfs")
         return `
         const ${field.name} = this.#getValOrDefault(dataObj, "${field.name}");
         if (${field.name} !== undefined) targetObj["${field.name}"] = ${field.name};`;
@@ -34,7 +36,7 @@ function generateSupplementFile(className, config) {
     // Template for the function
     const content = `
 // Auto-generated supplement file for ${className}
-function ${className}_DataEnrichment(targetObjType, dataObj = {}) {
+${className}_DataEnrichment(targetObjType, dataObj = {}) {
     const myName = "${className}_DataEnrichment"; // don't automatize in case 'use strict'
     if (targetObjType == "info") {
         return {
@@ -64,30 +66,17 @@ function ${className}_DataEnrichment(targetObjType, dataObj = {}) {
     window.open(linkUrl, "_blank");
 }
 
-module.exports = ${className}_DataEnrichment;
+//module.exports = ${className}_DataEnrichment;
 `;
 
     // Write the file
-    fs.writeFileSync(path.join(__dirname, fileName), content, "utf8");
+    fs.writeFileSync(path.join(location, fileName), content, "utf8");
     console.log(`✅ File ${fileName} created successfully.`);
 }
 
-// Example usage:
-const config = {
-    base: "liquidSample",
-    derived: "NMRliquidSample",
-    fieldsToAdd: [
-        {
-            name: "tubeDiameter_mm",
-            mandatory: true,
-            type: "float",
-            userRequest: "Enter a value in mm",
-            defaultValue: 5.5,
-            randomFrom: 1,
-            randomTo: 10,
-            show: true
-        }
-    ]
-};
+const derivationsFile = path.join("derivations.json");
+const data = JSON.parse(fs.readFileSync(derivationsFile, "utf8"));
 
-generateSupplementFile("myDataEnrichment1", config);
+data.derivations.forEach(config => {
+    generateSupplementFile(config);
+});

@@ -65,7 +65,7 @@ function createHandlerForFile(fileName) {
 	// 3. Merge content into output file
 	fs.writeFileSync(handlerPathOut, content, { flag: "w" });
 
-	// 4. Conditionally append the supplemental file (e.g., supObj1.js)
+	// 4a. Conditionally append the supplemental file (e.g., supObj1.js)
 	const supFileName = `sup${shortName}.js`;
 	const supFilePath = path.join(path.dirname(handlerPathGeneric), supFileName);
 
@@ -74,6 +74,17 @@ function createHandlerForFile(fileName) {
 		fs.appendFileSync(handlerPathOut, "\n" + supContent);
 	} else {
 		console.log(`Supplemental file not found: ${supFileName}`);
+	}
+
+	// 4b. Conditionally append the supplemental file (e.g., supObj1.js)
+	const supFileName1 = `supplement${shortName}.js`;
+	const supFilePath1 = path.join(path.dirname(handlerPathGeneric), supFileName1);
+
+	if (fs.existsSync(supFilePath1)) {
+		const supContent = fs.readFileSync(supFilePath1, "utf8");
+		fs.appendFileSync(handlerPathOut, "\n" + supContent);
+	} else {
+		console.log(`Supplemental file not found: ${supFileName1}`);
 	}
 
 	// 5. Append closing bracket

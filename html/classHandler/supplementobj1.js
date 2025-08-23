@@ -1,23 +1,23 @@
 
-// Auto-generated supplement file for liquidSample
-function liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
-    const myName = "liquidSample_DataEnrichment"; // don't automatize in case 'use strict'
+// Auto-generated supplement file for obj1
+obj1_DataEnrichment(targetObjType, dataObj = {}) {
+    const myName = "obj1_DataEnrichment"; // don't automatize in case 'use strict'
     if (targetObjType == "info") {
         return {
-            sourceObjType: "liquidSample",
-            targetObjType: "NMRliquidSample",
+            sourceObjType: "obj1",
+            targetObjType: "obj1size",
             uniqueHTMLcode: myName,
             elevatorMethod: myName,
             arrayOfItems: [
                 {
             type: "baseType",
-            htmlID: "tubeDiameter_mm",
+            htmlID: "size",
             baseType: "float",
-            comment: "Enter a value in mm",
-            defaultValue: 5.5,
-            randomFrom: 1,
-            randomTo: 10,
-            show: true
+            comment: "undefined",
+            defaultValue: undefined,
+            randomFrom: undefined,
+            randomTo: undefined,
+            show: undefined
         }
             ],
         };
@@ -30,8 +30,8 @@ function liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
 
     // Handle fields dynamically
     
-        const tubeDiameter_mm = this.#getValOrDefault(dataObj, "tubeDiameter_mm");
-        if (tubeDiameter_mm !== undefined) targetObj["tubeDiameter_mm"] = tubeDiameter_mm;
+        const size = this.#getValOrDefault(dataObj, "size");
+        if (size !== undefined) targetObj["size"] = size;
 
     const content = { content: targetObj };
     const encodedContent = JSON.stringify(content);
@@ -41,4 +41,4 @@ function liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
     window.open(linkUrl, "_blank");
 }
 
-module.exports = liquidSample_DataEnrichment;
+//module.exports = obj1_DataEnrichment;
