@@ -1,17 +1,14 @@
 const fs = require("fs");
 const path = require("path");
 
-const htmlDir = "./html/classHandler";
-
-// could be absolute path
 /**
  * Generates a supplement file for the given className and config.
+ * @param {string} className - The class name for the function and file.
  * @param {Object} config - Configuration object containing base, derived, and fieldsToAdd.
  */
-function generateSupplementFile(config) {
+function generateSupplementFile(className, config) {
+    const fileName = `supplement${className}.js`;
     const { base, derived, fieldsToAdd } = config;
-		const className = base;
-    const fileName = `supplement${base}.js`;
 
     // Generate arrayOfItems content from fieldsToAdd
     const arrayOfItems = fieldsToAdd.map(field => {
@@ -71,7 +68,7 @@ module.exports = ${className}_DataEnrichment;
 `;
 
     // Write the file
-    fs.writeFileSync(path.join(htmlDir, fileName), content, "utf8");
+    fs.writeFileSync(path.join(__dirname, fileName), content, "utf8");
     console.log(`✅ File ${fileName} created successfully.`);
 }
 
@@ -93,4 +90,4 @@ const config = {
     ]
 };
 
-generateSupplementFile( config);
+generateSupplementFile("myDataEnrichment1", config);
