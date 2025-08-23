@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/pairObj1.json",
+    "properties": {
+        "object1": {
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "$id": "https://chemedata.github.io/schema/v1/schema/obj1.json",
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "age": {
+                    "type": "integer"
+                },
+                "toto": {
+                    "type": "integer"
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "object2": {
+            "$ref": "https://chemedata.github.io/schema/v1/schema/obj2.json"
+        }
+    },
+    "required": [
+        "object1",
+        "object2"
+    ]
+}

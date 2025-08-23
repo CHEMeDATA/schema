@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/pairObj1.json",
+    "properties": {
+        "object1": {
+            "$ref": "https://chemedata.github.io/schema/v1/schema/obj1.json"
+        },
+        "object2": {
+            "$ref": "https://chemedata.github.io/schema/v1/schema/obj2.json"
+        }
+    },
+    "required": [
+        "object1",
+        "object2"
+    ]
+}
