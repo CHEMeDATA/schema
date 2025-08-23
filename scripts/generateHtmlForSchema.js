@@ -6,7 +6,7 @@ const schemaDir = "./v1/schema";
 const instanceDir = './instances';
 const htmlDir = './html';
 const classHandlerFolderRelativeToRootHTML = './classHandler'; // could be absolute path
-const locationsJavascript = './objectsJS'; // could be absolute path
+const locationsJavascript = './src'; 
 
 const displayTableProperties = true;
 // Ensure the HTML output directory exists

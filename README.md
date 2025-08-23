@@ -22,7 +22,6 @@ rm -r v1/schemaResolved
 mkdir -p v1/schemaResolved
 node scripts/resolveSchemas.js
 
-rm -r html
 rm -r objectsJS
 rm -r classHandler
 mkdir -p html
