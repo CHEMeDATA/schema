@@ -3,15 +3,41 @@
     "derivations": [
         {
             "base": "obj1",
-            "derived": "obj1size"
+            "derived": "obj1size",
+            "fieldsToAdd": [
+                {
+                    "name": "size",
+                    "mandatory": true,
+                    "type": "float"
+                }
+            ]
         },
         {
             "base": "sample",
-            "derived": "liquidSample"
+            "derived": "liquidSample",
+            "fieldsToAdd": [
+                {
+                    "name": "volume_L",
+                    "mandatory": true,
+                    "type": "float"
+                }
+            ]
         },
         {
             "base": "liquidSample",
-            "derived": "NMRliquidSample"
+            "derived": "NMRliquidSample",
+            "fieldsToAdd": [
+                {
+                    "name": "tubeDiameter_mm",
+                    "mandatory": true,
+                    "type": "float",
+                    "userRequest": "Enter a value in mm",
+                    "defaultValue": 5.5,
+                    "randomFrom": 1,
+                    "randomTo": 10,
+                    "show": true
+                }
+            ]
         }
     ]
 }

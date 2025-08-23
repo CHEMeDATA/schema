@@ -297,13 +297,13 @@ class Obj1Handler {
 					{
 						type: "file",
 						htmlID: "input1",
-						comment: "Upload JSON File 1 - mandatory",
+						comment: "Select JSON File 1 - mandatory",
 						show: true,
 					},
 					{
 						type: "file",
 						htmlID: "input2rr",
-						comment: "Upload JSON File 2",
+						comment: "Select JSON File 2",
 						show: true,
 					},
 					{

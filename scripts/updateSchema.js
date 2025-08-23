@@ -21,12 +21,18 @@ function ensureDerivationsFile(derivationsFile) {
 }
 
 // Add a derivation record
-function addDerivation(derivationsFile, base, derived) {
+function addDerivation(derivationsFile, base, derived, fieldsToAdd) {
 	ensureDerivationsFile(derivationsFile);
 	const content = JSON.parse(fs.readFileSync(derivationsFile, "utf8"));
 
-	content.derivations.push({ base, derived });
-
+	content.derivations.push({ base, derived, fieldsToAdd });
+	/*
+userRequest: "Enter a value in mm",
+						defaultValue: 5.5,
+						randomFrom: 1,
+						randomTo: 10,
+						show: true},
+						*/
 	fs.writeFileSync(derivationsFile, JSON.stringify(content, null, 4), "utf8");
 }
 
@@ -42,7 +48,7 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 
 	// store in derivations file
 	const derivationsFile = path.join(".", "derivations.json");
-    addDerivation(derivationsFile, sourceClass, derivedClass);
+    addDerivation(derivationsFile, sourceClass, derivedClass, fieldsToAdd);
 	// Ensure file exists with _comment and empty derivations array
 
 	console.log(`🛠️ Deriving ${sourceClass} into ${derivedClass}...`);
@@ -69,8 +75,8 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 	const requiredFields = [];
 	fieldsToAdd.forEach((field) => {
 		derivedSchema["properties"][field.name] = { type: field.type };
-		if (field.type === "float") derivedSchema["properties"][field.name] =  "number" ;
-		if (field.type === "double") derivedSchema["properties"][field.name] =  "number" ;
+		if (field.type === "float") derivedSchema["properties"][field.name] =  { type: "number" } ;
+		if (field.type === "double") derivedSchema["properties"][field.name] =  { type: "number" } ;
 		if (field.mandatory) {
 			requiredFields.push(field.name);
 		}
@@ -151,8 +157,17 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 
 
 // Example usage
-
-
+// for type float and double will be replaced with numbers in schema
+/*
+type: "baseType",
+						htmlID: "tubeDiameter_mm",
+						baseType: "float",
+						comment: "Enter a value in mm",
+						defaultValue: 5.5,
+						randomFrom: 1,
+						randomTo: 10,
+						show: true,
+*/
 createNewTypeSchema("obj1", [
 	{ name: "name", required: true, array: false, type: "string" },
 	{ name: "age", required: false, array: false, type: "integer" },
@@ -187,22 +202,16 @@ deriveSchema("sample", "liquidSample", [
 ]);
 
 deriveSchema("liquidSample", "NMRliquidSample", [
-	{ name: "tubeDiameter_mm", mandatory: true, type: "float" },
-	
-]);
-/*
-for schema : number of float and double
-if type:object, there is a ref. and it will be a file
-type: "baseType",
-						htmlID: "tubeDiameter_mm",
-						baseType: "float",
-						comment: "Enter a value in mm",
+	{ name: "tubeDiameter_mm", mandatory: true, type: "float" , 
+						userRequest: "Enter a value in mm",
 						defaultValue: 5.5,
 						randomFrom: 1,
 						randomTo: 10,
-						show: true,
-*/
-deriveSchema("pairObj1", [
+						show: true},
+	
+]);
+
+createNewTypeSchema("pairObj1", [
 	{
 		name: "object1",
 		required: true,

@@ -286,21 +286,22 @@ class LiquidSampleHandler {
 
 
 	myDataEnrichment1_DataEnrichment(targetObjType, dataObj = {}) {
-		const nyName = "myDataEnrichment1_DataEnrichment"; // dont automatize in case use strict
+		const myName = "myDataEnrichment1_DataEnrichment"; // dont automatize in case use strict
 		if (targetObjType == "info") {
 			return {
 				sourceObjType: "liquidSample",
 				targetObjType: "NMRliquidSample",
-				uniqueHTMLcode: nyName, // avoid name conflicts
-				elevatorMethod: nyName,
+				uniqueHTMLcode: myName, // avoid name conflicts
+				elevatorMethod: myName,
 				arrayOfItems: [
-					
 					{
 						type: "baseType",
-						htmlID: "tubeDiameter",
+						htmlID: "tubeDiameter_mm",
 						baseType: "float",
-						comment: "Enter a Float",
+						comment: "Enter a value in mm",
 						defaultValue: 5.5,
+						randomFrom: 1,
+						randomTo: 10,
 						show: true,
 					}
 				],
@@ -312,7 +313,7 @@ class LiquidSampleHandler {
 		};
 
 		// optional escape
-		const curField = "tubeDiameter";
+		const curField = "tubeDiameter_mm";
 		/*	if (
 					!document.getElementById(`${curField}${dataObj.uniqueHTMLcode}`).dataset.content
 				) {
