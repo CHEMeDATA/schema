@@ -69,6 +69,8 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 	const requiredFields = [];
 	fieldsToAdd.forEach((field) => {
 		derivedSchema["properties"][field.name] = { type: field.type };
+		if (field.type === "float") derivedSchema["properties"][field.name] =  "number" ;
+		if (field.type === "double") derivedSchema["properties"][field.name] =  "number" ;
 		if (field.mandatory) {
 			requiredFields.push(field.name);
 		}
@@ -120,6 +122,8 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 				propSchema = { $ref: `${schemaRoot}${prop.ref}.json` };
 			} else {
 				propSchema = { type: prop.type };
+				if (prop.type === "float") propSchema = { type: "number" };
+				if (prop.type === "double") propSchema = { type: "number" };
 			}
 		}
 
@@ -144,14 +148,10 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 	console.log(`✅ ${newSchemaName} schema created at:`, schemaPath);
 }
 
-// Example usage
-//createGroupSchema("groupObject1", [
-//    { name: "members", required: true, array: true, type: "object", ref: "obj1" }, // Correctly reference obj1.json
-//    { name: "groupSize", required: true, array: false, type: "number" },  // A required number field
-//    { name: "active", required: false, array: false, type: "boolean" }   // An optional boolean field
-//]);
+
 
 // Example usage
+
 
 createNewTypeSchema("obj1", [
 	{ name: "name", required: true, array: false, type: "string" },
@@ -164,7 +164,7 @@ createNewTypeSchema("obj2", [
 ]);
 
 deriveSchema("obj1", "obj1size", [
-	{ name: "size", mandatory: true, type: "number" },
+	{ name: "size", mandatory: true, type: "float" },
 ]);
 
 createNewTypeSchema("groupObject1", [
@@ -183,16 +183,26 @@ createNewTypeSchema("sample", [
 ]);
 
 deriveSchema("sample", "liquidSample", [
-	{ name: "volume_L", mandatory: true, type: "number" },
+	{ name: "volume_L", mandatory: true, type: "float" },
 ]);
 
 deriveSchema("liquidSample", "NMRliquidSample", [
-	{ name: "tubeDiameter_mm", mandatory: true, type: "number" },
+	{ name: "tubeDiameter_mm", mandatory: true, type: "float" },
+	
 ]);
-
-
-
-createNewTypeSchema("pairObj1", [
+/*
+for schema : number of float and double
+if type:object, there is a ref. and it will be a file
+type: "baseType",
+						htmlID: "tubeDiameter_mm",
+						baseType: "float",
+						comment: "Enter a value in mm",
+						defaultValue: 5.5,
+						randomFrom: 1,
+						randomTo: 10,
+						show: true,
+*/
+deriveSchema("pairObj1", [
 	{
 		name: "object1",
 		required: true,

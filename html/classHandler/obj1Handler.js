@@ -286,13 +286,13 @@ class Obj1Handler {
 
 
 	myDataEnrichment1_DataEnrichment(targetObjType, dataObj = {}) {
-		const nyName = "myDataEnrichment1_DataEnrichment"; // dont automatize in case use strict
+		const myName = "myDataEnrichment1_DataEnrichment"; // dont automatize in case use strict
 		if (targetObjType == "info") {
 			return {
 				sourceObjType: "obj1",
 				targetObjType: "groupObject1",
-				uniqueHTMLcode: nyName, // avoid name conflicts
-				elevatorMethod: nyName,
+				uniqueHTMLcode: myName, // avoid name conflicts
+				elevatorMethod: myName,
 				arrayOfItems: [
 					{
 						type: "file",
@@ -371,12 +371,12 @@ class Obj1Handler {
 	}
 
 	myDataEnrichment2_DataEnrichment(targetObjType, dataObj = {}) {
-		const nyName = "myDataEnrichment2_DataEnrichment"; // dont automatize in case use strict
+		const myName = "myDataEnrichment2_DataEnrichment"; // dont automatize in case use strict
 		if (targetObjType == "info") {
 			return {
 				targetObjType: "pairObj1",
-				uniqueHTMLcode: nyName, // avoid name conflicts use different names
-				elevatorMethod: nyName, // this is the name of the methods
+				uniqueHTMLcode: myName, // avoid name conflicts use different names
+				elevatorMethod: myName, // this is the name of the methods
 				arrayOfItems: [
 					{
 						type: "file",
