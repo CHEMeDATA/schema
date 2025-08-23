@@ -11,7 +11,7 @@
 					
 					{
 						type: "baseType",
-						htmlID: "tubeDiameter",
+						htmlID: "tubeDiameter_mm",
 						baseType: "float",
 						comment: "Enter a Float",
 						defaultValue: 5.5,
@@ -26,7 +26,7 @@
 		};
 
 		// optional escape
-		const curField = "tubeDiameter";
+		const curField = "tubeDiameter_mm";
 		/*	if (
 					!document.getElementById(`${curField}${dataObj.uniqueHTMLcode}`).dataset.content
 				) {
