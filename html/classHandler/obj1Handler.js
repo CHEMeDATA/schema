@@ -578,7 +578,7 @@ class Obj1Handler {
 						htmlID: "param2",
 						baseType: "float",
 						comment: "Enter a value in mm",
-						defaultValue: 5.0,
+						defaultValue: 5.5,
 						randomFrom: 1,
 						randomTo: 10,
 						show: true,
