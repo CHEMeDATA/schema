@@ -34,7 +34,8 @@ node scripts/makeElevators.js
 node scripts/generateHtmlForSchema.js
 
 wget -O ./all_viewers.json https://raw.githubusercontent.com/chemedata/nmr-objects/main/all_viewers.json
-node scripts/makeFormForReader.js
+mkdir -p html/src_objects
+node scripts/makeFormForReaders.js
 
 ```
 
