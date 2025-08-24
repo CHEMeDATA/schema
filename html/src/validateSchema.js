@@ -1,7 +1,6 @@
-const linkToSchemaBase = "https://nmredatainitiative.github.io/J-graph/testSchema/html/";
 
 
-async function fetchSchemas(jsonData) {
+export async function fetchSchemas(jsonData) {
     let schemaObjects = {};
 
     async function fetchSchema(url) {
@@ -44,7 +43,7 @@ async function fetchSchemas(jsonData) {
     return schemaObjects;
 }
 
-function validateJSON(data, schemas, resultList) {
+export function validateJSON(data, schemas, resultList) {
     const ajv = new Ajv({ schemas });
     resultList.innerHTML = "";
 
@@ -66,6 +65,8 @@ function validateJSON(data, schemas, resultList) {
             if (validate(obj)) {
                 const objName = schemaName.match(/([^/]+)\.json$/)[1];
                 const urlSafeData = encodeURIComponent(JSON.stringify(obj));
+                const linkToSchemaBase = "https://nmredatainitiative.github.io/J-graph/testSchema/html/";
+
                 const linkToSchemaPages = linkToSchemaBase + objName + ".html";
                 if (path == "Root") {
                     resultList.innerHTML += `<li class="valid-schema" style="color: black;">✅ ${path} - ${objName} Valid</li>`;

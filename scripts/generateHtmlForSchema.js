@@ -224,7 +224,7 @@ ${instanceOptions}
                     if (typeof ${refCap}Handler !== "function") {
                         console.log("❌ ${refCap}Handler is not found. Probably ${classHandlerFolderRelativeToRootHTML}/${ref}Handler.js does not exist. This may be normal if not implemented.");
                     } else {
-                      window.mainObject = new ${refCap}Handler({});
+                      mainObject = new ${refCap}Handler({});
                       console.log("✅ mainObject initialized.");
                     }  
                 } catch (error) {

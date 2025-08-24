@@ -148,7 +148,7 @@ data.list.forEach((item) => {
 
 					//https://raw.githubusercontent.com/chemedata/nmr-objects/main/src/JgraphObject.js
 					//					https://raw.githubusercontent.com/chemedata/nmr-objects/main/src/NMRspectrumObject.js
-		const url =  `https://raw.githubusercontent.com/chemedata/nmr-objects/main/src/${innerItem.object}.js`;
+		const url =  `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
 		const output = `html/src_objects/${innerItem.object}.js`;
 
 		downloadFile(url, output).catch(console.error);

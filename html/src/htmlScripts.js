@@ -1,177 +1,141 @@
+// htmlScripts.js
+import { fetchSchemas } from "./validateSchema.js";
+import { validateJSON } from "./validateSchema.js";
 
-    function updateFeatureOfObject(data) {
-      if (!data || typeof data !== 'object') return;
-      if (data['$schema']) {
-        let schemaName = data['$schema'];
-        const objName = schemaName.match(/([^/]+)\.json$/)[1];
-        if (window.mainObject) {
-          window.mainObject.updateContent(data);
-            const container = document.getElementById("dynamicContent");
-            if(container) {
-                window.mainObject.showAllOptionsInHTML(container);
-            } else {
-                console.log("no element 'dynamicContent' in document. It is the part of the HTML where we try to show what can be done with the object type")
-            }
-        } else {
-                console.log("no 'window.mainObject' in window - is an instance of the type of object the page is handling");
-        }
-      }
-    }
+/**
+ * Restore special characters from URL-encoded string
+ */
+function restoreSpecialCharacters(encodedString) {
+	try {
+		let decoded = decodeURIComponent(encodedString);
+		decoded = decoded.replace(/%22/g, '"');
+		return decoded;
+	} catch (error) {
+		console.error("Error restoring special characters:", error);
+		return null;
+	}
+}
 
-    function restoreSpecialCharacters(encodedString) {
-        try {
-            // First, decode URI component
-            let decoded = decodeURIComponent(encodedString);
+/**
+ * Get JSON data from URL query or fragment
+ */
+function getDataFromURL() {
+	const urlParams = new URLSearchParams(window.location.search);
+	let dataParam = urlParams.get("data");
 
-            // Second, replace incorrectly escaped double quotes
-            decoded = decoded.replace(/%22/g, '"');
-            console.log("Restored special characters:", decoded);
-            return decoded;
-        } catch (error) {
-            console.error("Error restoring special characters:", error);
-            return null;
-        }
-    }
+	if (!dataParam) {
+		const hash = window.location.hash.substring(1);
+		if (hash.startsWith("data=")) {
+			dataParam = hash.substring(5);
+		}
+	}
 
-    function getDataFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-		// for fragment identifier ?data=...
-        let dataParam = urlParams.get("data");
+	return dataParam ? restoreSpecialCharacters(dataParam) : null;
+}
 
-        if (!dataParam) {
+/**
+ * Update the main object and show dynamic content
+ */
+export function updateFeatureOfObject(
+	data,
+	mainObject,
+	editor,
+	validationMessage
+) {
+	if (!data || typeof data !== "object") return;
+	if (data.$schema && mainObject) {
+		mainObject.updateContent(data);
+		const container = document.getElementById("dynamicContent");
+		if (container) mainObject.showAllOptionsInHTML(container);
+	}
+}
 
-            // try fragment identifier (#data=...)
-            const hash = window.location.hash.substring(1); // Remove the "#" symbol
-            if (hash.startsWith("data=")) {
-                dataParam = hash.substring(5); // Remove "data=" from the beginning
+/**
+ * Load JSON instance from URL parameter
+ */
+export async function loadFromURL(mainObject, editor, validationMessage) {
+	const dataParam = getDataFromURL();
+	if (!dataParam) return;
 
-            }
-        }
+	try {
+		const parsedData = JSON.parse(dataParam);
+		if (parsedData.content) {
+			editor.value = JSON.stringify(parsedData.content, null, 4);
+			const schemas = await fetchSchemas(parsedData.content);
+			validateJSON(parsedData.content, schemas, validationMessage);
+			updateFeatureOfObject(
+				parsedData.content,
+				mainObject,
+				editor,
+				validationMessage
+			);
+			editor.dataset.schema = JSON.stringify(schemas);
+		} else {
+			validationMessage.textContent = "⚠ No 'content' field found in URL data";
+		}
+	} catch (error) {
+		validationMessage.textContent = "❌ Invalid JSON in URL";
+		console.error("Error parsing URL data:", error);
+	}
+}
 
-        if (dataParam) {
-            return restoreSpecialCharacters(dataParam);
-        }
-        return null;
-    }
+/**
+ * Load JSON instance from file
+ */
+export async function loadInstance(
+	fileName,
+	mainObject,
+	editor,
+	validationMessage
+) {
+	if (!fileName) return;
 
-    async function loadFromURL() {
-        const dataParam = getDataFromURL();
-        if (dataParam) {
-            try {
-                const parsedData = JSON.parse(dataParam);
-                if (parsedData.content) {
-                    editor.value = JSON.stringify(parsedData.content, null, 4);
+	try {
+		const response = await fetch("../instances/" + fileName);
+		if (!response.ok)
+			throw new Error("Failed to fetch instance: " + response.status);
 
-                    const schemas = await fetchSchemas(parsedData.content);
-                    validateJSON(parsedData.content, schemas, validationMessage);         
-                    updateFeatureOfObject(parsedData.content);
-                    editor.dataset.schema = JSON.stringify(schemas);
-                } else {
-                    validationMessage.textContent = "⚠ No 'content' field found in URL data";
-                }
-            } catch (error) {
-                validationMessage.textContent = "❌ Invalid JSON in URL";
-                console.error("Error parsing URL data:", error);
-            }
-        }
-    }
+		const data = await response.json();
+		editor.value = JSON.stringify(data, null, 4);
 
-  
+		const schemas = await fetchSchemas(data);
+		validateJSON(data, schemas, validationMessage);
+		updateFeatureOfObject(data, mainObject, editor, validationMessage);
+		editor.dataset.schema = JSON.stringify(schemas);
+	} catch (err) {
+		editor.value = "";
+		validationMessage.textContent =
+			"❌ Failed to load instance: " + err.message;
+		console.error("Error loading instance:", err);
+	}
+}
 
-async function loadInstance(fileName) {
-        if (!fileName) return;
+/**
+ * Process arbitrary JSON data
+ */
+export async function processJSONData(data, mainObject, validationMessage) {
+	if (!data) return;
 
-        try {
-            const response = await fetch("../instances/" + fileName);
-            if (!response.ok) throw new Error("Failed to fetch instance: " + response.status);
+	try {
+		let schemas = {};
+		if (data && data.$schema) {
+			schemas = await fetchSchemas(data);
+		} else if (validationMessage && validationMessage.dataset?.schema) {
+			schemas = JSON.parse(validationMessage.dataset.schema);
+		}
 
-            const data = await response.json();
-            editor.value = JSON.stringify(data, null, 4);
+		validateJSON(data, schemas, validationMessage);
 
-            const schemas = await fetchSchemas(data);
-            validateJSON(data, schemas, validationMessage);
-            updateFeatureOfObject(data);
-            // Store schemas in dataset for live validation
-            editor.dataset.schema = JSON.stringify(schemas);
-        } catch (err) {
-            editor.value = "";
-            validationMessage.textContent = "❌ Failed to load instance: " + err.message;
-            console.error("Error loading instance:", err);
-        }
-    }
-   
-document.addEventListener("DOMContentLoaded", function () {
-  
-   // Now the DOM is guaranteed to be ready
-    const editor = document.getElementById("jsonEditor");
-    const selector = document.getElementById("instanceSelector");
-    const validationMessage = document.getElementById("validationMessage");
-
-    // Make them global if other functions need them
-    window.editor = editor;
-    window.selector = selector;
-    window.validationMessage = validationMessage;
-        
-    if (selector) {
-        selector.addEventListener("change", function () {
-            loadInstance(selector.value);
-        });
-    } else {
-        console.log("No element with id 'instanceSelector' found in DOM, no example for this object type in the instances folder");
-    }
-    
-    // Live validation on user input
-    editor.addEventListener("input", function () {
-        try {
-            const jsonData = JSON.parse(editor.value);
-            const schemas = JSON.parse(editor.dataset.schema || "{}");
-            validateJSON(jsonData, schemas, validationMessage);
-            updateFeatureOfObject(jsonData);
-        } catch (error) {
-            validationMessage.textContent = "❌ Invalid JSON format";
-            validationMessage.style.color = "red";
-        }
-    });
-
-    loadFromURL();
-
-});
-
- 
-window.processJSONData = async function (data, validationMessage) {
-    if (!data) return;
-
-    try {
-        // Parse schemas if already stored
-        let schemas = {};
-       
-        if (data && data.$schema) {
-            schemas = await fetchSchemas(data);
-        } else if (validationMessage && validationMessage.dataset?.schema) {
-            schemas = JSON.parse(validationMessage.dataset.schema);
-        }
-        
-        // Validate
-console.log ("window.processJSONData ",data)    
-console.log ("window.processJSONData schemas",schemas)    
-console.log ("window.processJSONData ",validationMessage)    
-
-    validateJSON(data, schemas, validationMessage);
-
-        // Update main object if exists
-        if (window.mainObject) {
-            window.mainObject.updateContent(data);
-            const container = document.getElementById("dynamicContent");
-            if (container) {
-                window.mainObject.showAllOptionsInHTML(container);
-            }
-        }
-    } catch (err) {
-        console.error("Error processing JSON data:", err);
-        if (validationMessage) {
-            validationMessage.textContent = "❌ Failed to process JSON data";
-            validationMessage.style.color = "red";
-        }
-    }
-};
-
+		if (mainObject) {
+			mainObject.updateContent(data);
+			const container = document.getElementById("dynamicContent");
+			if (container) mainObject.showAllOptionsInHTML(container);
+		}
+	} catch (err) {
+		console.error("Error processing JSON data:", err);
+		if (validationMessage) {
+			validationMessage.textContent = "❌ Failed to process JSON data";
+			validationMessage.style.color = "red";
+		}
+	}
+}
