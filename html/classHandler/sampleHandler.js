@@ -12,10 +12,13 @@ class SampleHandler {
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
 		this.#showViewer();
-		this.#showUpdateWithButton();
 
-		const methodsUpdater = this.#listNonStaticMethods("showUpdateNoButton"); // get all elevator methods
+		this.#showUpdateWithButton();
+		this.#showUpdateNoButton();
+
+		const methodsUpdater = this.#listNonStaticMethods("_showUpdateNoButton"); // get all elevator methods
 		methodsUpdater.forEach((method) => {
+			console.log("method", method.info)
 			this.#showDataUpdater(method.info); // Call for each elevator
 		});
 
@@ -67,6 +70,8 @@ class SampleHandler {
 	updateContent(data) {
 		this.obj = data;
 	}
+
+
 	#showUpdateWithButton() {
 		const container = document.getElementById("dynamicContent");
 		const frame = document.createElement("div");
@@ -80,19 +85,165 @@ class SampleHandler {
 		document.getElementById("updateButton").addEventListener("click", () => {
 			const inputVal = document.getElementById("ageInput").value;
 			const newAge = parseInt(inputVal, 10);
-			//if (!isNaN(newAge)) {
-			this.obj.age = newAge; // Update the object's age
-			document.getElementById("ageDisplay").textContent = inputVal; // Update display
-			const validationMessage = document.getElementById("validationMessage");        
+			if (!isNaN(newAge)) {
+				this.obj.age = newAge; // Update the object's age
+				document.getElementById("ageDisplay").textContent = inputVal; // Update display
+				const validationMessage = document.getElementById("validationMessage");        
 
-			window.processJSONData(this.obj, validationMessage); // Trigger processing
+				window.processJSONData(this.obj, validationMessage); // Trigger processing
 
-			const editor = document.getElementById("jsonEditor");
-			editor.value = JSON.stringify(this.obj, null, 4);
+				const editor = document.getElementById("jsonEditor");
+				editor.value = JSON.stringify(this.obj, null, 4);
+			}
 		});
 	}
-	showUpdateNoButton(param, dataObj = {}) {
-		const myName = "showUpdateNoButton"; // dont automatize in case use strict
+
+	#showUpdateNoButton() {
+		const container = document.getElementById("dynamicContent");
+		const frame = document.createElement("div");
+		frame.className = "frame blue-frame";
+		frame.innerHTML = `<h4>Data Update</h4>
+        <p>Current age: <span id="ageDisplay2">${this.obj.age}</span></p>
+        <input type="number" id="ageInput2" value="${this.obj.age}" />`;
+		container.appendChild(frame);
+
+		const ageInput = document.getElementById("ageInput2");
+		const ageDisplay = document.getElementById("ageDisplay2");
+		const editor = document.getElementById("jsonEditor");
+		const validationMessage = document.getElementById("validationMessage");
+
+		ageInput.addEventListener("input", () => {
+			const inputVal = ageInput.value;
+			const newAge = parseInt(inputVal, 10);
+			if (!isNaN(newAge)) {
+				this.obj.age = newAge; // Update or create age
+				document.getElementById("ageDisplay").textContent = inputVal; // Update display
+				const validationMessage = document.getElementById("validationMessage");    
+
+				window.processJSONData(this.obj, validationMessage); // Trigger processing
+
+				const editor = document.getElementById("jsonEditor");
+				editor.value = JSON.stringify(this.obj, null, 4);
+			
+				//ageDisplay.textContent = newAge; // Update display
+				//editor.value = JSON.stringify(this.obj, null, 4); // Update editor
+				//	window.processJSONData(this.obj, validationMessage); // Trigger processing
+			}
+		});
+	}
+
+  	async loadSchemaPOO(input) {
+        const response = await fetch(input);
+        if (!response.ok) {
+            throw new Error(`Failed to load schema: ${response.status}`);
+        }
+        const schema = await response.json();
+        return schema;
+    }
+	
+
+	default_showUpdateNoButton(param, dataObj = {}) {
+		const myName = "default_showUpdateNoButton"; // dont automatize in case use strict
+		const validationMessage = document.getElementById("validationMessage");    
+   // not working
+	//	this.loadSchemaPOO(this.obj.$schema).then((schema) => {
+	//	    console.log("Schema content:", schema);
+
+ 	
+		const info = {
+	            uniqueHTMLcode: myName,
+	            elevatorMethod: myName,
+	            arrayOfItems: [
+	                {
+		            type: "baseType",
+		            htmlID: "tubeDiameter_mm",
+		            baseType: "float",
+		            comment: "ZZZZZ Enter a value in mm",
+		            defaultValue: 5.5,
+		            randomFrom: 1,
+		            randomTo: 10,
+		            show: true
+        			},
+					{
+						type: "file",
+						htmlID: "additionalObject",
+						comment: "Select JSON File 2",
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "extraString",
+						baseType: "string",
+						comment:
+							"Enter an string - this dummy test, not required by schema",
+						defaultValue: "This is default",
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "extraDummyParam",
+						baseType: "int",
+						comment:
+							"Enter an Integer - this dummy test, not required by schema",
+						defaultValue: 10,
+						show: true,
+					}
+            ],
+        };
+		if (param == "info") {
+			return info
+		}
+
+		info.arrayOfItems.forEach((item) => {
+	    const el = document.getElementById(item.htmlID+myName);
+	    if (!el) return; 
+	    let value = el.value;
+
+	    // Convert based on baseType
+	    switch (item.baseType) {
+	        case "float":
+	        case "double":
+	            value = parseFloat(value);
+	            if (isNaN(value)) value = null;
+	            break;
+	        case "int":
+	            value = parseInt(value, 10);
+	            if (isNaN(value)) value = null;
+	            break;
+	        case "string":
+	            value = String(value);
+	            break;
+	        default:
+	            console.warn(`Unknown baseType "${item.baseType}" for ${item.htmlID}`);
+	            break;
+	    }
+
+	    // Set as field of this.obj using htmlID as key
+	    this.obj[item.htmlID] = value;
+	});
+
+		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
+
+			window.processJSONData(this.obj, validationMessage); // Trigger processing
+			const editor = document.getElementById("jsonEditor");
+			editor.value = JSON.stringify(this.obj, null, 4);
+
+
+
+
+
+
+	//	}).catch((err) => {
+	//	    console.error(err);
+	//	});
+
+		
+
+		
+	}
+
+	other_showUpdateNoButton(param, dataObj = {}) {
+		const myName = "other_showUpdateNoButton"; // dont automatize in case use strict
 		const info = {
 	            sourceObjType: "liquidSample",
 	            targetObjType: "NMRliquidSample",
@@ -108,7 +259,31 @@ class SampleHandler {
 		            randomFrom: 1,
 		            randomTo: 10,
 		            show: true
-        			}
+        			},
+					{
+						type: "file",
+						htmlID: "additionalObject",
+						comment: "Select JSON File 2",
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "extraString",
+						baseType: "string",
+						comment:
+							"Enter an string - this dummy test, not required by schema",
+						defaultValue: "This is default",
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "extraDummyParam",
+						baseType: "int",
+						comment:
+							"Enter an Integer - this dummy test, not required by schema",
+						defaultValue: 10,
+						show: true,
+					}
             ],
         };
 		if (param == "info") {
@@ -116,7 +291,7 @@ class SampleHandler {
 		}
 
 		info.arrayOfItems.forEach((item) => {
-	    const el = document.getElementById(item.htmlID+"showUpdateNoButton");
+	    const el = document.getElementById(item.htmlID+myName);
 	    if (!el) return; 
 	    let value = el.value;
 
@@ -156,7 +331,6 @@ class SampleHandler {
 
 		
 	}
-
 	#generateTableOfInputForEnrichment(frame, dataObj) {
 		const dataArray = dataObj.arrayOfItems;
 		frame.innerHTML = "<h4>Data Enrichment</h4>"; // Clear previous content

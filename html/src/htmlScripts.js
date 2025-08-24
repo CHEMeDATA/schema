@@ -144,12 +144,13 @@ window.processJSONData = async function (data, validationMessage) {
     try {
         // Parse schemas if already stored
         let schemas = {};
+       
         if (data && data.$schema) {
             schemas = await fetchSchemas(data);
         } else if (validationMessage && validationMessage.dataset?.schema) {
             schemas = JSON.parse(validationMessage.dataset.schema);
         }
-
+        
         // Validate
 console.log ("window.processJSONData ",data)    
 console.log ("window.processJSONData schemas",schemas)    
