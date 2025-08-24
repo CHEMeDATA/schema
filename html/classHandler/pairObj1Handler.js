@@ -12,12 +12,16 @@ class PairObj1Handler {
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
 		this.#showViewer();
-		//this.#showUpdateWitButton();
-		this.#showUpdateNoButton();
+		this.#showUpdateWithButton();
+
+		const methodsUpdater = this.#listNonStaticMethods("showUpdateNoButton"); // get all elevator methods
+		methodsUpdater.forEach((method) => {
+			this.#showDataUpdater(method.info); // Call for each elevator
+		});
 
 		const methods = this.#listNonStaticMethods("_DataEnrichment"); // get all elevator methods
 		methods.forEach((method) => {
-			this.#showDataEnrichmentMethods(method.info); // Call #showDataEnrichmentMethods for each elevator
+			this.#showDataEnrichmentMethods(method.info); // Call for each elevator
 		});
 
 		this.#showViewer2();
@@ -63,7 +67,7 @@ class PairObj1Handler {
 	updateContent(data) {
 		this.obj = data;
 	}
-	#showUpdateWitButton() {
+	#showUpdateWithButton() {
 		const container = document.getElementById("dynamicContent");
 		const frame = document.createElement("div");
 		frame.className = "frame blue-frame";
@@ -76,39 +80,81 @@ class PairObj1Handler {
 		document.getElementById("updateButton").addEventListener("click", () => {
 			const inputVal = document.getElementById("ageInput").value;
 			const newAge = parseInt(inputVal, 10);
+			//if (!isNaN(newAge)) {
 			this.obj.age = newAge; // Update the object's age
 			document.getElementById("ageDisplay").textContent = inputVal; // Update display
-			const validationMessage = document.getElementById("validationMessage");                    validateJSON(parsedData.content, schemas, validationMessage);
+			const validationMessage = document.getElementById("validationMessage");        
 
 			window.processJSONData(this.obj, validationMessage); // Trigger processing
+
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
 		});
 	}
-	#showUpdateNoButton() {
-		const container = document.getElementById("dynamicContent");
-		const frame = document.createElement("div");
-		frame.className = "frame blue-frame";
-		frame.innerHTML = `<h4>Data Update</h4>
-        <p>Current age: <span id="ageDisplay2">${this.obj.age}</span></p>
-        <input type="number" id="ageInput2" value="${this.obj.age}" />`;
-		container.appendChild(frame);
+	showUpdateNoButton(param, dataObj = {}) {
+		const myName = "showUpdateNoButton"; // dont automatize in case use strict
+		const info = {
+	            sourceObjType: "liquidSample",
+	            targetObjType: "NMRliquidSample",
+	            uniqueHTMLcode: myName,
+	            elevatorMethod: myName,
+	            arrayOfItems: [
+	                {
+		            type: "baseType",
+		            htmlID: "tubeDiameter_mm",
+		            baseType: "float",
+		            comment: "Enter a value in mm",
+		            defaultValue: 5.5,
+		            randomFrom: 1,
+		            randomTo: 10,
+		            show: true
+        			}
+            ],
+        };
+		if (param == "info") {
+			return info
+		}
 
-		const ageInput = document.getElementById("ageInput2");
-		const ageDisplay = document.getElementById("ageDisplay2");
-		const editor = document.getElementById("jsonEditor");
-		const validationMessage = document.getElementById("validationMessage");
+		info.arrayOfItems.forEach((item) => {
+	    const el = document.getElementById(item.htmlID+"showUpdateNoButton");
+	    if (!el) return; 
+	    let value = el.value;
 
-		ageInput.addEventListener("input", () => {
-			const inputVal = ageInput.value;
-			const newAge = parseInt(inputVal, 10);
-			if (!isNaN(newAge)) {
-				this.obj.age = newAge; // Update or create age
-				ageDisplay.textContent = newAge; // Update display
-				editor.value = JSON.stringify(this.obj, null, 4); // Update editor
-				window.processJSONData(this.obj, validationMessage); // Trigger processing
-			}
-		});
+	    // Convert based on baseType
+	    switch (item.baseType) {
+	        case "float":
+	        case "double":
+	            value = parseFloat(value);
+	            if (isNaN(value)) value = null;
+	            break;
+	        case "int":
+	            value = parseInt(value, 10);
+	            if (isNaN(value)) value = null;
+	            break;
+	        case "string":
+	            value = String(value);
+	            break;
+	        default:
+	            console.warn(`Unknown baseType "${item.baseType}" for ${item.htmlID}`);
+	            break;
+	    }
+
+	    // Set as field of this.obj using htmlID as key
+	    this.obj[item.htmlID] = value;
+	});
+
+		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
+			const validationMessage = document.getElementById("validationMessage");        
+
+			window.processJSONData(this.obj, validationMessage); // Trigger processing
+
+			const editor = document.getElementById("jsonEditor");
+			editor.value = JSON.stringify(this.obj, null, 4);
+
+
+
+
+		
 	}
 
 	#generateTableOfInputForEnrichment(frame, dataObj) {
@@ -235,6 +281,44 @@ class PairObj1Handler {
 					console.error(`Method "${methodName}" does not exist.`);
 				}
 			});
+	}
+
+	#showDataUpdater(dataObj) {
+		const container = document.getElementById("dynamicContent");
+		const targetObjType = dataObj.targetObjType;
+
+		// Create the container for the file input and input
+		const frame = document.createElement("div");
+		frame.className = "frame blue-frame";
+
+		this.#generateTableOfInputForEnrichment(frame, dataObj);
+
+		frame.innerHTML += `          <button id="updateButton2${dataObj.uniqueHTMLcode}">Update</button>`;
+		frame.innerHTML += `          <pre id="mergeOutput${dataObj.uniqueHTMLcode}"></pre>`;
+
+		container.appendChild(frame);
+
+		this.#addFileInputListeners(
+			dataObj,
+			this.#loadFile,
+			this.#handleInputChange
+		);
+
+		this.#updateValuesInputDataEnrichment(dataObj);
+
+		document
+			.getElementById(`updateButton2${dataObj.uniqueHTMLcode}`)
+			.addEventListener("click", () => {
+				console.log("dataObj",dataObj)
+				const methodName = dataObj.elevatorMethod; // "combineFiles"; // Dynamic method name
+				if (typeof this[methodName] === "function") {
+					this[methodName](targetObjType, dataObj);
+				} else {
+					console.error(`Method "${methodName}" does not exist.`);
+				}
+			});
+
+		
 	}
 
 	async #loadFile(event) {

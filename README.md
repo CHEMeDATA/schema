@@ -33,7 +33,7 @@ mkdir -p instances
 node scripts/makeElevators.js
 node scripts/generateHtmlForSchema.js
 
-
+wget -O ./all_viewers.json https://raw.githubusercontent.com/chemedata/nmr-objects/main/all_viewers.json
 
 ```
 
