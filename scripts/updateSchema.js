@@ -240,3 +240,25 @@ createNewTypeSchema("pairObj1", [
 	}
 	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
 ]);
+
+createNewTypeSchema("nmrSpectrumObject", [
+	{
+		name: "values",
+		required: true,
+		array: true,
+		type: "double",
+	},
+	{
+		name: "firstPoint",
+		required: true,
+		array: false,
+		type: "double",
+	},
+	{
+		name: "lastPoint",
+		required: true,
+		array: false,
+		type: "double",
+	}
+	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
+]);
