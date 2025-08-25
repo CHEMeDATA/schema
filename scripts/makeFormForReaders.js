@@ -62,7 +62,6 @@ function generateSupplementFile(config) {
 	// Generate field handling loop
 	const fieldLoop = fieldsToAdd
 		.map((field) => {
-			console.log("fsfs");
 			return `
 	const ${field.dataPropertyName} = this.#getValOrDefault(dataObj, "${field.dataPropertyName}");
 	if (${field.dataPropertyName} !== undefined) sourceObj["${field.dataPropertyName}"] = ${field.dataPropertyName};`;
@@ -119,7 +118,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 	console.log("3333")
 	console.log("5555")
 
-	const targetData = the${object}.data;
+	const targetData = {content :the${object}.data};
 
 	if ( 
 		(targetData && Object.keys(targetData).length === 0)
@@ -196,4 +195,3 @@ data.list.forEach((item) => {
 	});
 });
 
-console.log(result);

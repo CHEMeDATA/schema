@@ -54,7 +54,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	console.log("3333")
 	console.log("5555")
 
-	const targetData = thenmrSpectrumObject.data;
+	const targetData = {content :thenmrSpectrumObject.data};
 
 	if ( 
 		(targetData && Object.keys(targetData).length === 0)
@@ -76,6 +76,7 @@ linkUrl
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
 	if (linkUrl.length > 1000) {
+		localStorage.clear();
 	    const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
 	    localStorage.setItem(storageKey, JSON.stringify(targetData));
 	    const linkUrlShort = `https://chemedata.github.io/schema/html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;

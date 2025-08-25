@@ -38,7 +38,7 @@ mkdir -p html/src_objects
 node scripts/makeFormForReaders.js
 echo "get /Users/djeanner/git/MnovaJson-reader/external/ObjectBase.js"
 wget -O ./html/src_objects/ObjectBase.js https://raw.githubusercontent.com/chemedata/MnovaJson-reader/main/external/ObjectBase.js
-
+scripts/insertSupplementForFormInObjectClasses.zsh
 
 ```
 
