@@ -600,7 +600,8 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	console.log("3333")
 	console.log("5555")
 
-	const targetData = thenmrSpectrumObject.data;
+	// const targetData = thenmrSpectrumObject.data; old
+	const targetData = {content : thenmrSpectrumObject.data};
 
 	if ( 
 		(targetData && Object.keys(targetData).length === 0)
@@ -617,11 +618,12 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
-linkUrl
+
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
 	if (linkUrl.length > 1000) {
+		localStorage.clear();
 	    const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
 	    localStorage.setItem(storageKey, JSON.stringify(targetData));
 	    const linkUrlShort = `https://chemedata.github.io/schema/html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;

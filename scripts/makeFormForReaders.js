@@ -141,6 +141,7 @@ linkUrl
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[\x20-\x7E]+$/.test(linkUrl));
 	if (linkUrl.length > 1000) {
+		localStorage.clear();
 	    const storageKey = \`data_\${Date.now()}_\${Math.floor(Math.random() * 1e6)}\`;
 	    localStorage.setItem(storageKey, JSON.stringify(targetData));
 	    const linkUrlShort = \`https://chemedata.github.io/schema/html/\${encodeURIComponent(targetObjType)}.html#storageKey=\${storageKey}\`;
