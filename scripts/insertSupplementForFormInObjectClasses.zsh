@@ -30,7 +30,6 @@ for file in "$dir"/supplement*.js; do
 	echo "Insertions of $file in $objectFile"
 	echo "-------------------------"
 
-	echo "Insertions in $DIST_DIR/$OBJECT_STATEMENTS.js"
 	cat "$objectFile" \
 	  | sed '/\/\/ AUTOMATIC METHOD INSERTION WILL BE MADE HERE/r '"$file" \
 	  > "$objectFile_tmp.txt"

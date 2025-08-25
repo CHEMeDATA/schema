@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json",
+    "properties": {
+        "values": {
+            "type": "array",
+            "items": {
+                "type": "double"
+            }
+        },
+        "firstPoint": {
+            "type": "number"
+        },
+        "lastPoint": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "values",
+        "firstPoint",
+        "lastPoint"
+    ]
+}

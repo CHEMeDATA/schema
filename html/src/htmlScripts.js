@@ -18,27 +18,18 @@ function restoreSpecialCharacters(encodedString) {
 
 // utils/urlData.js
 export function getDataFromURL() {
-    const urlParams = new URLSearchParams(window.location.search);
-    let dataParam = urlParams.get("data");
-    if (!dataParam) {
-        const hash =window.location.hash.substring(1);
-        if (hash.startsWith("data=")) {
-            dataParam = hash.substring(5);
-            console.log("hashhash read from link")
-        } else if (hash.startsWith("storageKey=")) {
-             console.log("hashhash read from short link")
-
-            const storageKey = hash.substring(11);
-
-            console.log("storageKey  hash.substring(11)    : ", storageKey)
-
-            dataParam = localStorage.getItem(storageKey);
-             console.log("stored", dataParam)
-        }
-    }
-                console.log("hashhash no link...")
-
-    return dataParam ? restoreSpecialCharacters(dataParam) : null;
+	const urlParams = new URLSearchParams(window.location.search);
+	let dataParam = urlParams.get("data");
+	if (!dataParam) {
+		const hash = window.location.hash.substring(1);
+		if (hash.startsWith("data=")) {
+			dataParam = hash.substring(5);
+		} else if (hash.startsWith("storageKey=")) {
+			const storageKey = hash.substring(11);
+			dataParam = localStorage.getItem(storageKey);
+		}
+	}
+	return dataParam ? restoreSpecialCharacters(dataParam) : null;
 }
 
 /**
@@ -62,39 +53,32 @@ export function updateFeatureOfObject(
  * Load JSON instance from URL parameter
  */
 export async function loadFromURL(mainObject, editor, validationMessage) {
-    const dataParam = getDataFromURL();
-    console.log("dataParam2",dataParam)
-    if (!dataParam) return;
+	const dataParam = getDataFromURL();
+	if (!dataParam) return;
 
-    let parsedData = null;
+	let parsedData = null;
 
-    try {
-        const parsedData = JSON.parse(dataParam);
-        if (parsedData.content) {
-                            console.log("parsedData.content",parsedData.content)
-
-            editor.value = JSON.stringify(parsedData.content, null, 4);
-            const schemas = await fetchSchemas(parsedData.content);
-            validateJSON(parsedData.content, schemas, validationMessage);
-            updateFeatureOfObject(
-                parsedData.content,
-                mainObject,
-                editor,
-                validationMessage
-            );
-            editor.dataset.schema = JSON.stringify(schemas);
-                console.log("dataParam3",schemas)
-                console.log("dataParam4",editor.dataset.schema)
-
-        } else {
-            validationMessage.textContent = "⚠ No 'content' field found in URL data";
-        }
-    } catch (error) {
-        validationMessage.textContent = "❌ Invalid JSON in URL / localStorage";
-        console.error("Error parsing URL data:", error);
-    }
+	try {
+		const parsedData = JSON.parse(dataParam);
+		if (parsedData.content) {
+			editor.value = JSON.stringify(parsedData.content, null, 4);
+			const schemas = await fetchSchemas(parsedData.content);
+			validateJSON(parsedData.content, schemas, validationMessage);
+			updateFeatureOfObject(
+				parsedData.content,
+				mainObject,
+				editor,
+				validationMessage
+			);
+			editor.dataset.schema = JSON.stringify(schemas);
+		} else {
+			validationMessage.textContent = "⚠ No 'content' field found in URL data";
+		}
+	} catch (error) {
+		validationMessage.textContent = "❌ Invalid JSON in URL / localStorage";
+		console.error("Error parsing URL data:", error);
+	}
 }
-
 
 /**
  * Load JSON instance from file
