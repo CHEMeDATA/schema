@@ -5,9 +5,7 @@
     "properties": {
         "values": {
             "type": "array",
-            "items": {
-                "type": "double"
-            }
+            "items": "number"
         },
         "firstPoint": {
             "type": "number"
