@@ -1,13 +1,19 @@
-const fs = require("fs");
-const path = require("path");
+// ES module imports
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Directories
-const schemaDir = "./v1/schema";
-const instanceDir = "./instances";
-const htmlDir = "./html";
+const schemaDir = path.join(__dirname, "../v1/schema");
+const instanceDir = path.join(__dirname, "../instances");
+const htmlDir = path.join(__dirname, "../html");
 const classHandlerFolderRelativeToRootHTMLNoDot = "classHandler"; // could be absolute path
 const classHandlerFolderRelativeToRootHTML = `./${classHandlerFolderRelativeToRootHTMLNoDot}`; // could be absolute path
-const locationsJavascript = "./src";
+const locationsJavascript = path.join(__dirname, "../src");
 
 const displayTableProperties = true;
 // Ensure the HTML output directory exists
@@ -41,12 +47,7 @@ function createHandlerForFile(fileName) {
 	const handlerPathOut = path.join(handlerPath, `${shortName}Handler.js`);
 	const handlerClassName = `${shortName}Handler`;
 
-	if (this.verbose)
-		console.log(
-			"objectHandler for",
-			fileName,
-			classHandlerFolderRelativeToRootHTMLNoDot
-		);
+	
 
 	// 1. Read the generic template
 	let content = fs.readFileSync(handlerPathGeneric, "utf8");
@@ -152,7 +153,6 @@ function generateHtmlForSchema(fileName, ref) {
 
 	const matchingInstances = instanceFiles.filter((instanceFile) => {
 		const instancePath = path.join(instanceDir, instanceFile);
-		if (this.verbose) console.log("reading : ", instancePath);
 		const instanceData = JSON.parse(fs.readFileSync(instancePath, "utf8"));
 		return instanceData["$schema"] === schema["$id"];
 	});
@@ -171,7 +171,8 @@ ${instanceOptions}
             </select>
     `
 			: `            <p>No instances found for this schema.</p>`;
-
+	const refCapMaj = refCap.charAt(0).toUpperCase() + refCap.slice(1);
+	const refCapMin = refCap.charAt(0).toLowerCase() + refCap.slice(1);
 	// Generate HTML content
 	const htmlContent = `
         <!DOCTYPE html>
@@ -180,11 +181,8 @@ ${instanceOptions}
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Schema: ${fileName}</title>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"></script>
-            <script src="${locationsJavascript}/validateSchema.js"></script>
-            <script src="${locationsJavascript}/htmlScripts.js" defer></script>
-            <script src="${classHandlerFolderRelativeToRootHTML}/${ref}Handler.js" defer></script>
-            <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
             <style>
                 body { font-family: Arial, sans-serif; margin: 20px; }
                 table { border-collapse: collapse; width: 100%; }
@@ -217,21 +215,55 @@ ${instanceOptions}
             <p>
                 <a href="index.html" id="returnButton">⬅ Return to Object List</a>
             </p>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"></script>
             
-            <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                try {
-                    if (typeof ${refCap}Handler !== "function") {
-                        console.log("❌ ${refCap}Handler is not found. Probably ${classHandlerFolderRelativeToRootHTML}/${ref}Handler.js does not exist. This may be normal if not implemented.");
-                    } else {
-                      mainObject = new ${refCap}Handler({});
-                      console.log("✅ mainObject initialized.");
-                    }  
-                } catch (error) {
-                    console.error(error.message);
-                }
-            });
-            </script>
+            <script type="module">
+                 //   import Ajv from "https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"; // not a module
+  import * as d3 from "https://d3js.org/d3.v7.min.js";
+
+  // Local modules (make sure these files have proper exports)
+  import { validateJSON } from './src/validateSchema.js';
+  import { fetchSchemas } from './src/validateSchema.js';
+  //import * as htmlScripts from './src/htmlScripts.js';
+  import { loadFromURL, loadInstance, updateFeatureOfObject } from './src/htmlScripts.js';
+  import { ${refCapMaj}Handler } from './classHandler/${refCapMin}Handler.js';
+  import { JgraphObject } from './src_objects/jGraphObject.js';
+  import { NMRspectrumObject } from './src_objects/nmrSpectrumObject.js';
+document.addEventListener("DOMContentLoaded", function () {
+    const editor = document.getElementById("jsonEditor");
+    const selector = document.getElementById("instanceSelector");
+    const validationMessage = document.getElementById("validationMessage");
+
+    // Create the mainObject after DOM is ready
+    const mainObject = new ${refCapMaj}Handler({});
+
+    if (selector) {
+        selector.addEventListener("change", function () {
+            loadInstance(selector.value, mainObject, editor, validationMessage);
+        });
+    }
+
+    // Live validation
+    editor.addEventListener("input", function () {
+        try {
+            const jsonData = JSON.parse(editor.value);
+            const schemas = JSON.parse(editor.dataset.schema || "{}");
+            validateJSON(jsonData, schemas, validationMessage);
+            updateFeatureOfObject(jsonData, mainObject, editor, validationMessage);
+            mainObject.editor = editor;
+            mainObject.mainObject = mainObject;
+            mainObject.jsonData = jsonData;
+            mainObject.validationMessage = validationMessage;
+        } catch (err) {
+            validationMessage.textContent = "❌ Invalid JSON format";
+        }
+    });
+
+    // If you want to load from URL
+    loadFromURL(mainObject, editor, validationMessage);
+});
+
+        </script>
         </body>
         </html>
     `;
@@ -269,7 +301,7 @@ function generateIndexPage() {
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Schema Index</title>
+            <title>Schema Index</title>  
         </head>
         <body>
             <h1>Schema Documentation</h1>

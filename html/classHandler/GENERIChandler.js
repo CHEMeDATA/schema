@@ -1,4 +1,8 @@
-class GENERIChandler {
+import { processJSONData } from '../src/htmlScripts.js';
+import { JgraphObject } from '../src_objects/jGraphObject.js';
+import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
+  
+export class GENERIChandler {
 	constructor(obj = {}) {
 		this.obj = obj;
 		this.verbose = true;
@@ -89,7 +93,7 @@ class GENERIChandler {
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");        
 
-				window.processJSONData(this.obj, validationMessage); // Trigger processing
+				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
 				const editor = document.getElementById("jsonEditor");
 				editor.value = JSON.stringify(this.obj, null, 4);
@@ -119,14 +123,14 @@ class GENERIChandler {
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");    
 
-				window.processJSONData(this.obj, validationMessage); // Trigger processing
+				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
 				const editor = document.getElementById("jsonEditor");
 				editor.value = JSON.stringify(this.obj, null, 4);
 			
 				//ageDisplay.textContent = newAge; // Update display
 				//editor.value = JSON.stringify(this.obj, null, 4); // Update editor
-				//	window.processJSONData(this.obj, validationMessage); // Trigger processing
+				//	window.processJSONData(this.obj, this, validationMessage); // Trigger processing
 			}
 		});
 	}
@@ -223,7 +227,7 @@ class GENERIChandler {
 
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
 
-			window.processJSONData(this.obj, validationMessage); // Trigger processing
+			processJSONData(this.obj, this, validationMessage); // Trigger processing
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
 
@@ -320,7 +324,7 @@ class GENERIChandler {
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
 			const validationMessage = document.getElementById("validationMessage");        
 
-			window.processJSONData(this.obj, validationMessage); // Trigger processing
+			processJSONData(this.obj, this, validationMessage); // Trigger processing
 
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);

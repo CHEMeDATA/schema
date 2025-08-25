@@ -1,5 +1,11 @@
-const fs = require("fs");
-const path = require("path");
+// ES module imports
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// __dirname equivalent for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // Directories
 const source = "../v1/schema";
@@ -9,26 +15,26 @@ const outputDir = path.join(__dirname, target);
 
 // Ensure output directory exists
 if (!fs.existsSync(outputDir)) {
-	fs.mkdirSync(outputDir, { recursive: true });
+    fs.mkdirSync(outputDir, { recursive: true });
 }
 
 // Load all schemas into memory for resolving $refs
-
-// Load schemas from inputDir
 function loadSchemas() {
-	const schemaCache = {};
-	const files = fs.readdirSync(inputDir);
-	files.forEach((file) => {
-		if (file.endsWith(".json")) {
-			const filePath = path.join(inputDir, file);
-			try {
-				schemaCache[file] = JSON.parse(fs.readFileSync(filePath, "utf8"));
-			} catch (err) {
-				console.error(`❌ Error loading schema ${file}:`, err);
-			}
-		}
-	});
-	return schemaCache;
+    const schemaCache = {};
+    const files = fs.readdirSync(inputDir);
+    files.forEach((file) => {
+        if (file.endsWith(".json")) {
+            const filePath = path.join(inputDir, file);
+            try {
+                schemaCache[file] = JSON.parse(fs.readFileSync(filePath, "utf8"));
+				                console.error(`OK loading schema ${file}:`);
+
+            } catch (err) {
+                console.error(`❌ Error loading schema ${file}:`, err);
+            }
+        }
+    });
+    return schemaCache;
 }
 
 // Resolve $ref references

@@ -35,6 +35,7 @@ liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
         if (tubeDiameter_mm !== undefined) targetObj["tubeDiameter_mm"] = tubeDiameter_mm;
 
     const content = { content: targetObj };
+    if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
     const encodedContent = JSON.stringify(content);
     const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
 

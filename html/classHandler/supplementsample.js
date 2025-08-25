@@ -35,6 +35,7 @@ sample_DataEnrichment(targetObjType, dataObj = {}) {
         if (volume_L !== undefined) targetObj["volume_L"] = volume_L;
 
     const content = { content: targetObj };
+    if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
     const encodedContent = JSON.stringify(content);
     const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
 

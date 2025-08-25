@@ -5,7 +5,7 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Schema: obj1.json</title>
-           
+
 
             <style>
                 body { font-family: Arial, sans-serif; margin: 20px; }
@@ -98,33 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // If you want to load from URL
     loadFromURL(mainObject, editor, validationMessage);
 });
-/* 
-  const mainObject = new Obj1Handler({});
 
-  document.addEventListener("DOMContentLoaded", function () {
-      const selector = document.getElementById("instanceSelector");
-      const editor = document.getElementById("jsonEditor");
-      const validationMessage = document.getElementById("validationMessage");
-
-      // pass mainObject explicitly
-      selector?.addEventListener("change", e => htmlScripts.loadInstance(e.target.value, mainObject, editor, validationMessage));
-  });
-           let mainObject;
-
-            document.addEventListener("DOMContentLoaded", function () {
-                try {
-                    if (typeof Obj1Handler !== "function") {
-                        console.log("❌ Obj1Handler is not found. Probably ./classHandler/obj1Handler.js does not exist. This may be normal if not implemented.");
-                    } else {
-                      //mainObject = new Obj1Handler({});
-                      mainObject = new Obj1Handler({});
-                      console.log("✅ mainObject initialized.");
-                    }  
-                } catch (error) {
-                    console.error(error.message);
-                }
-            });*/
-            </script>
+        </script>
         </body>
         </html>
     

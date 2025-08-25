@@ -19,18 +19,48 @@ function restoreSpecialCharacters(encodedString) {
 /**
  * Get JSON data from URL query or fragment
  */
-function getDataFromURL() {
-	const urlParams = new URLSearchParams(window.location.search);
-	let dataParam = urlParams.get("data");
+ 
+function loadFromStorage() {
+    const hash = window.location.hash.slice(1);
+    const params = new URLSearchParams(hash);
+    const storageKey = params.get("storageKey");
 
-	if (!dataParam) {
-		const hash = window.location.hash.substring(1);
-		if (hash.startsWith("data=")) {
-			dataParam = hash.substring(5);
-		}
-	}
+    if (!storageKey) return null;
 
-	return dataParam ? restoreSpecialCharacters(dataParam) : null;
+    const dataStr = localStorage.getItem(storageKey);
+    if (!dataStr) return null;
+
+    try {
+        return JSON.parse(dataStr);
+    } catch (err) {
+        console.error("Failed to parse JSON from localStorage", err);
+        return null;
+    }
+}
+
+// utils/urlData.js
+export function getDataFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    let dataParam = urlParams.get("data");
+    if (!dataParam) {
+        const hash = window.location.hash.substring(1);
+        if (hash.startsWith("data=")) {
+            dataParam = hash.substring(5);
+        } else if (hash.startsWith("storageKey=")) {
+            const storageKey = hash.substring(11);
+            const stored = localStorage.getItem(storageKey);
+            if (stored) {
+                try {
+                    return JSON.parse(stored);
+                } catch (err) {
+                    console.error("Failed to parse stored JSON", err);
+                    return null;
+                }
+            }
+            return null;
+        }
+    }
+    return dataParam ? restoreSpecialCharacters(dataParam) : null;
 }
 
 /**

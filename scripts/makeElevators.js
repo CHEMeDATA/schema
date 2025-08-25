@@ -1,15 +1,23 @@
-const fs = require("fs");
-const path = require("path");
-const location = "./html/classHandler/"
-/**
- * Generates a supplement file for the given className and config.
- * @param {string} className - The class name for the function and file.
- * @param {Object} config - Configuration object containing base, derived, and fieldsToAdd.
- */
+// scripts/makeElevators.js
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// ES module __dirname equivalent
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Folder where supplement files will be written
+const location = path.join(__dirname, "../html/classHandler/");
+
+// Path to derivations.json
+const derivationsFile = path.join(__dirname, "../derivations.json");
+
+// Generate supplement file for a given class
 function generateSupplementFile(config) {
     const { base, derived, fieldsToAdd } = config;
-	const className = base;
-	const fileName = `supplement${className}.js`;
+    const className = base;
+    const fileName = `supplement${className}.js`;
 
     // Generate arrayOfItems content from fieldsToAdd
     const arrayOfItems = fieldsToAdd.map(field => {
@@ -27,7 +35,6 @@ function generateSupplementFile(config) {
 
     // Generate field handling loop
     const fieldLoop = fieldsToAdd.map(field => {
-		console.log("fsfs")
         return `
         const ${field.name} = this.#getValOrDefault(dataObj, "${field.name}");
         if (${field.name} !== undefined) targetObj["${field.name}"] = ${field.name};`;
@@ -60,6 +67,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
     ${fieldLoop}
 
     const content = { content: targetObj };
+    if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
     const encodedContent = JSON.stringify(content);
     const linkUrl = \`https://chemedata.github.io/schema/html/\${targetObjType}.html#data=\${encodedContent}\`;
 
@@ -70,14 +78,23 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 //module.exports = ${className}_DataEnrichment;
 `;
 
-    // Write the file
     fs.writeFileSync(path.join(location, fileName), content, "utf8");
     console.log(`✅ File ${fileName} created successfully.`);
 }
 
-const derivationsFile = path.join("derivations.json");
-const data = JSON.parse(fs.readFileSync(derivationsFile, "utf8"));
+// Main function
+async function main() {
+    try {
+        const raw = fs.readFileSync(derivationsFile, "utf8");
+        const data = JSON.parse(raw);
 
-data.derivations.forEach(config => {
-    generateSupplementFile(config);
-});
+        data.derivations.forEach(config => {
+            generateSupplementFile(config);
+        });
+    } catch (err) {
+        console.error("❌ Failed to generate supplements:", err);
+    }
+}
+
+// Run
+main();

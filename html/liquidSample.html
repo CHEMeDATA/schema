@@ -5,11 +5,8 @@
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Schema: liquidSample.json</title>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"></script>
-            <script src="./src/validateSchema.js"></script>
-            <script src="./src/htmlScripts.js" defer></script>
-            <script src="./classHandler/liquidSampleHandler.js" defer></script>
-            <script src="https://d3js.org/d3.v7.min.js"></script>
+
+
             <style>
                 body { font-family: Arial, sans-serif; margin: 20px; }
                 table { border-collapse: collapse; width: 100%; }
@@ -53,21 +50,55 @@
             <p>
                 <a href="index.html" id="returnButton">⬅ Return to Object List</a>
             </p>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"></script>
             
-            <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                try {
-                    if (typeof LiquidSampleHandler !== "function") {
-                        console.log("❌ LiquidSampleHandler is not found. Probably ./classHandler/liquidSampleHandler.js does not exist. This may be normal if not implemented.");
-                    } else {
-                      window.mainObject = new LiquidSampleHandler({});
-                      console.log("✅ mainObject initialized.");
-                    }  
-                } catch (error) {
-                    console.error(error.message);
-                }
-            });
-            </script>
+            <script type="module">
+                 //   import Ajv from "https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"; // not a module
+  import * as d3 from "https://d3js.org/d3.v7.min.js";
+
+  // Local modules (make sure these files have proper exports)
+  import { validateJSON } from './src/validateSchema.js';
+  import { fetchSchemas } from './src/validateSchema.js';
+  //import * as htmlScripts from './src/htmlScripts.js';
+  import { loadFromURL, loadInstance, updateFeatureOfObject } from './src/htmlScripts.js';
+  import { LiquidSampleHandler } from './classHandler/liquidSampleHandler.js';
+  import { JgraphObject } from './src_objects/jGraphObject.js';
+  import { NMRspectrumObject } from './src_objects/nmrSpectrumObject.js';
+document.addEventListener("DOMContentLoaded", function () {
+    const editor = document.getElementById("jsonEditor");
+    const selector = document.getElementById("instanceSelector");
+    const validationMessage = document.getElementById("validationMessage");
+
+    // Create the mainObject after DOM is ready
+    const mainObject = new LiquidSampleHandler({});
+
+    if (selector) {
+        selector.addEventListener("change", function () {
+            loadInstance(selector.value, mainObject, editor, validationMessage);
+        });
+    }
+
+    // Live validation
+    editor.addEventListener("input", function () {
+        try {
+            const jsonData = JSON.parse(editor.value);
+            const schemas = JSON.parse(editor.dataset.schema || "{}");
+            validateJSON(jsonData, schemas, validationMessage);
+            updateFeatureOfObject(jsonData, mainObject, editor, validationMessage);
+            mainObject.editor = editor;
+            mainObject.mainObject = mainObject;
+            mainObject.jsonData = jsonData;
+            mainObject.validationMessage = validationMessage;
+        } catch (err) {
+            validationMessage.textContent = "❌ Invalid JSON format";
+        }
+    });
+
+    // If you want to load from URL
+    loadFromURL(mainObject, editor, validationMessage);
+});
+
+        </script>
         </body>
         </html>
     

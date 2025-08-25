@@ -1,5 +1,7 @@
-const fs = require("fs");
-const path = require("path");
+
+// ES module syntax
+import fs from "fs";
+import path from "path";
 
 // Directories
 const schemaDir = "v1/schema";

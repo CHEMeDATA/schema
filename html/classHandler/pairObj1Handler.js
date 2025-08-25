@@ -1,5 +1,9 @@
 // ⚠️ This file was automatically generated. Do not edit manually.
-class PairObj1Handler {
+import { processJSONData } from '../src/htmlScripts.js';
+import { JgraphObject } from '../src_objects/jGraphObject.js';
+import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
+  
+export class PairObj1Handler {
 	constructor(obj = {}) {
 		this.obj = obj;
 		this.verbose = true;
@@ -90,7 +94,7 @@ class PairObj1Handler {
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");        
 
-				window.processJSONData(this.obj, validationMessage); // Trigger processing
+				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
 				const editor = document.getElementById("jsonEditor");
 				editor.value = JSON.stringify(this.obj, null, 4);
@@ -120,14 +124,14 @@ class PairObj1Handler {
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");    
 
-				window.processJSONData(this.obj, validationMessage); // Trigger processing
+				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
 				const editor = document.getElementById("jsonEditor");
 				editor.value = JSON.stringify(this.obj, null, 4);
 			
 				//ageDisplay.textContent = newAge; // Update display
 				//editor.value = JSON.stringify(this.obj, null, 4); // Update editor
-				//	window.processJSONData(this.obj, validationMessage); // Trigger processing
+				//	window.processJSONData(this.obj, this, validationMessage); // Trigger processing
 			}
 		});
 	}
@@ -224,7 +228,7 @@ class PairObj1Handler {
 
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
 
-			window.processJSONData(this.obj, validationMessage); // Trigger processing
+			processJSONData(this.obj, this, validationMessage); // Trigger processing
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
 
@@ -321,7 +325,7 @@ class PairObj1Handler {
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
 			const validationMessage = document.getElementById("validationMessage");        
 
-			window.processJSONData(this.obj, validationMessage); // Trigger processing
+			processJSONData(this.obj, this, validationMessage); // Trigger processing
 
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
