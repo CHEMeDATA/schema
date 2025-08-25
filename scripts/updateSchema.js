@@ -123,8 +123,8 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 			} else {
 				// Regular array of basic types
 				propSchema = { type: "array", items: { type: prop.type } };
-				if (prop.type === "float") propSchema = { type: "array", items: "number" };
-				if (prop.type === "double") propSchema = { type: "array", items: "number" };
+				if (prop.type === "float") propSchema = { type: "array", items: { type: "number" } };
+				if (prop.type === "double") propSchema = { type: "array", items: { type: "number" } };
 			}
 		} else {
 			// Single objects or primitives
