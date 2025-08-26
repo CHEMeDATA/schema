@@ -7,12 +7,79 @@ import { schemaDir, instanceDir } from "./config.js";
 console.log("Schema directory:", schemaDir);
 console.log("Instances directory:", instanceDir);
 
-
 //const schemaRoot = `https://raw.githubusercontent.com/CHEMeDATA/schema/main/${schemaDir}/`;
 const schemaRoot = `https://chemedata.github.io/schema/${schemaDir}/`;
 
 function generateError(message) {
 	throw new Error("❌", message);
+}
+
+function compactNumericArrays(jsonString, lineLength = 100) {
+    function processArray(content) {
+        let depth = 0;
+        let start = 0;
+        let result = "";
+
+        for (let i = 0; i < content.length; i++) {
+            const char = content[i];
+            if (char === "[") {
+                if (depth === 0) start = i;
+                depth++;
+            } else if (char === "]") {
+                depth--;
+                if (depth === 0) {
+                    const inner = content.slice(start + 1, i);
+                    const compactedInner = processArray(inner);
+                    result += `[${compactedInner}]`;
+                    continue;
+                }
+            }
+
+            if (depth === 0) result += char;
+        }
+
+        // Compact numeric array
+        const items = result.split(",").map(s => s.trim());
+        const allNumbers = items.every(item => !isNaN(Number(item)) && item !== "");
+        if (allNumbers) {
+            const joined = items.join(", ");
+            // insert line breaks every lineLength chars
+            let final = "";
+            for (let i = 0; i < joined.length; i += lineLength) {
+                final += joined.slice(i, i + lineLength) + "\n";
+            }
+            return final.trim(); // remove trailing newline
+        }
+
+        return result;
+    }
+
+    let stack = [];
+    let output = "";
+    let startIdx = null;
+
+    for (let i = 0; i < jsonString.length; i++) {
+        const char = jsonString[i];
+        if (char === "[") {
+            if (stack.length === 0) startIdx = i;
+            stack.push("[");
+        } else if (char === "]") {
+            stack.pop();
+            if (stack.length === 0 && startIdx !== null) {
+                const content = jsonString.slice(startIdx + 1, i);
+                const compacted = processArray(content);
+                output += `[${compacted}]`;
+                startIdx = null;
+                continue;
+            }
+        }
+
+        if (stack.length === 0 && char !== "]") {
+            output += char;
+        }
+    }
+
+    return output;
 }
 
 function ensureDerivationsFile(derivationsFile) {
@@ -104,6 +171,8 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 	console.log(`✅ ${derivedClass} schema created at:`, derivedPath);
 }
 
+
+
 /**
  * Create a JSON Schema based on provided properties
  * @param {string} newSchemaName - The name of the new schema (without .json)
@@ -173,6 +242,45 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 }
 
 function createInstance(objName, schemaName, dataInput) {
+	if (typeof dataInput == "string") {
+							console.log("******************");
+
+					console.log("string before ", dataInput);
+
+		dataInput = dataInput.replace(
+			/_INSERT_FILE-([\w.-]+)/g,
+			(match, fileName) => {
+				const filePath = path.join(instanceDir, fileName + ".json");
+				try {
+										console.log("filePath ", filePath);
+
+					const fileContent = fs.readFileSync(filePath, "utf-8");
+					// Wrap content in parentheses and stringify to preserve JSON format
+					// Remove outer {} if already present to avoid double object nesting
+					console.log("fileContent ", fileContent);
+
+					return fileContent;
+				} catch (err) {
+					console.error(`⚠️ Could not read file: ${filePath}`, err);
+					return `"ERROR: missing file ${fileName}"`;
+				}
+			}
+		);
+					console.log("string after :", dataInput);
+					console.log("******************");
+
+		try {
+			const dataObj = JSON.parse(dataInput); // parse JSON string to object
+			console.log("Object:", dataObj);
+			dataInput = dataObj;
+		} catch (err) {
+						console.log("Object:", dataObj);
+
+			console.error("Invalid JSON string:", err.message);
+			        throw new Error("❌ ");
+		}
+	}
+
 	if (!schemaName || !objName || !dataInput) {
 		generateError("Missing required parameters");
 	}
@@ -181,20 +289,20 @@ function createInstance(objName, schemaName, dataInput) {
 	console.log(`🛠️ Creating instance for schema: ${schemaName}...`);
 
 	const data = {
-    "$schema": `${schemaRoot}${schemaName}.json`,
-	"wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
-    ...dataInput // spread the rest after
+		$schema: `${schemaRoot}${schemaName}.json`,
+		wildComment:
+			"Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+		...dataInput, // spread the rest after
 	};
 
 	var constString = JSON.stringify(data, null, 4);
 
-	constString = constString.replace(/\[\s+([\s\S]*?)\s+\]/g, (match, content) => {
-    	return `[${content.replace(/\s+/g, " ").trim()}]`;
-	});
+	const constString2 = compactNumericArrays(constString);
 
-	fs.writeFileSync(instancePath, constString);
+	fs.writeFileSync(instancePath, constString2);
 
-	console.log(`✅ ${data} schema created at:`, instancePath);
+
+	console.log(`✅ ${data} instance created at:`, instancePath);
 }
 
 // Example usage createNewTypeSchema
@@ -314,12 +422,39 @@ createNewTypeSchema("nmrSpectrumObject", [
 ]);
 
 createInstance("miniSpectrum", "nmrSpectrumObject", {
-	$schema:
-		"https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json",
-	values: [
+	"values": [
 		0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 2,
 		10, 2, 0, 0, 0, 0, 0,
 	],
-	firstPoint: 8.0,
-	lastPoint: -1.0,
+	"firstPoint": 8.0,
+	"lastPoint": -1.0,
 });
+
+createInstance("miniSpectrum2","nmrSpectrumObject",`{
+    "values": [
+        0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 1.8, 8, 1.8, 0, 0, 0, 0, 0
+    ],
+    "firstPoint": 8.0,
+    "lastPoint": 0.0
+}` );
+
+createNewTypeSchema("setSpectra", [
+	{
+		"name": "members",
+		"required": true,
+		"array": true,
+		"type": "object",
+		"ref": "nmrSpectrumObject",
+	},
+]);
+
+// With _INSERT_FILE  it will insert the content of a file ("theFileName" = for  _INSERT_FILE-theFileName )
+createInstance(
+	"twoSpectra",
+	"setSpectra",
+	`{
+	"members": [_INSERT_FILE-miniSpectrum2, _INSERT_FILE-miniSpectrum]
+}`
+);
+
