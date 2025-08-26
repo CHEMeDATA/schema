@@ -3,6 +3,10 @@ import { processJSONData } from '../src/htmlScripts.js';
 import { JgraphObject } from '../src_objects/jGraphObject.js';
 import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
   
+import { initializeSettings } from "../src_objects/nmrSpectrum.js";
+import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
+import { createSVG } from "../src_objects/nmrSpectrum.js";
+
 export class SetSpectraHandler {
 	constructor(obj = {}) {
 		this.obj = obj;
@@ -10,12 +14,27 @@ export class SetSpectraHandler {
 		this.verboseStartingString = "SetSpectraHandler";
 	}
 
+	#makeListMethods(suffix = "") {
+    return Object.getOwnPropertyNames(Object.getPrototypeOf(this))
+      .filter(
+        (name) =>
+          typeof this[name] === "function" &&
+          name !== "constructor" &&
+          (suffix === "" || name.endsWith(suffix))
+      );
+  	}
 	// called by htmlScript.ps
 	showAllOptionsInHTML(container) {
 		if (this.verbose)
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
 		this.#showViewer();
+
+		const methodsVA = this.#makeListMethods("_AdditionalViewer");
+		methodsVA.forEach((method) => {
+			console.log(`Calling: ${method}`);
+			this[method]();
+		});
 
 		this.#showUpdateWithButton();
 		this.#showUpdateNoButton();
@@ -546,4 +565,41 @@ export class SetSpectraHandler {
 	}
 
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
+
+addis_AdditionalViewer(targetObjType, dataObj = {}) {
+    const myName = "addis_AdditionalViewer"; // don't automatize in case 'use strict'
+    
+		const container = document.getElementById("dynamicContent");
+		const frame = document.createElement("div");
+		frame.id = myName;
+		frame.className = "frame red-frame";
+		frame.innerHTML = `<svg width="200" height="300"></svg>`;
+		container.appendChild(frame);
+
+		
+const nMRspectraObjects = [
+   new NMRspectrumObject({demo : {arrayLorentzian : {
+			centers: [7.27, 5.0, 0.0],
+			widthsInHz: [0.7, 0.7, 0.7],
+			amplitudes: [1, 10, 1],
+		}}}), 
+    new NMRspectrumObject({demo : {
+    spectralData:{firstPoint:9}, 
+    arrayLorentzian:{centers:[3.8]}}
+    })
+    ]; 
+	
+	console.log("nMRspectraObjects", nMRspectraObjects)
+ const settings = initializeSettings({});
+    var svg = createSVG(myName, settings);
+    var spectrum = new NmrSpectrum(
+      nMRspectraObjects,
+      svg,
+      settings,
+      settings.smallScreen
+    );
+
+
+
+	}
 }

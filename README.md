@@ -20,7 +20,8 @@ echo "get /Users/djeanner/git/MnovaJson-reader/external/ObjectBase.js"
 wget -O ./html/src_objects/ObjectBase.js https://raw.githubusercontent.com/chemedata/MnovaJson-reader/main/external/ObjectBase.js
 
 
-
+cp /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/external/graphBase.js ./html/src_objects/
 
 
 ```
