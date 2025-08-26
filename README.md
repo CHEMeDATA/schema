@@ -14,7 +14,7 @@ echo
 rm -r v1/schema
 mkdir -p v1/schema
 rm derivations.json
-node scripts/updateSchema.js
+node scripts/createSchemaSomeInstances.js
 
 echo
 echo '****** In v1/schemResolved, write a copy of each schema but removed all "allOf" and explicit "$refs" except if would be recursive (which would make infinitely long file)'

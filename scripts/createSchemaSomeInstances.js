@@ -1,12 +1,19 @@
-
 // ES module syntax
 import fs from "fs";
 import path from "path";
 
-// Directories
-const schemaDir = "v1/schema";
+// setting folders
+import { schemaDir, instanceDir } from "./config.js";
+console.log("Schema directory:", schemaDir);
+console.log("Instances directory:", instanceDir);
+
+
 //const schemaRoot = `https://raw.githubusercontent.com/CHEMeDATA/schema/main/${schemaDir}/`;
 const schemaRoot = `https://chemedata.github.io/schema/${schemaDir}/`;
+
+function generateError(message) {
+	throw new Error("❌", message);
+}
 
 function ensureDerivationsFile(derivationsFile) {
 	if (!fs.existsSync(derivationsFile)) {
@@ -50,7 +57,7 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 
 	// store in derivations file
 	const derivationsFile = path.join(".", "derivations.json");
-    addDerivation(derivationsFile, sourceClass, derivedClass, fieldsToAdd);
+	addDerivation(derivationsFile, sourceClass, derivedClass, fieldsToAdd);
 	// Ensure file exists with _comment and empty derivations array
 
 	console.log(`🛠️ Deriving ${sourceClass} into ${derivedClass}...`);
@@ -77,8 +84,10 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 	const requiredFields = [];
 	fieldsToAdd.forEach((field) => {
 		derivedSchema["properties"][field.name] = { type: field.type };
-		if (field.type === "float") derivedSchema["properties"][field.name] =  { type: "number" } ;
-		if (field.type === "double") derivedSchema["properties"][field.name] =  { type: "number" } ;
+		if (field.type === "float")
+			derivedSchema["properties"][field.name] = { type: "number" };
+		if (field.type === "double")
+			derivedSchema["properties"][field.name] = { type: "number" };
 		if (field.mandatory) {
 			requiredFields.push(field.name);
 		}
@@ -101,6 +110,9 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
  * @param {Array} propertiesList - An array defining properties with attributes
  */
 function createNewTypeSchema(newSchemaName, propertiesList) {
+	if (!newSchemaName || !propertiesList) {
+		generateError("Missing required parameters");
+	}
 	const schemaPath = path.join(schemaDir, `${newSchemaName}.json`);
 
 	console.log(`🛠️ Creating schema: ${newSchemaName}...`);
@@ -123,8 +135,10 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 			} else {
 				// Regular array of basic types
 				propSchema = { type: "array", items: { type: prop.type } };
-				if (prop.type === "float") propSchema = { type: "array", items: { type: "number" } };
-				if (prop.type === "double") propSchema = { type: "array", items: { type: "number" } };
+				if (prop.type === "float")
+					propSchema = { type: "array", items: { type: "number" } };
+				if (prop.type === "double")
+					propSchema = { type: "array", items: { type: "number" } };
 			}
 		} else {
 			// Single objects or primitives
@@ -158,9 +172,32 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 	console.log(`✅ ${newSchemaName} schema created at:`, schemaPath);
 }
 
+function createInstance(objName, schemaName, dataInput) {
+	if (!schemaName || !objName || !dataInput) {
+		generateError("Missing required parameters");
+	}
+	const instancePath = path.join(instanceDir, `${objName}.json`);
 
+	console.log(`🛠️ Creating instance for schema: ${schemaName}...`);
 
-// Example usage
+	const data = {
+    "$schema": `${schemaRoot}${schemaName}.json`,
+	"wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+    ...dataInput // spread the rest after
+	};
+
+	var constString = JSON.stringify(data, null, 4);
+
+	constString = constString.replace(/\[\s+([\s\S]*?)\s+\]/g, (match, content) => {
+    	return `[${content.replace(/\s+/g, " ").trim()}]`;
+	});
+
+	fs.writeFileSync(instancePath, constString);
+
+	console.log(`✅ ${data} schema created at:`, instancePath);
+}
+
+// Example usage createNewTypeSchema
 // for type float and double will be replaced with numbers in schema
 /*
 type: "baseType",
@@ -183,12 +220,16 @@ createNewTypeSchema("obj2", [
 ]);
 
 deriveSchema("obj1", "obj1size", [
-	{ name: "size", mandatory: true, type: "float" , 
-						userRequest: "Enter a value in m (default 1.91m)",
-						defaultValue: 1.91,
-						randomFrom: 1.4,
-						randomTo: 2.1,
-						show: true},
+	{
+		name: "size",
+		mandatory: true,
+		type: "float",
+		userRequest: "Enter a value in m (default 1.91m)",
+		defaultValue: 1.91,
+		randomFrom: 1.4,
+		randomTo: 2.1,
+		show: true,
+	},
 ]);
 
 createNewTypeSchema("groupObject1", [
@@ -207,22 +248,29 @@ createNewTypeSchema("sample", [
 ]);
 
 deriveSchema("sample", "liquidSample", [
-	{ name: "volume_L", mandatory: true, type: "float" , 
-						userRequest: "Enter a value in L (default 500 ul)",
-						defaultValue: 500e-6,
-						randomFrom: 1,
-						randomTo: 10,
-						show: true},
+	{
+		name: "volume_L",
+		mandatory: true,
+		type: "float",
+		userRequest: "Enter a value in L (default 500 ul)",
+		defaultValue: 500e-6,
+		randomFrom: 1,
+		randomTo: 10,
+		show: true,
+	},
 ]);
 
 deriveSchema("liquidSample", "NMRliquidSample", [
-	{ name: "tubeDiameter_mm", mandatory: true, type: "float" , 
-						userRequest: "Enter a value in mm",
-						defaultValue: 5.5,
-						randomFrom: 1,
-						randomTo: 10,
-						show: true},
-	
+	{
+		name: "tubeDiameter_mm",
+		mandatory: true,
+		type: "float",
+		userRequest: "Enter a value in mm",
+		defaultValue: 5.5,
+		randomFrom: 1,
+		randomTo: 10,
+		show: true,
+	},
 ]);
 
 createNewTypeSchema("pairObj1", [
@@ -239,7 +287,7 @@ createNewTypeSchema("pairObj1", [
 		array: false,
 		type: "object",
 		ref: "obj2",
-	}
+	},
 	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
 ]);
 
@@ -261,6 +309,17 @@ createNewTypeSchema("nmrSpectrumObject", [
 		required: true,
 		array: false,
 		type: "double",
-	}
+	},
 	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
 ]);
+
+createInstance("miniSpectrum", "nmrSpectrumObject", {
+	$schema:
+		"https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json",
+	values: [
+		0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 2,
+		10, 2, 0, 0, 0, 0, 0,
+	],
+	firstPoint: 8.0,
+	lastPoint: -1.0,
+});

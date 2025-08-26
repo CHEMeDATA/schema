@@ -7,13 +7,12 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Directories
-const schemaDir = path.join(__dirname, "../v1/schema");
-const instanceDir = path.join(__dirname, "../instances");
-const htmlDir = path.join(__dirname, "../html");
+// setting folders
+import { schemaDir, instanceDir, htmlDir, srcDir } from "./config.js";
+
 const classHandlerFolderRelativeToRootHTMLNoDot = "classHandler"; // could be absolute path
 const classHandlerFolderRelativeToRootHTML = `./${classHandlerFolderRelativeToRootHTMLNoDot}`; // could be absolute path
-const locationsJavascript = path.join(__dirname, "../src");
+const locationsJavascript = srcDir;
 
 const displayTableProperties = true;
 // Ensure the HTML output directory exists

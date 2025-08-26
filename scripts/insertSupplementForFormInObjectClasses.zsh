@@ -2,10 +2,10 @@
 #!/bin/zsh
 
 # Directory to scan
-dir="./html/classHandler"
+classHandlserDir="./html/classHandler"
 
 # Loop over files starting with "supplement"
-for file in "$dir"/supplement*.js; do
+for file in "$classHandlserDir"/supplement*.js; do
     # Ensure it's a file
     [[ -f $file ]] || continue
 
