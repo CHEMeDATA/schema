@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/setSpectra.json",
+    "properties": {
+        "members": {
+            "type": "array",
+            "items": {
+                "$ref": "https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json"
+            }
+        }
+    },
+    "required": [
+        "members"
+    ]
+}

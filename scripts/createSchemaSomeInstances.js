@@ -241,6 +241,7 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 	console.log(`✅ ${newSchemaName} schema created at:`, schemaPath);
 }
 
+//! Quote the key in strings in put of createInstance ....
 function createInstance(objName, schemaName, dataInput) {
 	if (typeof dataInput == "string") {
 							console.log("******************");
@@ -421,6 +422,7 @@ createNewTypeSchema("nmrSpectrumObject", [
 	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
 ]);
 
+// Quote the key in strings in put of createInstance ....
 createInstance("miniSpectrum", "nmrSpectrumObject", {
 	"values": [
 		0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 2,
@@ -450,11 +452,12 @@ createNewTypeSchema("setSpectra", [
 ]);
 
 // With _INSERT_FILE  it will insert the content of a file ("theFileName" = for  _INSERT_FILE-theFileName )
+// Quote the key in strings....
 createInstance(
 	"twoSpectra",
 	"setSpectra",
 	`{
 	"members": [_INSERT_FILE-miniSpectrum2, _INSERT_FILE-miniSpectrum]
-}`
+	}`
 );
 

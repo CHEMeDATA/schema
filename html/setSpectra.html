@@ -1,0 +1,103 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Schema: setSpectra.json</title>
+
+
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                table { border-collapse: collapse; width: 100%; }
+                th, td { padding: 10px; border: 1px solid black; text-align: left; }
+                th { background-color: #f2f2f2; }
+                textarea { width: 100%; height: 200px; font-family: monospace; }
+                #validationMessage { font-weight: bold; }
+                .frame { padding: 20px; margin: 10px 0; border-radius: 5px; }
+                .blue-frame { background-color: #cce5ff; border: 1px solid #007bff; }
+                .red-frame { background-color: #f8d7da; border: 1px solid #dc3545; }
+                .green-frame { background-color: #d4edda; border: 1px solid #28a745; }
+                #returnButton { display: inline-block; padding: 10px 15px; background-color: #007BFF; 
+                color: white; text-decoration: none; border-radius: 5px; margin-top: 20px; }
+            </style>
+
+        </head>
+        <body>
+
+            <h1>Schema: setSpectra.json</h1>
+            <p><strong>Schema ID:</strong> 
+                <a href="https://chemedata.github.io/schema/v1/schema/setSpectra.json" target="_blank">https://chemedata.github.io/schema/v1/schema/setSpectra.json</a>
+            </p>
+
+            <h2>Properties:</h2>
+            <table>
+                <tr>  <th>Property</th>  <th>Type</th>  <th>Schema Reference</th>  <th>Required</th>  </tr>
+                <tr>  <td>members</td>  <td>array</td>  <td><a href="nmrSpectrumObject.html">nmrSpectrumObject.html</a></td>  <td>✅ Yes</td>  </tr>
+            </table>
+            
+            <h2>Load JSON Instance</h2>
+            <select id="instanceSelector">
+                <option value="">Select an instance...</option>
+                <option value="twoSpectra.json">twoSpectra.json</option>
+            </select>
+    
+            <h2>Edit JSON Instance</h2>
+            <textarea id="jsonEditor"></textarea>
+            <p id="validationMessage"></p>
+            <div id="dynamicContent"></div>
+            <p>
+                <a href="index.html" id="returnButton">⬅ Return to Object List</a>
+            </p>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"></script>
+            
+            <script type="module">
+                 //   import Ajv from "https://cdnjs.cloudflare.com/ajax/libs/ajv/6.12.6/ajv.min.js"; // not a module
+  import * as d3 from "https://d3js.org/d3.v7.min.js";
+
+  // Local modules (make sure these files have proper exports)
+  import { validateJSON } from './src/validateSchema.js';
+  import { fetchSchemas } from './src/validateSchema.js';
+  //import * as htmlScripts from './src/htmlScripts.js';
+  import { loadFromURL, loadInstance, updateFeatureOfObject } from './src/htmlScripts.js';
+  import { SetSpectraHandler } from './classHandler/setSpectraHandler.js';
+  import { JgraphObject } from './src_objects/jGraphObject.js';
+  import { NMRspectrumObject } from './src_objects/nmrSpectrumObject.js';
+document.addEventListener("DOMContentLoaded", function () {
+    const editor = document.getElementById("jsonEditor");
+    const selector = document.getElementById("instanceSelector");
+    const validationMessage = document.getElementById("validationMessage");
+
+    // Create the mainObject after DOM is ready
+    const mainObject = new SetSpectraHandler({});
+
+    if (selector) {
+        selector.addEventListener("change", function () {
+            loadInstance(selector.value, mainObject, editor, validationMessage);
+        });
+    }
+
+    // Live validation
+    editor.addEventListener("input", function () {
+        try {
+            const jsonData = JSON.parse(editor.value);
+            const schemas = JSON.parse(editor.dataset.schema || "{}");
+            validateJSON(jsonData, schemas, validationMessage);
+            updateFeatureOfObject(jsonData, mainObject, editor, validationMessage);
+            mainObject.editor = editor;
+            mainObject.mainObject = mainObject;
+            mainObject.jsonData = jsonData;
+            mainObject.validationMessage = validationMessage;
+        } catch (err) {
+            validationMessage.textContent = "❌ Invalid JSON format";
+        }
+    });
+
+    // If you want to load from URL
+    loadFromURL(mainObject, editor, validationMessage);
+});
+
+        </script>
+        </body>
+        </html>
+    
