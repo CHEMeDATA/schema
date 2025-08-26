@@ -545,5 +545,5 @@ export class NMRliquidSampleHandler {
 			.style("fill", "blue");
 	}
 
-
+/// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 }

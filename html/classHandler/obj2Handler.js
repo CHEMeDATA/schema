@@ -545,5 +545,5 @@ export class Obj2Handler {
 			.style("fill", "blue");
 	}
 
-
+/// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 }

@@ -545,5 +545,5 @@ export class Obj1sizeHandler {
 			.style("fill", "blue");
 	}
 
-
+/// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 }

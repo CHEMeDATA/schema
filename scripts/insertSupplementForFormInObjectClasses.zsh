@@ -21,19 +21,24 @@ for file in "$classHandlserDir"/supplement*.js; do
 
     # Check if corresponding Object.js exists
     objectFile="./html/classHandler/${objectName}Handler.js"
+    objectFile_tmp="./html/classHandler/${objectName}Handler_TMP.js"
+
     if [[ -f $objectFile ]]; then
         echo "✅ Object file exists: $objectFile"
+
+        echo "Insertions of $file in $objectFile"
+	    echo "-------------------------"
+        ls -lart  "$objectFile"
+	    cat "$objectFile" \
+	      | sed '/\/\/ AUTOMATIC METHOD INSERTION WILL BE MADE HERE/r '"$file" \
+	      > "$objectFile_tmp.txt"
+        ls -lart  "$file"
+        ls -lart  "$objectFile_tmp.txt"
+    	mv "$objectFile_tmp.txt" "$objectFile"
     else
         echo "❌ Object file missing: $objectFile"
     fi
 
-	echo "Insertions of $file in $objectFile"
-	echo "-------------------------"
-
-	cat "$objectFile" \
-	  | sed '/\/\/ AUTOMATIC METHOD INSERTION WILL BE MADE HERE/r '"$file" \
-	  > "$objectFile_tmp.txt"
-	mv "$objectFile_tmp.txt" "$objectFile"
 done
 
 echo

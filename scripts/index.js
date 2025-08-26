@@ -208,11 +208,12 @@ if (!fs.existsSync(htmlDir)) {
 	fs.mkdirSync(htmlDir, { recursive: true });
 }
 
+fs.rmSync(src_objects, { recursive: true, force: true });
+fs.mkdirSync(src_objects, { recursive: true });
+
 const schemaList = mainGeneration();
 generateIndexPage(schemaList);
 runElevators();
 
-fs.rmSync(src_objects, { recursive: true, force: true });
-fs.mkdirSync(src_objects, { recursive: true });
 
 mainMakeForm();
