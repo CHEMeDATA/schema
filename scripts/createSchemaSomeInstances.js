@@ -1,87 +1,83 @@
-// ES module syntax
+// ES module
 import fs from "fs";
 import path from "path";
+import { schemaRoot, schemaDir, instanceDir } from "./config.js";
 
-// setting folders
-import { schemaDir, instanceDir } from "./config.js";
-console.log("Schema directory:", schemaDir);
-console.log("Instances directory:", instanceDir);
-
-//const schemaRoot = `https://raw.githubusercontent.com/CHEMeDATA/schema/main/${schemaDir}/`;
-const schemaRoot = `https://chemedata.github.io/schema/${schemaDir}/`;
-
+// Throw error helper
 function generateError(message) {
-	throw new Error("❌", message);
+	throw new Error("❌ " + message);
 }
 
+// Compact numeric arrays in JSON string, insert line breaks every lineLength chars
 function compactNumericArrays(jsonString, lineLength = 100) {
-    function processArray(content) {
-        let depth = 0;
-        let start = 0;
-        let result = "";
+	function processArray(content) {
+		let depth = 0;
+		let start = 0;
+		let result = "";
 
-        for (let i = 0; i < content.length; i++) {
-            const char = content[i];
-            if (char === "[") {
-                if (depth === 0) start = i;
-                depth++;
-            } else if (char === "]") {
-                depth--;
-                if (depth === 0) {
-                    const inner = content.slice(start + 1, i);
-                    const compactedInner = processArray(inner);
-                    result += `[${compactedInner}]`;
-                    continue;
-                }
-            }
+		for (let i = 0; i < content.length; i++) {
+			const char = content[i];
+			if (char === "[") {
+				if (depth === 0) start = i;
+				depth++;
+			} else if (char === "]") {
+				depth--;
+				if (depth === 0) {
+					const inner = content.slice(start + 1, i);
+					const compactedInner = processArray(inner);
+					result += `[${compactedInner}]`;
+					continue;
+				}
+			}
 
-            if (depth === 0) result += char;
-        }
+			if (depth === 0) result += char;
+		}
 
-        // Compact numeric array
-        const items = result.split(",").map(s => s.trim());
-        const allNumbers = items.every(item => !isNaN(Number(item)) && item !== "");
-        if (allNumbers) {
-            const joined = items.join(", ");
-            // insert line breaks every lineLength chars
-            let final = "";
-            for (let i = 0; i < joined.length; i += lineLength) {
-                final += joined.slice(i, i + lineLength) + "\n";
-            }
-            return final.trim(); // remove trailing newline
-        }
+		const items = result.split(",").map((s) => s.trim());
+		const allNumbers = items.every(
+			(item) => !isNaN(Number(item)) && item !== ""
+		);
+		if (allNumbers) {
+			const joined = items.join(", ");
+			let final = "";
+			for (let i = 0; i < joined.length; i += lineLength) {
+				final += joined.slice(i, i + lineLength) + "\n";
+			}
+			return final.trim();
+		}
 
-        return result;
-    }
+		return result;
+	}
 
-    let stack = [];
-    let output = "";
-    let startIdx = null;
+	let stack = [];
+	let output = "";
+	let startIdx = null;
 
-    for (let i = 0; i < jsonString.length; i++) {
-        const char = jsonString[i];
-        if (char === "[") {
-            if (stack.length === 0) startIdx = i;
-            stack.push("[");
-        } else if (char === "]") {
-            stack.pop();
-            if (stack.length === 0 && startIdx !== null) {
-                const content = jsonString.slice(startIdx + 1, i);
-                const compacted = processArray(content);
-                output += `[${compacted}]`;
-                startIdx = null;
-                continue;
-            }
-        }
+	for (let i = 0; i < jsonString.length; i++) {
+		const char = jsonString[i];
+		if (char === "[") {
+			if (stack.length === 0) startIdx = i;
+			stack.push("[");
+		} else if (char === "]") {
+			stack.pop();
+			if (stack.length === 0 && startIdx !== null) {
+				const content = jsonString.slice(startIdx + 1, i);
+				const compacted = processArray(content);
+				output += `[${compacted}]`;
+				startIdx = null;
+				continue;
+			}
+		}
 
-        if (stack.length === 0 && char !== "]") {
-            output += char;
-        }
-    }
+		if (stack.length === 0 && char !== "]") {
+			output += char;
+		}
+	}
 
-    return output;
+	return output;
 }
 
+// Ensure derivations.json file exists
 function ensureDerivationsFile(derivationsFile) {
 	if (!fs.existsSync(derivationsFile)) {
 		const initialData = {
@@ -96,36 +92,21 @@ function ensureDerivationsFile(derivationsFile) {
 	}
 }
 
-// Add a derivation record
+// Add derivation record
 function addDerivation(derivationsFile, base, derived, fieldsToAdd) {
 	ensureDerivationsFile(derivationsFile);
 	const content = JSON.parse(fs.readFileSync(derivationsFile, "utf8"));
-
 	content.derivations.push({ base, derived, fieldsToAdd });
-	/*
-userRequest: "Enter a value in mm",
-						defaultValue: 5.5,
-						randomFrom: 1,
-						randomTo: 10,
-						show: true},
-						*/
 	fs.writeFileSync(derivationsFile, JSON.stringify(content, null, 4), "utf8");
 }
 
-/**
- * Function to derive a new schema from an existing one
- * @param {string} sourceClass - The base schema filename (without `.json`)
- * @param {string} derivedClass - The new schema filename (without `.json`)
- * @param {Array} fieldsToAdd - Fields to add with properties { name, mandatory, type }
- */
-function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
+// Derive a schema
+export function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 	const sourcePath = path.join(schemaDir, `${sourceClass}.json`);
 	const derivedPath = path.join(schemaDir, `${derivedClass}.json`);
-
-	// store in derivations file
 	const derivationsFile = path.join(".", "derivations.json");
+
 	addDerivation(derivationsFile, sourceClass, derivedClass, fieldsToAdd);
-	// Ensure file exists with _comment and empty derivations array
 
 	console.log(`🛠️ Deriving ${sourceClass} into ${derivedClass}...`);
 	console.log(
@@ -135,10 +116,8 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 			.join(", ")
 	);
 
-	// Load the source schema
 	const sourceSchema = JSON.parse(fs.readFileSync(sourcePath, "utf8"));
 
-	// Create the new schema based on the source schema
 	const derivedSchema = {
 		$schema: sourceSchema["$schema"],
 		type: sourceSchema["type"],
@@ -147,7 +126,6 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 		properties: {},
 	};
 
-	// Add new fields
 	const requiredFields = [];
 	fieldsToAdd.forEach((field) => {
 		derivedSchema["properties"][field.name] = { type: field.type };
@@ -165,9 +143,7 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 		derivedSchema["required"] = requiredFields;
 	}
 
-	// Save the new schema
 	fs.writeFileSync(derivedPath, JSON.stringify(derivedSchema, null, 4));
-
 	console.log(`✅ ${derivedClass} schema created at:`, derivedPath);
 }
 
@@ -178,25 +154,20 @@ function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
  * @param {string} newSchemaName - The name of the new schema (without .json)
  * @param {Array} propertiesList - An array defining properties with attributes
  */
-function createNewTypeSchema(newSchemaName, propertiesList) {
+export function createNewTypeSchema(newSchemaName, propertiesList) {
 	if (!newSchemaName || !propertiesList) {
 		generateError("Missing required parameters");
 	}
 	const schemaPath = path.join(schemaDir, `${newSchemaName}.json`);
-
 	console.log(`🛠️ Creating schema: ${newSchemaName}...`);
 
-	// Construct properties & required fields
-	let properties = {};
-	let requiredFields = [];
+	const properties = {};
+	const requiredFields = [];
 
 	propertiesList.forEach((prop) => {
 		let propSchema;
-
 		if (prop.array) {
-			// Handle arrays
 			if (prop.type === "object" && prop.ref) {
-				// If it's an array of objects, use a reference
 				propSchema = {
 					type: "array",
 					items: { $ref: `${schemaRoot}${prop.ref}.json` },
@@ -227,7 +198,6 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 		}
 	});
 
-	// Define the new schema
 	const newSchema = {
 		$schema: "http://json-schema.org/draft-07/schema#",
 		type: "object",
@@ -236,30 +206,19 @@ function createNewTypeSchema(newSchemaName, propertiesList) {
 		required: requiredFields.length > 0 ? requiredFields : undefined,
 	};
 
-	// Save the new schema
 	fs.writeFileSync(schemaPath, JSON.stringify(newSchema, null, 4));
 	console.log(`✅ ${newSchemaName} schema created at:`, schemaPath);
 }
 
-//! Quote the key in strings in put of createInstance ....
-function createInstance(objName, schemaName, dataInput) {
-	if (typeof dataInput == "string") {
-							console.log("******************");
-
-					console.log("string before ", dataInput);
-
+// Create instance
+export function createInstance(objName, schemaName, dataInput) {
+	if (typeof dataInput === "string") {
 		dataInput = dataInput.replace(
 			/_INSERT_FILE-([\w.-]+)/g,
 			(match, fileName) => {
 				const filePath = path.join(instanceDir, fileName + ".json");
 				try {
-										console.log("filePath ", filePath);
-
 					const fileContent = fs.readFileSync(filePath, "utf-8");
-					// Wrap content in parentheses and stringify to preserve JSON format
-					// Remove outer {} if already present to avoid double object nesting
-					console.log("fileContent ", fileContent);
-
 					return fileContent;
 				} catch (err) {
 					console.error(`⚠️ Could not read file: ${filePath}`, err);
@@ -267,197 +226,29 @@ function createInstance(objName, schemaName, dataInput) {
 				}
 			}
 		);
-					console.log("string after :", dataInput);
-					console.log("******************");
 
 		try {
-			const dataObj = JSON.parse(dataInput); // parse JSON string to object
-			console.log("Object:", dataObj);
-			dataInput = dataObj;
+			dataInput = JSON.parse(dataInput);
 		} catch (err) {
-						console.log("Object:", dataObj);
-
 			console.error("Invalid JSON string:", err.message);
-			        throw new Error("❌ ");
+			throw new Error("❌ ");
 		}
 	}
 
-	if (!schemaName || !objName || !dataInput) {
+	if (!schemaName || !objName || !dataInput)
 		generateError("Missing required parameters");
-	}
+
 	const instancePath = path.join(instanceDir, `${objName}.json`);
-
-	console.log(`🛠️ Creating instance for schema: ${schemaName}...`);
-
 	const data = {
 		$schema: `${schemaRoot}${schemaName}.json`,
 		wildComment:
 			"Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
-		...dataInput, // spread the rest after
+		...dataInput,
 	};
 
-	var constString = JSON.stringify(data, null, 4);
-
+	const constString = JSON.stringify(data, null, 4);
 	const constString2 = compactNumericArrays(constString);
-
 	fs.writeFileSync(instancePath, constString2);
 
-
-	console.log(`✅ ${data} instance created at:`, instancePath);
+	console.log(`✅ ${objName} instance created at:`, instancePath);
 }
-
-// Example usage createNewTypeSchema
-// for type float and double will be replaced with numbers in schema
-/*
-type: "baseType",
-						htmlID: "tubeDiameter_mm",
-						baseType: "float",
-						comment: "Enter a value in mm",
-						defaultValue: 5.5,
-						randomFrom: 1,
-						randomTo: 10,
-						show: true,
-*/
-createNewTypeSchema("obj1", [
-	{ name: "name", required: true, array: false, type: "string" },
-	{ name: "age", required: false, array: false, type: "integer" },
-]);
-
-createNewTypeSchema("obj2", [
-	{ name: "name", required: true, array: false, type: "string" },
-	{ name: "age", required: true, array: false, type: "integer" },
-]);
-
-deriveSchema("obj1", "obj1size", [
-	{
-		name: "size",
-		mandatory: true,
-		type: "float",
-		userRequest: "Enter a value in m (default 1.91m)",
-		defaultValue: 1.91,
-		randomFrom: 1.4,
-		randomTo: 2.1,
-		show: true,
-	},
-]);
-
-createNewTypeSchema("groupObject1", [
-	{ name: "members", required: true, array: true, type: "object", ref: "obj1" },
-]);
-
-createNewTypeSchema("sample", [
-	{
-		name: "origin",
-		required: false,
-		array: false,
-		type: "object",
-		ref: "sample",
-	},
-	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
-]);
-
-deriveSchema("sample", "liquidSample", [
-	{
-		name: "volume_L",
-		mandatory: true,
-		type: "float",
-		userRequest: "Enter a value in L (default 500 ul)",
-		defaultValue: 500e-6,
-		randomFrom: 1,
-		randomTo: 10,
-		show: true,
-	},
-]);
-
-deriveSchema("liquidSample", "NMRliquidSample", [
-	{
-		name: "tubeDiameter_mm",
-		mandatory: true,
-		type: "float",
-		userRequest: "Enter a value in mm",
-		defaultValue: 5.5,
-		randomFrom: 1,
-		randomTo: 10,
-		show: true,
-	},
-]);
-
-createNewTypeSchema("pairObj1", [
-	{
-		name: "object1",
-		required: true,
-		array: false,
-		type: "object",
-		ref: "obj1",
-	},
-	{
-		name: "object2",
-		required: true,
-		array: false,
-		type: "object",
-		ref: "obj2",
-	},
-	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
-]);
-
-createNewTypeSchema("nmrSpectrumObject", [
-	{
-		name: "values",
-		required: true,
-		array: true,
-		type: "double",
-	},
-	{
-		name: "firstPoint",
-		required: true,
-		array: false,
-		type: "double",
-	},
-	{
-		name: "lastPoint",
-		required: true,
-		array: false,
-		type: "double",
-	},
-	// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
-]);
-
-// Quote the key in strings in put of createInstance ....
-createInstance("miniSpectrum", "nmrSpectrumObject", {
-	"values": [
-		0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 2,
-		10, 2, 0, 0, 0, 0, 0,
-	],
-	"firstPoint": 8.0,
-	"lastPoint": -1.0,
-});
-
-createInstance("miniSpectrum2","nmrSpectrumObject",`{
-    "values": [
-        0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 1.8, 8, 1.8, 0, 0, 0, 0, 0
-    ],
-    "firstPoint": 8.0,
-    "lastPoint": 0.0
-}` );
-
-createNewTypeSchema("setSpectra", [
-	{
-		"name": "members",
-		"required": true,
-		"array": true,
-		"type": "object",
-		"ref": "nmrSpectrumObject",
-	},
-]);
-
-// With _INSERT_FILE  it will insert the content of a file ("theFileName" = for  _INSERT_FILE-theFileName )
-// Quote the key in strings....
-createInstance(
-	"twoSpectra",
-	"setSpectra",
-	`{
-	"members": [_INSERT_FILE-miniSpectrum2, _INSERT_FILE-miniSpectrum]
-	}`
-);
-

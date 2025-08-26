@@ -15,30 +15,29 @@ const outputDir = path.join(__dirname, target);
 
 // Ensure output directory exists
 if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
+	fs.mkdirSync(outputDir, { recursive: true });
 }
 
 // Load all schemas into memory for resolving $refs
-function loadSchemas() {
-    const schemaCache = {};
-    const files = fs.readdirSync(inputDir);
-    files.forEach((file) => {
-        if (file.endsWith(".json")) {
-            const filePath = path.join(inputDir, file);
-            try {
-                schemaCache[file] = JSON.parse(fs.readFileSync(filePath, "utf8"));
-				                console.error(`OK loading schema ${file}:`);
-
-            } catch (err) {
-                console.error(`❌ Error loading schema ${file}:`, err);
-            }
-        }
-    });
-    return schemaCache;
+export function loadSchemas() {
+	const schemaCache = {};
+	const files = fs.readdirSync(inputDir);
+	files.forEach((file) => {
+		if (file.endsWith(".json")) {
+			const filePath = path.join(inputDir, file);
+			try {
+				schemaCache[file] = JSON.parse(fs.readFileSync(filePath, "utf8"));
+				console.error(`OK loading schema ${file}:`);
+			} catch (err) {
+				console.error(`❌ Error loading schema ${file}:`, err);
+			}
+		}
+	});
+	return schemaCache;
 }
 
 // Resolve $ref references
-function resolveRefs(schema, seen = new Set()) {
+function resolveRefs(schemaCache, curSchema, schema, seen = new Set()) {
 	if (!schema || typeof schema !== "object") return schema;
 	if (seen.has(schema)) {
 		return schema.$id ? { $ref: schema.$id, $refKEEP: schema.$id } : schema;
@@ -46,7 +45,9 @@ function resolveRefs(schema, seen = new Set()) {
 	seen.add(schema);
 
 	if (Array.isArray(schema)) {
-		return schema.map((item) => resolveRefs(item, new Set(seen)));
+		return schema.map((item) =>
+			resolveRefs(schemaCache, curSchema, item, new Set(seen))
+		);
 	}
 	let resolvedSchema = { ...schema };
 
@@ -54,7 +55,7 @@ function resolveRefs(schema, seen = new Set()) {
 		const refFile = path.basename(schema["$ref"]);
 		if (schemaCache[refFile]) {
 			resolvedSchema = {
-				...resolveRefs(schemaCache[refFile], seen),
+				...resolveRefs(schemaCache, curSchema, schemaCache[refFile], seen),
 				...resolvedSchema,
 			};
 			delete resolvedSchema["$ref"];
@@ -65,7 +66,7 @@ function resolveRefs(schema, seen = new Set()) {
 			? resolvedSchema.related.slice()
 			: [];
 		schema["allOf"].forEach((ref) => {
-			const resolvedRef = resolveRefs(ref, seen);
+			const resolvedRef = resolveRefs(schemaCache, curSchema, ref, seen);
 			if (resolvedRef) {
 				// Collect related IDs but don't lose previous ones
 				if (resolvedRef.$id && allRelated.indexOf(resolvedRef.$id) === -1) {
@@ -95,6 +96,8 @@ function resolveRefs(schema, seen = new Set()) {
 	if (resolvedSchema.properties) {
 		Object.keys(resolvedSchema.properties).forEach((key) => {
 			resolvedSchema.properties[key] = resolveRefs(
+				schemaCache,
+				curSchema,
 				resolvedSchema.properties[key],
 				seen
 			);
@@ -137,11 +140,13 @@ function replaceRefKeep(obj) {
 }
 
 // Process all schemas and generate effective versions
-function processSchemas() {
+export function processSchemas() {
+	const schemaCache = loadSchemas();
+	var curSchema = "";
 	Object.keys(schemaCache).forEach((file) => {
 		console.log(`🛠️ Processing ${file}...`);
 		curSchema = schemaCache[file];
-		const resolvedSchema = resolveRefs(curSchema);
+		const resolvedSchema  = resolveRefs(schemaCache, curSchema, curSchema);
 		// Write the resolved schema
 		const outputFilePath = path.join(outputDir, file);
 		const finalSchema = replaceRefKeep(resolvedSchema);
@@ -149,8 +154,3 @@ function processSchemas() {
 		console.log(`✅ Resolved schema written to ${outputFilePath}`);
 	});
 }
-
-// Run script
-const schemaCache = loadSchemas();
-var curSchema = "";
-processSchemas();

@@ -2,26 +2,8 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-
-// __dirname equivalent for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// setting folders
 import { schemaDir, instanceDir, htmlDir, srcDir } from "./config.js";
 
-const classHandlerFolderRelativeToRootHTMLNoDot = "classHandler"; // could be absolute path
-const classHandlerFolderRelativeToRootHTML = `./${classHandlerFolderRelativeToRootHTMLNoDot}`; // could be absolute path
-const locationsJavascript = srcDir;
-
-const displayTableProperties = true;
-// Ensure the HTML output directory exists
-if (!fs.existsSync(htmlDir)) {
-	fs.mkdirSync(htmlDir, { recursive: true });
-}
-
-// List to track generated HTML pages for index.html
-let schemaList = [];
 
 /**
  * Converts a schema reference (`$ref`) to a corresponding HTML file link
@@ -34,7 +16,12 @@ function getHtmlLink(ref) {
 	return `<a href="${fileName}">${fileName}</a>`;
 }
 
+/**
+ * Create handler JS file for schema
+ */
 function createHandlerForFile(fileName) {
+	const classHandlerFolderRelativeToRootHTMLNoDot = "classHandler"; // could be absolute path
+
 	const shortName = path.basename(fileName, ".json");
 	const refCap =
 		shortName.charAt(0).toUpperCase() + shortName.slice(1) + "Handler";
@@ -44,9 +31,6 @@ function createHandlerForFile(fileName) {
 	);
 	const handlerPathGeneric = path.join(handlerPath, "GENERIChandler.js");
 	const handlerPathOut = path.join(handlerPath, `${shortName}Handler.js`);
-	const handlerClassName = `${shortName}Handler`;
-
-	
 
 	// 1. Read the generic template
 	let content = fs.readFileSync(handlerPathGeneric, "utf8");
@@ -72,13 +56,17 @@ function createHandlerForFile(fileName) {
 	if (fs.existsSync(supFilePath)) {
 		const supContent = fs.readFileSync(supFilePath, "utf8");
 		fs.appendFileSync(handlerPathOut, "\n" + supContent);
+				console.log(`     Supplemental file found: ${supFileName}`);
 	} else {
 		console.log(`Supplemental file not found: ${supFileName}`);
 	}
 
 	// 4b. Conditionally append the supplemental file (e.g., supObj1.js)
 	const supFileName1 = `supplement${shortName}.js`;
-	const supFilePath1 = path.join(path.dirname(handlerPathGeneric), supFileName1);
+	const supFilePath1 = path.join(
+		path.dirname(handlerPathGeneric),
+		supFileName1
+	);
 
 	if (fs.existsSync(supFilePath1)) {
 		const supContent = fs.readFileSync(supFilePath1, "utf8");
@@ -96,6 +84,7 @@ function createHandlerForFile(fileName) {
  * @param {string} fileName - Schema file name (e.g., "groupObject1.json")
  */
 function generateHtmlForSchema(fileName, ref) {
+	const displayTableProperties = true;
 	const filePath = path.join(schemaDir, fileName);
 	const schema = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
@@ -275,25 +264,28 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	createHandlerForFile(fileName);
 
-	schemaList.push({
+	return {
 		name: fileName,
 		link: path.basename(fileName, ".json") + ".html",
-	});
+	};
 }
 
 // Generate HTML for all schemas
-fs.readdirSync(schemaDir).forEach((file) => {
-	if (file.endsWith(".json")) {
-		console.log("Generating HTML for", file);
-		let ref = path.basename(file, ".json"); //file.replace(".json","");
-		generateHtmlForSchema(file, ref);
-	}
-});
-
+export function mainGeneration() {
+	var list = [];
+	fs.readdirSync(schemaDir).forEach((file) => {
+		if (file.endsWith(".json")) {
+			console.log("Generating HTML for", file);
+			let ref = path.basename(file, ".json"); //file.replace(".json","");
+			list.push(generateHtmlForSchema(file, ref));
+		}
+	});
+	return list;
+}
 /**
  * Generates an index.html file listing all schemas
  */
-function generateIndexPage() {
+export function generateIndexPage(schemaList) {
 	let indexContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -306,7 +298,6 @@ function generateIndexPage() {
             <h1>Schema Documentation</h1>
             <ul>
 `;
-
 	schemaList.forEach((schema) => {
 		indexContent += `                <li><a href="${
 			schema.link
@@ -323,6 +314,3 @@ function generateIndexPage() {
 	fs.writeFileSync(path.join(htmlDir, "index.html"), indexContent, "utf8");
 	console.log("✅ index.html generated successfully!");
 }
-
-// Call the function after generating all schema pages
-generateIndexPage();

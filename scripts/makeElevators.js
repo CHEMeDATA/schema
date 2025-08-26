@@ -2,26 +2,19 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-
+import { location, derivationsFile } from "./config.js";
 // ES module __dirname equivalent
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Folder where supplement files will be written
-const location = path.join(__dirname, "../html/classHandler/");
-
-// Path to derivations.json
-const derivationsFile = path.join(__dirname, "../derivations.json");
 
 // Generate supplement file for a given class
 function generateSupplementFile(config) {
-    const { base, derived, fieldsToAdd } = config;
-    const className = base;
-    const fileName = `supplement${className}.js`;
+	const { base, derived, fieldsToAdd } = config;
+	const className = base;
+	const fileName = `supplement${className}.js`;
 
-    // Generate arrayOfItems content from fieldsToAdd
-    const arrayOfItems = fieldsToAdd.map(field => {
-        return `{
+	// Generate arrayOfItems content from fieldsToAdd
+	const arrayOfItems = fieldsToAdd
+		.map((field) => {
+			return `{
             type: "baseType",
             htmlID: "${field.name}",
             baseType: "${field.type}",
@@ -31,17 +24,20 @@ function generateSupplementFile(config) {
             randomTo: ${field.randomTo},
             show: ${field.show}
         }`;
-    }).join(",\n");
+		})
+		.join(",\n");
 
-    // Generate field handling loop
-    const fieldLoop = fieldsToAdd.map(field => {
-        return `
+	// Generate field handling loop
+	const fieldLoop = fieldsToAdd
+		.map((field) => {
+			return `
         const ${field.name} = this.#getValOrDefault(dataObj, "${field.name}");
         if (${field.name} !== undefined) targetObj["${field.name}"] = ${field.name};`;
-    }).join("\n");
+		})
+		.join("\n");
 
-    // Template for the function
-    const content = `
+	// Template for the function
+	const content = `
 // Auto-generated supplement file for ${className}
 ${className}_DataEnrichment(targetObjType, dataObj = {}) {
     const myName = "${className}_DataEnrichment"; // don't automatize in case 'use strict'
@@ -78,23 +74,20 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 //module.exports = ${className}_DataEnrichment;
 `;
 
-    fs.writeFileSync(path.join(location, fileName), content, "utf8");
-    console.log(`✅ File ${fileName} created successfully.`);
+	fs.writeFileSync(path.join(location, fileName), content, "utf8");
+	console.log(`✅ File ${fileName} created successfully.`);
 }
 
 // Main function
-async function main() {
-    try {
-        const raw = fs.readFileSync(derivationsFile, "utf8");
-        const data = JSON.parse(raw);
+export async function runElevators() {
+	try {
+		const raw = fs.readFileSync(derivationsFile, "utf8");
+		const data = JSON.parse(raw);
 
-        data.derivations.forEach(config => {
-            generateSupplementFile(config);
-        });
-    } catch (err) {
-        console.error("❌ Failed to generate supplements:", err);
-    }
+		data.derivations.forEach((config) => {
+			generateSupplementFile(config);
+		});
+	} catch (err) {
+		console.error("❌ Failed to generate supplements:", err);
+	}
 }
-
-// Run
-main();
