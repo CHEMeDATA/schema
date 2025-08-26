@@ -65,7 +65,7 @@ export function validateJSON(data, schemas, resultList) {
             if (validate(obj)) {
                 const objName = schemaName.match(/([^/]+)\.json$/)[1];
                 const urlSafeData = encodeURIComponent(JSON.stringify(obj));
-                const linkToSchemaBase = "https://nmredatainitiative.github.io/J-graph/testSchema/html/";
+                const linkToSchemaBase = "https://chemedata.github.io/schema/html/";
 
                 const linkToSchemaPages = linkToSchemaBase + objName + ".html";
                 if (path == "Root") {
