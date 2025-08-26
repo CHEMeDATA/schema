@@ -1,12 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
-
-// __dirname replacement in ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const location = "./html/classHandler/";
+import { all_viewersFile, location } from "./config.js";
 
 /**
  * Generates a supplement file for the given className and config.
@@ -14,7 +8,15 @@ const location = "./html/classHandler/";
  * @param {Object} config - Configuration object containing base, derived, and fieldsToAdd.
  */
 function generateSupplementFile(config) {
-	const { object, objectObj, type, jsLibrary, creatorParam, fieldsToAdd, repository } = config;
+	const {
+		object,
+		objectObj,
+		type,
+		jsLibrary,
+		creatorParam,
+		fieldsToAdd,
+		repository,
+	} = config;
 	const className = object;
 	const fileName = `supplement${className}.js`;
 	const creatorParamStringified = JSON.stringify(creatorParam);
@@ -161,37 +163,38 @@ linkUrl
 // ES module fetch wrapper
 async function downloadFile(url, output) {
 	const response = await fetch(url);
-	if (!response.ok) throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+	if (!response.ok)
+		throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
 
 	const data = await response.text();
 	fs.writeFileSync(output, data, "utf8");
 	console.log(`File saved to ${output}`);
 }
 
-// Load derivations
-const derivationsFile = path.join(__dirname, "../all_viewers.json");
-const data = JSON.parse(fs.readFileSync(derivationsFile, "utf8"));
+export function mainMakeForm() {
+	// Load derivations
+	const data = JSON.parse(fs.readFileSync(all_viewersFile, "utf8"));
 
-const result = [];
+	const result = [];
 
-data.list.forEach((item) => {
-	item.listObject.forEach((innerItem) => {
-		const input = {
-			object: innerItem.object,
-			objectObj: innerItem.objectObj,
-			type: innerItem.type,
-			fieldsToAdd: innerItem.requiredInput,
-			jsLibrary: item.jsLibrary,
-			creatorParam: item.creatorParam,
-			repository: item.repository
-		};
+	data.list.forEach((item) => {
+		item.listObject.forEach((innerItem) => {
+			const input = {
+				object: innerItem.object,
+				objectObj: innerItem.objectObj,
+				type: innerItem.type,
+				fieldsToAdd: innerItem.requiredInput,
+				jsLibrary: item.jsLibrary,
+				creatorParam: item.creatorParam,
+				repository: item.repository,
+			};
 
-		const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
-		const output = path.join(__dirname, `../html/src_objects/${innerItem.object}.js`);
+			const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
+			const output = path.join(`./html/src_objects/${innerItem.object}.js`);
 
-		downloadFile(url, output).catch(console.error);
-		result.push(input);
-		generateSupplementFile(input);
+			downloadFile(url, output).catch(console.error);
+			result.push(input);
+			generateSupplementFile(input);
+		});
 	});
-});
-
+}

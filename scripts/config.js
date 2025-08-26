@@ -10,4 +10,4 @@ export const location =  "html/classHandler/";
 
 export const derivationsFile = "derivations.json";
 export const src_objects = "html/src_objects";
-
+export const all_viewersFile = "./all_viewers.json";

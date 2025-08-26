@@ -6,12 +6,12 @@ import {
 
 import { processSchemas, loadSchemas } from "./resolveSchemas.js";
 
-import { generateIndexPage , mainGeneration} from "./generateHtmlForSchema.js";
+import { generateIndexPage, mainGeneration } from "./generateHtmlForSchema.js";
 
 import { runElevators } from "./makeElevators.js";
+import { mainMakeForm } from "./makeFormForReaders.js";
 
 import fs from "fs";
-import path from "path";
 import {
 	schemaDir,
 	instanceDir,
@@ -208,8 +208,11 @@ if (!fs.existsSync(htmlDir)) {
 	fs.mkdirSync(htmlDir, { recursive: true });
 }
 
-const schemaList = mainGeneration()
+const schemaList = mainGeneration();
 generateIndexPage(schemaList);
 runElevators();
 
+fs.rmSync(src_objects, { recursive: true, force: true });
 fs.mkdirSync(src_objects, { recursive: true });
+
+mainMakeForm();

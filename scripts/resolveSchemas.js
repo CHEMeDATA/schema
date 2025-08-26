@@ -146,7 +146,7 @@ export function processSchemas() {
 	Object.keys(schemaCache).forEach((file) => {
 		console.log(`🛠️ Processing ${file}...`);
 		curSchema = schemaCache[file];
-		const resolvedSchema  = resolveRefs(schemaCache, curSchema, curSchema);
+		const resolvedSchema = resolveRefs(schemaCache, curSchema, curSchema);
 		// Write the resolved schema
 		const outputFilePath = path.join(outputDir, file);
 		const finalSchema = replaceRefKeep(resolvedSchema);
