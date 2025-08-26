@@ -22,6 +22,9 @@ import {
 	src_objects,
 } from "./config.js";
 
+import { insertSupplementForFormInObjectClasses } from "./insertSupplementForFormInObjectClasses.js";
+
+
 // Example usage createNewTypeSchema
 // for type float and double will be replaced with numbers in schema
 /*
@@ -217,3 +220,5 @@ runElevators();
 
 
 mainMakeForm();
+
+insertSupplementForFormInObjectClasses();

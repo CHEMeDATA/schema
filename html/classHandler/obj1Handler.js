@@ -593,6 +593,7 @@ obj1_DataEnrichment(targetObjType, dataObj = {}) {
 
 //module.exports = obj1_DataEnrichment;
 
+
 	myDataEnrichment1_DataEnrichment(targetObjType, dataObj = {}) {
 		const myName = "myDataEnrichment1_DataEnrichment"; // dont automatize in case use strict
 		if (targetObjType == "info") {
