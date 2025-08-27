@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { schemaDir, instanceDir, htmlDir, srcDir } from "./config.js";
+import { schemaDir, instanceDir, htmlDir, srcDir, classHandlerSupFiles } from "./config.js";
 
 
 /**
@@ -29,7 +29,7 @@ function createHandlerForFile(fileName) {
 		htmlDir,
 		classHandlerFolderRelativeToRootHTMLNoDot
 	);
-	const handlerPathGeneric = path.join(handlerPath, "GENERIChandler.js");
+	const handlerPathGeneric = path.join(classHandlerSupFiles, "GENERIChandler.js");
 	const handlerPathOut = path.join(handlerPath, `${shortName}Handler.js`);
 
 	// 1. Read the generic template
