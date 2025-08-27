@@ -26,7 +26,6 @@ export class PairObj1Handler {
 		if (this.verbose)
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
-		this.#showViewer();
 
 		const methodsVA = this.#makeListMethods("_AdditionalViewer");
 		methodsVA.forEach((method) => {
@@ -48,7 +47,7 @@ export class PairObj1Handler {
 			this.#showDataEnrichmentMethods(method.info); // Call for each elevator
 		});
 
-		this.#showViewer2();
+		this.#showViewer();
 	}
 
 	#listNonStaticMethods(include) {
@@ -544,22 +543,6 @@ export class PairObj1Handler {
 			.attr("cy", 100)
 			.attr("r", this.obj.age)
 			.style("fill", "green");
-	}
-
-	#showViewer2() {
-		const container = document.getElementById("dynamicContent");
-		const frame = document.createElement("div");
-		frame.className = "frame green-frame";
-		frame.innerHTML = `<svg width="200" height="200"></svg>`;
-		container.appendChild(frame);
-
-		const svg = d3.select(frame).select("svg");
-		svg
-			.append("circle")
-			.attr("cx", 100)
-			.attr("cy", 100)
-			.attr("r", this.obj.age)
-			.style("fill", "blue");
 	}
 
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE

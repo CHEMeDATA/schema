@@ -30,7 +30,6 @@ export class SetSpectraHandler {
 		if (this.verbose)
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
-		this.#showViewer();
 
 		const methodsVA = this.#makeListMethods("_AdditionalViewer");
 		methodsVA.forEach((method) => {
@@ -52,7 +51,7 @@ export class SetSpectraHandler {
 			this.#showDataEnrichmentMethods(method.info); // Call for each elevator
 		});
 
-		this.#showViewer2();
+		this.#showViewer();
 	}
 
 	#listNonStaticMethods(include) {
@@ -550,61 +549,67 @@ export class SetSpectraHandler {
 			.style("fill", "green");
 	}
 
-	#showViewer2() {
-		const container = document.getElementById("dynamicContent");
-		const frame = document.createElement("div");
-		frame.className = "frame green-frame";
-		frame.innerHTML = `<svg width="200" height="200"></svg>`;
-		container.appendChild(frame);
-
-		const svg = d3.select(frame).select("svg");
-		svg
-			.append("circle")
-			.attr("cx", 100)
-			.attr("cy", 100)
-			.attr("r", this.obj.age)
-			.style("fill", "blue");
-	}
-
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
 
-NmrSpectrum_AdditionalViewer() {
-    const myName = "NmrSpectrum_AdditionalViewer"; // don't automatize in case 'use strict'
-	const frame = document.createElement("div");
-	frame.id = myName;
-	frame.className = "frame red-frame";
-	frame.innerHTML = `<svg width="200" height="300"></svg>`;
+	setSpectra_AdditionalViewer() {
+	    const myName = "setSpectra_AdditionalViewer"; // function name don't use js feature in case 'use strict'
+		const frame = document.createElement("div");
+		frame.id = myName;
+		frame.className = "frame red-frame";
+		frame.innerHTML = `<svg width="200" height="100"></svg>`;
 
-	const container = document.getElementById("dynamicContent");
-	container.appendChild(frame);
-		
-	const nMRspectraObjectsDemo = [
-	   new NMRspectrumObject({demo : {arrayLorentzian : {
-				centers: [7.27, 5.0, 0.0],
-				widthsInHz: [0.7, 0.7, 0.7],
-				amplitudes: [1, 10, 1],
-			}}}), 
-	    new NMRspectrumObject({demo : {
-		    spectralData:{firstPoint:9}, 
-		    arrayLorentzian:{centers:[3.8]}}
-	    })
-	]; 
-		
+		const container = document.getElementById("dynamicContent");
+		container.appendChild(frame);
 
-	const nMRspectraObjects =  [
-		new NMRspectrumObject({},this.obj.members[0]), 
-		new NMRspectrumObject({},this.obj.members[1])
-	]; 
+		var viewerDataPassed = {};
+		// NSKEA not viewer specific, object specific
+		if (myName == "setSpectra_AdditionalViewer") { // do not remove automatic code...
+			const nMRspectraObjectsDemo = [
+			   new NMRspectrumObject({demo : {arrayLorentzian : {
+						centers: [7.27, 5.0, 0.0],
+						widthsInHz: [0.7, 0.7, 0.7],
+						amplitudes: [1, 10, 1],
+					}}}), 
+			    new NMRspectrumObject({demo : {
+				    spectralData:{firstPoint:9}, 
+				    arrayLorentzian:{centers:[3.8]}}
+			    })
+			]; 
 
-	const settings = initializeSettings({});
-	var svg = createSVG(myName, settings);
-	var spectrum = new NmrSpectrum(
-		nMRspectraObjects,
-		svg,
-		settings,
-		settings.smallScreen
-	);
+			 viewerDataPassed =  [
+				new NMRspectrumObject({},this.obj.members[0]), 
+				new NMRspectrumObject({},this.obj.members[1])
+			]; 
+		} 
+		if (myName == "nmrSpectrum_AdditionalViewer") { // do not remove automatic code...
+			const nMRspectraObjectsDemo = [
+			   new NMRspectrumObject({demo : {arrayLorentzian : {
+						centers: [7.27, 5.0, 0.0],
+						widthsInHz: [0.7, 0.7, 0.7],
+						amplitudes: [1, 10, 1],
+					}}})
+			]; 
+				
+
+			 viewerDataPassed =  [
+				new NMRspectrumObject({},this.obj)
+			]; 
+		}
+		// NSKEA end not viewer specific, object specific
+		// AZGLC start
+		function call(viewerDataPassed) {
+			const settings = initializeSettings({});
+			var svg = createSVG(myName, settings);
+			var spectrum = new NmrSpectrum(
+				viewerDataPassed,
+				svg,
+				settings,
+				settings.smallScreen
+			);
+		}
+		// AZGLC end
+		call(viewerDataPassed);
 	}
 }

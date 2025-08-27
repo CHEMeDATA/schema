@@ -5,6 +5,7 @@ import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 
+
 export class Obj2Handler {
 	constructor(obj = {}) {
 		this.obj = obj;
@@ -26,7 +27,6 @@ export class Obj2Handler {
 		if (this.verbose)
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
-		this.#showViewer();
 
 		const methodsVA = this.#makeListMethods("_AdditionalViewer");
 		methodsVA.forEach((method) => {
@@ -48,7 +48,7 @@ export class Obj2Handler {
 			this.#showDataEnrichmentMethods(method.info); // Call for each elevator
 		});
 
-		this.#showViewer2();
+		this.#showViewer();
 	}
 
 	#listNonStaticMethods(include) {
@@ -546,23 +546,41 @@ export class Obj2Handler {
 			.style("fill", "green");
 	}
 
-	#showViewer2() {
-		const container = document.getElementById("dynamicContent");
-		const frame = document.createElement("div");
-		frame.className = "frame green-frame";
-		frame.innerHTML = `<svg width="200" height="200"></svg>`;
-		container.appendChild(frame);
-
-		const svg = d3.select(frame).select("svg");
-		svg
-			.append("circle")
-			.attr("cx", 100)
-			.attr("cy", 100)
-			.attr("r", this.obj.age)
-			.style("fill", "blue");
-	}
-
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
+	obj2_AdditionalViewer() {
+    	const myName = "obj2_AdditionalViewer"; // function name don't use js feature in case 'use strict'		const container = document.getElementById("dynamicContent");
+		
+		var viewerDataPassed = {}
+		// NSKEA not viewer specific, object specific
+		if (myName == "obj2_AdditionalViewer") { // do not remove automatic code...
+			viewerDataPassed = this.obj.age;
+
+		}
+		// NSKEA end not viewer specific, object specific
+
+		// AZGLC start
+		function call(viewerDataPassed) {
+			const frame = document.createElement("div");
+			frame.id = myName;
+			frame.className = "frame green-frame";
+			frame.innerHTML = `<svg width="200" height="100"></svg>`;
+			const container = document.getElementById("dynamicContent");
+			container.appendChild(frame);
+
+
+			const svg = d3.select(frame).select("svg");
+			svg
+				.append("circle")
+				.attr("cx", 100)
+				.attr("cy", 50)
+				.attr("r", viewerDataPassed)
+				.style("fill", "red");	
+		}
+		// AZGLC end
+
+		call(viewerDataPassed);
+	}
+
 }
