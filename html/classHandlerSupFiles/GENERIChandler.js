@@ -1,6 +1,4 @@
 import { processJSONData } from '../src/htmlScripts.js';
-import { JgraphObject } from '../src_objects/jGraphObject.js';
-import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 
