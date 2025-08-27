@@ -16,13 +16,14 @@ import {
 	schemaDir,
 	instanceDir,
 	htmlDir,
-	location,
+	classHandlerDir,
 	derivationsFile,
 	schemaResolved,
 	src_objects,
 } from "./config.js";
 
 import { insertSupplementForFormInObjectClasses } from "./insertSupplementForFormInObjectClasses.js";
+import { insertSupplementForViewersClasses } from "./insertSupplementForViewersClasses.js";
 
 
 // Example usage createNewTypeSchema
@@ -204,7 +205,7 @@ fs.mkdirSync(schemaResolved, { recursive: true });
 processSchemas();
 
 fs.mkdirSync(htmlDir, { recursive: true });
-fs.mkdirSync(location, { recursive: true });
+fs.mkdirSync(classHandlerDir, { recursive: true });
 fs.mkdirSync(instanceDir, { recursive: true });
 // Ensure the HTML output directory exists
 if (!fs.existsSync(htmlDir)) {
@@ -218,7 +219,11 @@ const schemaList = mainGeneration();
 generateIndexPage(schemaList);
 runElevators();
 
-
+console.log("****************************** 0")
 mainMakeForm();
 
+console.log("****************************** 1")
 insertSupplementForFormInObjectClasses();
+console.log("****************************** 2")
+insertSupplementForViewersClasses();
+console.log("****************************** End")

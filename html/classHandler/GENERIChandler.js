@@ -2,6 +2,8 @@ import { processJSONData } from '../src/htmlScripts.js';
 import { JgraphObject } from '../src_objects/jGraphObject.js';
 import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
   
+/// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
+
 export class GENERIChandler {
 	constructor(obj = {}) {
 		this.obj = obj;
@@ -9,12 +11,27 @@ export class GENERIChandler {
 		this.verboseStartingString = "GENERIChandler";
 	}
 
+	#makeListMethods(suffix = "") {
+    return Object.getOwnPropertyNames(Object.getPrototypeOf(this))
+      .filter(
+        (name) =>
+          typeof this[name] === "function" &&
+          name !== "constructor" &&
+          (suffix === "" || name.endsWith(suffix))
+      );
+  	}
 	// called by htmlScript.ps
 	showAllOptionsInHTML(container) {
 		if (this.verbose)
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
 		this.#showViewer();
+
+		const methodsVA = this.#makeListMethods("_AdditionalViewer");
+		methodsVA.forEach((method) => {
+			console.log(`Calling: ${method}`);
+			this[method]();
+		});
 
 		this.#showUpdateWithButton();
 		this.#showUpdateNoButton();
@@ -545,3 +562,5 @@ export class GENERIChandler {
 	}
 
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
+
+/// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE

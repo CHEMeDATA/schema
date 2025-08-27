@@ -3,9 +3,11 @@ import { processJSONData } from '../src/htmlScripts.js';
 import { JgraphObject } from '../src_objects/jGraphObject.js';
 import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
   
+/// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 import { initializeSettings } from "../src_objects/nmrSpectrum.js";
 import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
 import { createSVG } from "../src_objects/nmrSpectrum.js";
+
 
 export class SetSpectraHandler {
 	constructor(obj = {}) {
@@ -565,6 +567,8 @@ export class SetSpectraHandler {
 	}
 
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
+
+/// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
 
 NmrSpectrum_AdditionalViewer() {
     const myName = "NmrSpectrum_AdditionalViewer"; // don't automatize in case 'use strict'

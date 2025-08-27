@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { all_viewersFile, location } from "./config.js";
+import { all_viewersFile, classHandlerDir } from "./config.js";
 
 /**
  * Generates a supplement file for the given className and config.
@@ -156,7 +156,7 @@ linkUrl
 `;
 
 	// Write the file
-	fs.writeFileSync(path.join(location, fileName), content, "utf8");
+	fs.writeFileSync(path.join(classHandlerDir, fileName), content, "utf8");
 	console.log(`✅ File ${fileName} created successfully.`);
 }
 

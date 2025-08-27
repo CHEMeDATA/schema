@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 
-import { location } from "./config.js";
+import { classHandlerDir } from "./config.js";
 
 // Scan for supplement*.js files
 export function insertSupplementForFormInObjectClasses() {
@@ -13,7 +13,6 @@ export function insertSupplementForFormInObjectClasses() {
 	console.log("start insertSupplementForFormInObjectClasses");
 	console.log("start insertSupplementForFormInObjectClasses");
 
-	const classHandlerDir = location;
 	fs.readdirSync(classHandlerDir)
 		.filter((file) => file.startsWith("supplement") && file.endsWith(".js"))
 		.forEach((file) => {

@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
-import { location, derivationsFile } from "./config.js";
+import { classHandlerDir, derivationsFile } from "./config.js";
 // ES module __dirname equivalent
 
 // Generate supplement file for a given class
@@ -74,7 +74,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 //module.exports = ${className}_DataEnrichment;
 `;
 
-	fs.writeFileSync(path.join(location, fileName), content, "utf8");
+	fs.writeFileSync(path.join(classHandlerDir, fileName), content, "utf8");
 	console.log(`✅ File ${fileName} created successfully.`);
 }
 
