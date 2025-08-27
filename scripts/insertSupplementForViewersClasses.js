@@ -4,16 +4,16 @@ import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
 
-import { classHandlerDir } from "./config.js";
+import { classHandlerDir , classHandlerSupFiles} from "./config.js";
 
 // Scan for supplement*.js files
 export function insertSupplementForViewersClasses() {
 	console.log("start insertSupplementForViewersClasses * viewers");
 
-	fs.readdirSync(classHandlerDir)
+	fs.readdirSync(classHandlerSupFiles)
 		.filter((file) => file.startsWith("suppl_") && file.endsWith("_method.js"))
 		.forEach((file) => {
-			const supplementFile = path.join(classHandlerDir, file);
+			const supplementFile = path.join(classHandlerSupFiles, file);
 			if (!fs.statSync(supplementFile).isFile()) return;
 
 			console.log(`Viewer upplement file: ${file}`);
@@ -22,7 +22,7 @@ export function insertSupplementForViewersClasses() {
 						console.log("objectName       ",objectName)
 
 			const file2 = "suppl_" + objectName + "_import.js";
-			const supplementFile2 = path.join(classHandlerDir, file2);
+			const supplementFile2 = path.join(classHandlerSupFiles, file2);
 
 			console.log("file",supplementFile)
 			console.log("file2",supplementFile2)

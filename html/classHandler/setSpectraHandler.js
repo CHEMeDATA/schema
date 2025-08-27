@@ -4,6 +4,10 @@ import { JgraphObject } from '../src_objects/jGraphObject.js';
 import { NMRspectrumObject } from '../src_objects/nmrSpectrumObject.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
+import { initializeSettings } from "../src_objects/nmrSpectrum.js";
+import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
+import { createSVG } from "../src_objects/nmrSpectrum.js";
+
 
 export class SetSpectraHandler {
 	constructor(obj = {}) {
@@ -548,4 +552,64 @@ export class SetSpectraHandler {
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
+
+	setSpectra_AdditionalViewer() {
+	    const myName = "setSpectra_AdditionalViewer"; // function name don't use js feature in case 'use strict'
+		const frame = document.createElement("div");
+		frame.id = myName;
+		frame.className = "frame red-frame";
+		frame.innerHTML = `<svg width="200" height="100"></svg>`;
+
+		const container = document.getElementById("dynamicContent");
+		container.appendChild(frame);
+
+		var viewerDataPassed = {};
+		// NSKEA not viewer specific, object specific
+		if (myName == "setSpectra_AdditionalViewer") { // do not remove automatic code...
+			const nMRspectraObjectsDemo = [
+			   new NMRspectrumObject({demo : {arrayLorentzian : {
+						centers: [7.27, 5.0, 0.0],
+						widthsInHz: [0.7, 0.7, 0.7],
+						amplitudes: [1, 10, 1],
+					}}}), 
+			    new NMRspectrumObject({demo : {
+				    spectralData:{firstPoint:9}, 
+				    arrayLorentzian:{centers:[3.8]}}
+			    })
+			]; 
+
+			 viewerDataPassed =  [
+				new NMRspectrumObject({},this.obj.members[0]), 
+				new NMRspectrumObject({},this.obj.members[1])
+			]; 
+		} 
+		if (myName == "nmrSpectrum_AdditionalViewer") { // do not remove automatic code...
+			const nMRspectraObjectsDemo = [
+			   new NMRspectrumObject({demo : {arrayLorentzian : {
+						centers: [7.27, 5.0, 0.0],
+						widthsInHz: [0.7, 0.7, 0.7],
+						amplitudes: [1, 10, 1],
+					}}})
+			]; 
+				
+
+			 viewerDataPassed =  [
+				new NMRspectrumObject({},this.obj)
+			]; 
+		}
+		// NSKEA end not viewer specific, object specific
+		// AZGLC start
+		function call(viewerDataPassed) {
+			const settings = initializeSettings({});
+			var svg = createSVG(myName, settings);
+			var spectrum = new NmrSpectrum(
+				viewerDataPassed,
+				svg,
+				settings,
+				settings.smallScreen
+			);
+		}
+		// AZGLC end
+		call(viewerDataPassed);
+	}
 }
