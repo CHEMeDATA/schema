@@ -6,6 +6,7 @@ export const schemaResolved = "v1/schemaResolved";
 export const instanceDir = "instances";
 export const srcDir = "src";
 export const htmlDir = "html";
+export const dataDir = "data";
 
 export const classHandlerDir =  `${htmlDir}/classHandler/`;
 export const classHandlerSupFiles =  `${htmlDir}/classHandlerSupFiles/`;

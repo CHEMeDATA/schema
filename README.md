@@ -2,6 +2,8 @@
 
 Under construction!
 
+ [index](https://chemedata.github.io/schema/html/index.html)
+
 Main schema builder repository.
 
 run:
@@ -25,6 +27,12 @@ cp /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js ./html/src_objects
 
 cp /Users/djeanner/git/nmr-objects/dist/JgraphObject.js ./html/src_objects/
 
+cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spectra.json data/
+cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_molecule.json data/
+cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spinFitResult.json data/
+# jq '.[0:3]' data/01_assigned_Set.spectra.json > data/01_assigned_Set.spectra.short.json
+
+cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned.mol data/
+
 
 ```
-

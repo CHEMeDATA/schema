@@ -194,24 +194,39 @@ createInstance(
 	"twoSpectra",
 	"setSpectra",
 	`{
-	"members": [_INSERT_FILE-miniSpectrum2, _INSERT_FILE-miniSpectrum]
+	"members": [_INSERT_FILE-miniSpectrum2__, _INSERT_FILE-miniSpectrum__]
 	}`
 );
 
 createNewTypeSchema("JgraphObject", [
 	{
-		name: "onlyDummyDataYet",
+		name: "jsonSpectrum",
 		required: true,
-		array: false,
-		type: "string",
-	},
+		array: true,
+		type: "object",
+		ref: "nmrSpectrumObject",	},
+		{
+		name: "jsonMolecule",
+		required: true,
+		array: true,
+		type: "object",
+		ref: "nmrSpectrumObject",	},
+		{
+		name: "jsonDataInitial",
+		required: true,
+		array: true,
+		type: "object",
+		ref: "nmrSpectrumObject",	},
 ]);
 
+//// UUUSSEEDD SHORT VERSION of array
 createInstance(
 	"myFirstJgraphObject",
 	"JgraphObject",
 	`{
-	"onlyDummyDataYet": "no comment"
+	"jsonSpectrum": _INSERT_FILE-01_assigned_Set.spectra.short__,  
+	"jsonMolecule": _INSERT_FILE-01_assigned_molecule__, 
+	"jsonDataInitial": _INSERT_FILE-01_assigned_Set.spinFitResult__
 	}`
 );
 

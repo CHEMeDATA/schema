@@ -1,7 +1,7 @@
 // ES module
 import fs from "fs";
 import path from "path";
-import { schemaRoot, schemaDir, instanceDir } from "./config.js";
+import { schemaRoot, schemaDir, instanceDir, dataDir } from "./config.js";
 
 // Throw error helper
 function generateError(message) {
@@ -147,8 +147,6 @@ export function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 	console.log(`✅ ${derivedClass} schema created at:`, derivedPath);
 }
 
-
-
 /**
  * Create a JSON Schema based on provided properties
  * @param {string} newSchemaName - The name of the new schema (without .json)
@@ -212,11 +210,18 @@ export function createNewTypeSchema(newSchemaName, propertiesList) {
 
 // Create instance
 export function createInstance(objName, schemaName, dataInput) {
+	let large = false;
 	if (typeof dataInput === "string") {
 		dataInput = dataInput.replace(
-			/_INSERT_FILE-([\w.-]+)/g,
+			/_INSERT_FILE-([\s\S]*?)__/g,
 			(match, fileName) => {
-				const filePath = path.join(instanceDir, fileName + ".json");
+				console.log(`*******fileName: ${fileName}`);
+
+				let filePath = path.join(instanceDir, fileName + ".json");
+				if (!fs.existsSync(filePath)) {
+					// fallback to dataDir if file not in instanceDir
+					filePath = path.join(dataDir, fileName + ".json");
+				}
 				try {
 					const fileContent = fs.readFileSync(filePath, "utf-8");
 					return fileContent;
@@ -226,14 +231,19 @@ export function createInstance(objName, schemaName, dataInput) {
 				}
 			}
 		);
-
 		try {
+			large = dataInput.length > 300000;
 			dataInput = JSON.parse(dataInput);
 		} catch (err) {
 			console.error("Invalid JSON string:", err.message);
 			throw new Error("❌ ");
 		}
 	}
+
+	/*if (large) {
+		dataInput.splice(5);
+		console.warning("chapped arrays ");
+	}*/
 
 	if (!schemaName || !objName || !dataInput)
 		generateError("Missing required parameters");
@@ -245,10 +255,15 @@ export function createInstance(objName, schemaName, dataInput) {
 			"Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
 		...dataInput,
 	};
-
-	const constString = JSON.stringify(data, null, 4);
-	const constString2 = compactNumericArrays(constString);
-	fs.writeFileSync(instancePath, constString2);
+	console.log("is large", large);
+	if (large) {
+		const constString = JSON.stringify(data);
+		fs.writeFileSync(instancePath, constString);
+	} else {
+		const constString = JSON.stringify(data, null, 4);
+		const constString2 = compactNumericArrays(constString);
+		fs.writeFileSync(instancePath, constString2);
+	}
 
 	console.log(`✅ ${objName} instance created at:`, instancePath);
 }

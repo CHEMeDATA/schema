@@ -3,11 +3,28 @@
     "type": "object",
     "$id": "https://chemedata.github.io/schema/v1/schema/JgraphObject.json",
     "properties": {
-        "onlyDummyDataYet": {
-            "type": "string"
+        "jsonSpectrum": {
+            "type": "array",
+            "items": {
+                "$ref": "https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json"
+            }
+        },
+        "jsonMolecule": {
+            "type": "array",
+            "items": {
+                "$ref": "https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json"
+            }
+        },
+        "jsonDataInitial": {
+            "type": "array",
+            "items": {
+                "$ref": "https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json"
+            }
         }
     },
     "required": [
-        "onlyDummyDataYet"
+        "jsonSpectrum",
+        "jsonMolecule",
+        "jsonDataInitial"
     ]
 }
