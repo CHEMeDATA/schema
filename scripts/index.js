@@ -21,7 +21,6 @@ import {
 	derivationsFile,
 	schemaResolved,
 	src_objects,
-	classHandlerDir
 } from "./config.js";
 
 import { insertSupplementForFormInObjectClasses } from "./insertSupplementForFormInObjectClasses.js";
@@ -207,6 +206,14 @@ createNewTypeSchema("JgraphObject", [
 		type: "string",
 	},
 ]);
+
+createInstance(
+	"myFirstJgraphObject",
+	"JgraphObject",
+	`{
+	"onlyDummyDataYet": "no comment"
+	}`
+);
 
 console.log(
 	"\n****** In v1/schemaResolved, write a copy of each schema but removed all 'allOf' and explicit '$refs' except if recursive\n"

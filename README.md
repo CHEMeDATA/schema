@@ -19,9 +19,11 @@ wget -O "./html/src_objects/mnovaJsonReader.js" "https://raw.githubusercontent.c
 echo "get /Users/djeanner/git/MnovaJson-reader/external/ObjectBase.js"
 wget -O ./html/src_objects/ObjectBase.js https://raw.githubusercontent.com/chemedata/MnovaJson-reader/main/external/ObjectBase.js
 
-
 cp /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js ./html/src_objects/
 cp /Users/djeanner/git/MnovaJson-reader/external/graphBase.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js ./html/src_objects/
+
+cp /Users/djeanner/git/nmr-objects/dist/JgraphObject.js ./html/src_objects/
 
 
 ```
