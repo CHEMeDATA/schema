@@ -21,6 +21,7 @@ import {
 	derivationsFile,
 	schemaResolved,
 	src_objects,
+	classHandlerDir
 } from "./config.js";
 
 import { insertSupplementForFormInObjectClasses } from "./insertSupplementForFormInObjectClasses.js";
@@ -43,6 +44,9 @@ console.log("\n****** Create the schema for the objects in v1/schema\n");
 
 fs.rmSync(schemaDir, { recursive: true, force: true });
 fs.mkdirSync(schemaDir, { recursive: true });
+
+fs.rmSync(classHandlerDir, { recursive: true, force: true });
+fs.mkdirSync(classHandlerDir, { recursive: true });
 
 if (fs.existsSync(derivationsFile)) {
 	fs.unlinkSync(derivationsFile);
