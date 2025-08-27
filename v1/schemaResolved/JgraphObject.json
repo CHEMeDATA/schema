@@ -1,0 +1,13 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/JgraphObject.json",
+    "properties": {
+        "onlyDummyDataYet": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "onlyDummyDataYet"
+    ]
+}

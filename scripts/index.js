@@ -1,3 +1,5 @@
+import fs from "fs";
+
 import {
 	createNewTypeSchema,
 	deriveSchema,
@@ -11,7 +13,6 @@ import { generateIndexPage, mainGeneration } from "./generateHtmlForSchema.js";
 import { runElevators } from "./makeElevators.js";
 import { mainMakeForm } from "./makeFormForReaders.js";
 
-import fs from "fs";
 import {
 	schemaDir,
 	instanceDir,
@@ -24,7 +25,6 @@ import {
 
 import { insertSupplementForFormInObjectClasses } from "./insertSupplementForFormInObjectClasses.js";
 import { insertSupplementForViewersClasses } from "./insertSupplementForViewersClasses.js";
-
 
 // Example usage createNewTypeSchema
 // for type float and double will be replaced with numbers in schema
@@ -195,6 +195,15 @@ createInstance(
 	}`
 );
 
+createNewTypeSchema("JgraphObject", [
+	{
+		name: "onlyDummyDataYet",
+		required: true,
+		array: false,
+		type: "string",
+	},
+]);
+
 console.log(
 	"\n****** In v1/schemaResolved, write a copy of each schema but removed all 'allOf' and explicit '$refs' except if recursive\n"
 );
@@ -219,11 +228,15 @@ const schemaList = mainGeneration();
 generateIndexPage(schemaList);
 runElevators();
 
-console.log("****************************** 0")
+console.log("****************************** 0");
 mainMakeForm();
 
-console.log("****************************** 1")
+console.log("****************************** 1");
 insertSupplementForFormInObjectClasses();
-console.log("****************************** 2")
+console.log("****************************** 2");
 insertSupplementForViewersClasses();
-console.log("****************************** End")
+console.log("****************************** End");
+
+
+
+
