@@ -204,19 +204,19 @@ createNewTypeSchema("JgraphObject", [
 		required: true,
 		array: true,
 		type: "object",
-		ref: "nmrSpectrumObject",	},
+		ref: "NMRspectrumObject",	},
 		{
 		name: "jsonMolecule",
 		required: true,
 		array: true,
 		type: "object",
-		ref: "nmrSpectrumObject",	},
+		ref: "NMRspectrumObject",	},
 		{
 		name: "jsonDataInitial",
 		required: true,
 		array: true,
 		type: "object",
-		ref: "nmrSpectrumObject",	},
+		ref: "NMRspectrumObject",	},
 ]);
 
 //// UUUSSEEDD SHORT VERSION of array
@@ -224,7 +224,7 @@ createInstance(
 	"myFirstJgraphObject",
 	"JgraphObject",
 	`{
-	"jsonSpectrum": _INSERT_FILE-01_assigned_Set.spectra.short__,  
+	"jsonSpectrum": _INSERT_FILE-01_assigned_Set.spectra__,  
 	"jsonMolecule": _INSERT_FILE-01_assigned_molecule__, 
 	"jsonDataInitial": _INSERT_FILE-01_assigned_Set.spinFitResult__
 	}`

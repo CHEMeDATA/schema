@@ -25,6 +25,15 @@ cp /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js ./html/src_objec
 cp /Users/djeanner/git/MnovaJson-reader/external/graphBase.js ./html/src_objects/
 cp /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js ./html/src_objects/
 
+
+cp /Users/djeanner/git/MnovaJson-reader/src/updateColumnsPositions.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/src/updateColumnsAction.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/src/updateBlockPosition.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/src/assignedCouplings.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/src/getJgraphColor.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/src/jmolInterface.js ./html/src_objects/
+cp /Users/djeanner/git/MnovaJson-reader/src/getJisOK.js ./html/src_objects/
+
 cp /Users/djeanner/git/nmr-objects/dist/JgraphObject.js ./html/src_objects/
 
 cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spectra.json data/
@@ -33,6 +42,17 @@ cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spi
 # jq '.[0:3]' data/01_assigned_Set.spectra.json > data/01_assigned_Set.spectra.short.json
 
 cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned.mol data/
+
+
+jq -r --argjson maxDepth 3 '
+  paths(scalars) 
+  | select(length <= $maxDepth) 
+  | map(tostring) 
+  | map(select(. | test("^[0-9]+$") | not)) 
+  | join(".")
+' instances/myFirstJgraphObject.json
+
+
 
 
 ```
