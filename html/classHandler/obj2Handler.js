@@ -556,22 +556,27 @@ export class Obj2Handler {
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
 	obj2_AdditionalViewer() {
-    	const myName = "obj2_AdditionalViewer"; // function name don't use js feature in case 'use strict'		const container = document.getElementById("dynamicContent");
-		
-		var viewerDataPassed = {}
-		// NSKEA not viewer specific, object specific
-		if (myName == "obj2_AdditionalViewer") { // do not remove automatic code...
-			viewerDataPassed = this.obj.age;
+		const myName = "obj2_AdditionalViewer"; // function name don't use js feature in case 'use strict'				
 
+		// NSKEA DATA location of automatically inserted code
+
+		// NSKEA not viewer specific, object specific
+		function getProperDataForVisualization(inputData, myName) {
+			if (myName == "obj2_AdditionalViewer") { // do not remove automatic code...
+				return inputData.obj.age;
+			}
 		}
 		// NSKEA end not viewer specific, object specific
 
-		// AZGLC start
-		function callGenerationGraphic(viewerDataPassed)  {
+		// NSKEA Method location of automatically inserted code
+
+		// NSKEA start
+		function callGenerationGraphic(myName, viewerDataPassed)  {
 			const frame = document.createElement("div");
 			frame.id = myName;
 			frame.className = "frame green-frame";
 			frame.innerHTML = `<svg width="200" height="100"></svg>`;
+
 			const container = document.getElementById("dynamicContent");
 			container.appendChild(frame);
 
@@ -584,9 +589,9 @@ export class Obj2Handler {
 				.attr("r", viewerDataPassed)
 				.style("fill", "red");	
 		}
-		// AZGLC end
-
-		callGenerationGraphic(viewerDataPassed);
+		// NSKEA end
+		const viewerDataPassed = getProperDataForVisualization(this, myName);
+		callGenerationGraphic(myName, viewerDataPassed);
 	}
 
 }

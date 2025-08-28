@@ -1,45 +1,47 @@
-
 	nmrSpectrum_AdditionalViewer() {
-	    const myName = "nmrSpectrum_AdditionalViewer"; // function name don't use js feature in case 'use strict'
-		
+		const myName = "nmrSpectrum_AdditionalViewer"; // function name don't use js feature in case 'use strict'
 
-		var viewerDataPassed = {};
+		// NSKEA DATA location of automatically inserted code
+
 		// NSKEA not viewer specific, object specific
-		if (myName == "setSpectra_AdditionalViewer") { // do not remove automatic code...
-			const nMRspectraObjectsDemo = [
-			   new NMRspectrumObject({demo : {arrayLorentzian : {
-						centers: [7.27, 5.0, 0.0],
-						widthsInHz: [0.7, 0.7, 0.7],
-						amplitudes: [1, 10, 1],
-					}}}), 
-			    new NMRspectrumObject({demo : {
-				    spectralData:{firstPoint:9}, 
-				    arrayLorentzian:{centers:[3.8]}}
-			    })
-			]; 
+		function getProperDataForVisualization(inputData, myName) {
 
-			 viewerDataPassed =  [
-				new NMRspectrumObject({},this.obj.members[0]), 
-				new NMRspectrumObject({},this.obj.members[1])
-			]; 
-		} 
-		if (myName == "nmrSpectrum_AdditionalViewer") { // do not remove automatic code...
-			const nMRspectraObjectsDemo = [
-			   new NMRspectrumObject({demo : {arrayLorentzian : {
-						centers: [7.27, 5.0, 0.0],
-						widthsInHz: [0.7, 0.7, 0.7],
-						amplitudes: [1, 10, 1],
-					}}})
-			]; 
-				
+			if (myName == "setSpectra_AdditionalViewer") { // do not remove automatic code...
+				const nMRspectraObjectsDemo = [
+				   new NMRspectrumObject({demo : {arrayLorentzian : {
+							centers: [7.27, 5.0, 0.0],
+							widthsInHz: [0.7, 0.7, 0.7],
+							amplitudes: [1, 10, 1],
+						}}}), 
+				    new NMRspectrumObject({demo : {
+					    spectralData:{firstPoint:9}, 
+					    arrayLorentzian:{centers:[3.8]}}
+				    })
+				]; 
 
-			 viewerDataPassed =  [
-				new NMRspectrumObject({},this.obj)
-			]; 
+				 return [
+					new NMRspectrumObject({},inputData.obj.members[0]), 
+					new NMRspectrumObject({},inputData.obj.members[1])
+				]; 
+			} 
+			if (myName == "nmrSpectrum_AdditionalViewer") { // do not remove automatic code...
+				const nMRspectraObjectsDemo = [
+				   new NMRspectrumObject({demo : {arrayLorentzian : {
+							centers: [7.27, 5.0, 0.0],
+							widthsInHz: [0.7, 0.7, 0.7],
+							amplitudes: [1, 10, 1],
+						}}})
+				]; 
+					
+
+			return [
+					new NMRspectrumObject({},inputData.obj)
+				]; 
+			}
 		}
 		// NSKEA end not viewer specific, object specific
-		// AZGLC start
-		function callGenerationGraphic(viewerDataPassed)  {
+		// NSKEA start
+		function callGenerationGraphic(myName, viewerDataPassed)  {
 			const frame = document.createElement("div");
 			frame.id = myName;
 			frame.className = "frame red-frame";
@@ -56,6 +58,7 @@
 				settings.smallScreen
 			);
 		}
-		// AZGLC end
-		callGenerationGraphic(viewerDataPassed);
+		// NSKEA end
+		const viewerDataPassed = getProperDataForVisualization(this, myName);
+		callGenerationGraphic(myName, viewerDataPassed);
 	}
