@@ -198,31 +198,31 @@ createInstance(
 	}`
 );
 
-createNewTypeSchema("JgraphObject", [
+createNewTypeSchema("jGraphObject", [
 	{
 		name: "jsonSpectrum",
 		required: true,
 		array: true,
 		type: "object",
-		ref: "NMRspectrumObject",	},
+		ref: "nmrSpectrumObject",	},
 		{
 		name: "jsonMolecule",
 		required: true,
 		array: true,
 		type: "object",
-		ref: "NMRspectrumObject",	},
+		ref: "nmrSpectrumObject",	},
 		{
 		name: "jsonDataInitial",
 		required: true,
 		array: true,
 		type: "object",
-		ref: "NMRspectrumObject",	},
+		ref: "nmrSpectrumObject",	},
 ]);
 
 //// UUUSSEEDD SHORT VERSION of array
 createInstance(
 	"myFirstJgraphObject",
-	"JgraphObject",
+	"jGraphObject",
 	`{
 	"jsonSpectrum": _INSERT_FILE-01_assigned_Set.spectra__,  
 	"jsonMolecule": _INSERT_FILE-01_assigned_molecule__, 

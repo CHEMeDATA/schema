@@ -145,7 +145,7 @@ export async function loadInstance(
 	} catch (err) {
 		validationMessage.textContent =
 			"❌ Failed to load instance or schema : " + err.message;
-		console.error("❌ Failed to load instance or schema ::", err);
+		console.log("❌ Failed to load instance or schema ::", err);
 	}
 }
 

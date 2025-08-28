@@ -4,7 +4,7 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Schema: JgraphObject.json</title>
+            <title>Schema: jGraphObject.json</title>
 
 
             <style>
@@ -25,9 +25,9 @@
         </head>
         <body>
 
-            <h1>Schema: JgraphObject.json</h1>
+            <h1>Schema: jGraphObject.json</h1>
             <p><strong>Schema ID:</strong> 
-                <a href="https://chemedata.github.io/schema/v1/schema/JgraphObject.json" target="_blank">https://chemedata.github.io/schema/v1/schema/JgraphObject.json</a>
+                <a href="https://chemedata.github.io/schema/v1/schema/jGraphObject.json" target="_blank">https://chemedata.github.io/schema/v1/schema/jGraphObject.json</a>
             </p>
 
             <h2>Properties:</h2>
@@ -62,7 +62,7 @@
   import { fetchSchemas } from './src/validateSchema.js';
   //import * as htmlScripts from './src/htmlScripts.js';
   import { loadFromURL, loadInstance, updateFeatureOfObject } from './src/htmlScripts.js';
-  import { JgraphObjectHandler } from './classHandler/jgraphObjectHandler.js';
+  import { JGraphObjectHandler } from './classHandler/jGraphObjectHandler.js';
   import { JgraphObject } from './src_objects/jGraphObject.js';
   import { NMRspectrumObject } from './src_objects/nmrSpectrumObject.js';
 document.addEventListener("DOMContentLoaded", function () {
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const validationMessage = document.getElementById("validationMessage");
 
     // Create the mainObject after DOM is ready
-    const mainObject = new JgraphObjectHandler({});
+    const mainObject = new JGraphObjectHandler({});
 
     if (selector) {
         selector.addEventListener("change", function () {

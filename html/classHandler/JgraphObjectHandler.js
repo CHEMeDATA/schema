@@ -10,11 +10,11 @@ import { JgraphObject } from "../src_objects/JgraphObject.js";
 import { NmrAssignment } from "../src_objects/nmrAssignement.js";
 
 
-export class JgraphObjectHandler {
+export class JGraphObjectHandler {
 	constructor(obj = {}) {
 		this.obj = obj;
 		this.verbose = true;
-		this.verboseStartingString = "JgraphObjectHandler";
+		this.verboseStartingString = "JGraphObjectHandler";
 	}
 
 	#makeListMethods(suffix = "") {
