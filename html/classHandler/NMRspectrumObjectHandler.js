@@ -653,13 +653,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	nmrSpectrum_AdditionalViewer() {
 	    const myName = "nmrSpectrum_AdditionalViewer"; // function name don't use js feature in case 'use strict'
-		const frame = document.createElement("div");
-		frame.id = myName;
-		frame.className = "frame red-frame";
-		frame.innerHTML = `<svg width="200" height="100"></svg>`;
-
-		const container = document.getElementById("dynamicContent");
-		container.appendChild(frame);
+		
 
 		var viewerDataPassed = {};
 		// NSKEA not viewer specific, object specific
@@ -698,6 +692,13 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		// NSKEA end not viewer specific, object specific
 		// AZGLC start
 		function callGenerationGraphic(viewerDataPassed)  {
+			const frame = document.createElement("div");
+			frame.id = myName;
+			frame.className = "frame red-frame";
+			frame.innerHTML = `<svg width="200" height="100"></svg>`;
+
+			const container = document.getElementById("dynamicContent");
+			container.appendChild(frame);
 			const settings = initializeSettings({});
 			var svg = createSVG(myName, settings);
 			var spectrum = new NmrSpectrum(

@@ -36,7 +36,6 @@
 		// NSKEA end not viewer specific, object specific
 		// AZGLC start
 		function callGenerationGraphic(viewerDataPassed) {
-			console.log("check2", viewerDataPassed.data.spectrumDataAllChopped);
 			const settings = initializeSettings({});
 			var svg = createSVG(myName, settings);
 			var spectrum = new NmrSpectrum(
