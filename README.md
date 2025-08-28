@@ -43,5 +43,4 @@ cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spi
 cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned.mol data/
 
 
-
 ```
