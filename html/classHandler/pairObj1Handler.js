@@ -519,8 +519,6 @@ export class PairObj1Handler {
 					console.error(`Method "${methodName}" does not exist.`);
 				}
 			});
-
-		
 	}
 
 	async #loadFile(event) {

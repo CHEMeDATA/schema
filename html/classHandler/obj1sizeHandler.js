@@ -519,8 +519,6 @@ export class Obj1sizeHandler {
 					console.error(`Method "${methodName}" does not exist.`);
 				}
 			});
-
-		
 	}
 
 	async #loadFile(event) {

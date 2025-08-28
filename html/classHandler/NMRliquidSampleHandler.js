@@ -519,8 +519,6 @@ export class NMRliquidSampleHandler {
 					console.error(`Method "${methodName}" does not exist.`);
 				}
 			});
-
-		
 	}
 
 	async #loadFile(event) {

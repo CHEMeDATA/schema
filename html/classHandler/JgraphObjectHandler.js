@@ -526,8 +526,6 @@ export class JGraphObjectHandler {
 					console.error(`Method "${methodName}" does not exist.`);
 				}
 			});
-
-		
 	}
 
 	async #loadFile(event) {
@@ -652,7 +650,6 @@ jGraphObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
-linkUrl
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
@@ -878,7 +875,6 @@ jGraphObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
-linkUrl
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));

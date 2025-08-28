@@ -526,8 +526,6 @@ export class NmrSpectrumObjectHandler {
 					console.error(`Method "${methodName}" does not exist.`);
 				}
 			});
-
-		
 	}
 
 	async #loadFile(event) {
