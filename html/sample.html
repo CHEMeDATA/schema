@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Live validation
     editor.addEventListener("input", function () {
         try {
-            const jsonData = JSON.parse(editor.value);
+            const jsonData = editor.isShortDontUseValue ? editor.data : JSON.parse(editor.value);
             const schemas = JSON.parse(editor.dataset.schema || "{}");
             validateJSON(jsonData, schemas, validationMessage);
             updateFeatureOfObject(jsonData, mainObject, editor, validationMessage);

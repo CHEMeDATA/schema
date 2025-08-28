@@ -428,6 +428,8 @@ export class NmrSpectrumObjectHandler {
 	}
 
 	#updateValuesInputDataEnrichment(dataObj) {
+		console.log("inputElement Warning: REMOVED EFFECT OF updateValuesInputDataEnrichment. Seems uselsss")
+		return;
 		dataObj.arrayOfItems.forEach((item) => {
 			const inputElement = document.getElementById(
 				`${item.htmlID}${dataObj.uniqueHTMLcode}`
@@ -435,9 +437,16 @@ export class NmrSpectrumObjectHandler {
 			if (inputElement) {
 				// Check if this.obj has a property matching item.htmlID
 				if (this.obj.hasOwnProperty(item.htmlID)) {
+					console.log ("inputElement", inputElement)
+					console.log ("item.htmlID", item.htmlID)
+					console.log ("this.obj", this.obj)
 					inputElement.value = this.obj[item.htmlID]; // Use the object's value
+					console.log ("alive1")
+
 					inputElement.style.color = "blue"; // Change text color
 					// inputElement.style.backgroundColor = "#e0f7fa"; // Light blue background
+					console.log ("alive2")
+
 				} else if (item.defaultValue !== undefined) {
 					inputElement.value = item.defaultValue; // Fallback to defaultValue
 					inputElement.style.color = "black"; // Default text color
@@ -445,6 +454,7 @@ export class NmrSpectrumObjectHandler {
 				}
 			}
 		});
+		console.log ("alive3")
 	}
 
 	#showDataEnrichmentMethods(dataObj) {
@@ -624,7 +634,6 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
-linkUrl
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
@@ -776,7 +785,6 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
-linkUrl
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));

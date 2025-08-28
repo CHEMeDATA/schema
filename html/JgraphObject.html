@@ -33,9 +33,7 @@
             <h2>Properties:</h2>
             <table>
                 <tr>  <th>Property</th>  <th>Type</th>  <th>Schema Reference</th>  <th>Required</th>  </tr>
-                <tr>  <td>jsonSpectrum</td>  <td>array</td>  <td><a href="nmrSpectrumObject.html">nmrSpectrumObject.html</a></td>  <td>✅ Yes</td>  </tr>
-                <tr>  <td>jsonMolecule</td>  <td>array</td>  <td><a href="nmrSpectrumObject.html">nmrSpectrumObject.html</a></td>  <td>✅ Yes</td>  </tr>
-                <tr>  <td>jsonDataInitial</td>  <td>array</td>  <td><a href="nmrSpectrumObject.html">nmrSpectrumObject.html</a></td>  <td>✅ Yes</td>  </tr>
+                <tr>  <td>dummy</td>  <td>string</td>  <td>-</td>  <td>❌ No</td>  </tr>
             </table>
             
             <h2>Load JSON Instance</h2>
@@ -82,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Live validation
     editor.addEventListener("input", function () {
         try {
-            const jsonData = JSON.parse(editor.value);
+            const jsonData = editor.isShortDontUseValue ? editor.data : JSON.parse(editor.value);
             const schemas = JSON.parse(editor.dataset.schema || "{}");
             validateJSON(jsonData, schemas, validationMessage);
             updateFeatureOfObject(jsonData, mainObject, editor, validationMessage);

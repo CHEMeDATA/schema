@@ -65,11 +65,31 @@ export async function loadFromURL(mainObject, editor, validationMessage) {
 	try {
 		// If dataParam is too large, skip full JSON.stringify
 		if (dataParam.length > MAX_PRETTY_PRINT_SIZE) {
+			/*
 			editor.value =
 				dataParam.slice(0, 1000) + "\n\n... (truncated preview) ...";
 			validationMessage.textContent =
 				"⚠ Data is too large to display fully in the editor. Showing truncated preview.";
 			parsedData = JSON.parse(dataParam.slice(0, 1000)); // optionally parse only a small preview
+							editor.dataset.schema = JSON.stringify(schemas);
+							*/
+			parsedData = JSON.parse(dataParam);
+			if (parsedData.content) {
+				editor.value =
+				dataParam.slice(0, 1000) + "\n\n... (truncated preview) ...";
+				const schemas = await fetchSchemas(parsedData.content);
+				validateJSON(parsedData.content, schemas, validationMessage);
+				updateFeatureOfObject(
+					parsedData.content,
+					mainObject,
+					editor,
+					validationMessage
+				);
+				editor.dataset.schema = JSON.stringify(schemas);
+			} else {
+				validationMessage.textContent =
+					"⚠ No 'content' field found in URL data";
+			}
 		} else {
 			parsedData = JSON.parse(dataParam);
 			if (parsedData.content) {
@@ -118,27 +138,27 @@ export async function loadInstance(
 			? parseInt(contentLength, 10) / (1024 * 1024)
 			: null;
 
-		const data = await response.json();
-
+		editor.data = await response.json();
+		editor.isShortDontUseValue = false;
 		if (sizeMB && sizeMB > 50) {
-			// For very large files, read only a small preview
+			editor.isShortDontUseValue = true;
 
-			const short = JSON.stringify(data);
+			const short = JSON.stringify(editor.data);
 
 			editor.value = short.slice(0, 1000) + "\n\n... (truncated preview) ...";
 			validationMessage.textContent =
 				"⚠ Instance too large to display fully. Showing preview only.";
 		} else {
-			editor.value = JSON.stringify(data, null, 4);
+			editor.value = JSON.stringify(editor.data, null, 4);
 		}
 
 		// Otherwise load full JSON normally
 
-		const schemas = await fetchSchemas(data);
+		const schemas = await fetchSchemas(editor.data);
 		console.log("validateJSON ...", schemas);
-		validateJSON(data, schemas, validationMessage);
+		validateJSON(editor.data, schemas, validationMessage);
 		console.log("updateFeatureOfObject ...");
-		updateFeatureOfObject(data, mainObject, editor, validationMessage);
+		updateFeatureOfObject(editor.data, mainObject, editor, validationMessage);
 		console.log("end ...");
 
 		editor.dataset.schema = JSON.stringify(schemas);

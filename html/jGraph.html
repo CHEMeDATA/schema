@@ -4,7 +4,7 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Schema: liquidSample.json</title>
+            <title>Schema: jGraph.json</title>
 
 
             <style>
@@ -25,22 +25,23 @@
         </head>
         <body>
 
-            <h1>Schema: liquidSample.json</h1>
+            <h1>Schema: jGraph.json</h1>
             <p><strong>Schema ID:</strong> 
-                <a href="https://chemedata.github.io/schema/v1/schema/liquidSample.json" target="_blank">https://chemedata.github.io/schema/v1/schema/liquidSample.json</a>
+                <a href="https://chemedata.github.io/schema/v1/schema/jGraph.json" target="_blank">https://chemedata.github.io/schema/v1/schema/jGraph.json</a>
             </p>
 
             <h2>Properties:</h2>
             <table>
                 <tr>  <th>Property</th>  <th>Type</th>  <th>Schema Reference</th>  <th>Required</th>  </tr>
-                <tr>  <td><strong>Derived from</strong></td>  <td>Object</td>  <td><a href="sample.html">sample.html</a></td>  <td>✅ Yes</td>  </tr>
-                <tr>  <td>volume_L</td>  <td>number</td>  <td>-</td>  <td>✅ Yes</td>  </tr>
+                <tr>  <td>jsonSpectrum</td>  <td>array</td>  <td><a href="nmrSpectrumObject.html">nmrSpectrumObject.html</a></td>  <td>✅ Yes</td>  </tr>
+                <tr>  <td>jsonMolecule</td>  <td>array</td>  <td><a href="nmrSpectrumObject.html">nmrSpectrumObject.html</a></td>  <td>✅ Yes</td>  </tr>
+                <tr>  <td>jsonDataInitial</td>  <td>array</td>  <td><a href="nmrSpectrumObject.html">nmrSpectrumObject.html</a></td>  <td>✅ Yes</td>  </tr>
             </table>
             
             <h2>Load JSON Instance</h2>
             <select id="instanceSelector">
                 <option value="">Select an instance...</option>
-                <option value="sampleSimple.json">sampleSimple.json</option>
+                <option value="myFirstJgraphObject.json">myFirstJgraphObject.json</option>
             </select>
     
             <h2>Edit JSON Instance</h2>
@@ -61,7 +62,7 @@
   import { fetchSchemas } from './src/validateSchema.js';
   //import * as htmlScripts from './src/htmlScripts.js';
   import { loadFromURL, loadInstance, updateFeatureOfObject } from './src/htmlScripts.js';
-  import { LiquidSampleHandler } from './classHandler/liquidSampleHandler.js';
+  import { JGraphHandler } from './classHandler/jGraphHandler.js';
   import { JgraphObject } from './src_objects/jGraphObject.js';
   import { NMRspectrumObject } from './src_objects/nmrSpectrumObject.js';
 document.addEventListener("DOMContentLoaded", function () {
@@ -70,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const validationMessage = document.getElementById("validationMessage");
 
     // Create the mainObject after DOM is ready
-    const mainObject = new LiquidSampleHandler({});
+    const mainObject = new JGraphHandler({});
 
     if (selector) {
         selector.addEventListener("change", function () {
@@ -81,7 +82,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Live validation
     editor.addEventListener("input", function () {
         try {
-            const jsonData = editor.isShortDontUseValue ? editor.data : JSON.parse(editor.value);
+            const jsonData = JSON.parse(editor.value);
             const schemas = JSON.parse(editor.dataset.schema || "{}");
             validateJSON(jsonData, schemas, validationMessage);
             updateFeatureOfObject(jsonData, mainObject, editor, validationMessage);

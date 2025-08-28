@@ -12,37 +12,33 @@
 		var viewerDataPassed = {};
 		// NSKEA not viewer specific, object specific
 		if (myName == "setSpectra_AdditionalViewer") { // do not remove automatic code...
-			const nMRspectraObjectsDemo = [
-			   new NMRspectrumObject({demo : {arrayLorentzian : {
-						centers: [7.27, 5.0, 0.0],
-						widthsInHz: [0.7, 0.7, 0.7],
-						amplitudes: [1, 10, 1],
-					}}}), 
-			    new NMRspectrumObject({demo : {
-				    spectralData:{firstPoint:9}, 
-				    arrayLorentzian:{centers:[3.8]}}
-			    })
-			]; 
+		
+			
+const origin = {
+                        timeStampConversion: "no timestamp for tests no content ugly test",
+                       
+                    };
+					console.log("UUZ this.obj.jsonSpectrum", this.obj.jsonSpectrum)
 
-			 viewerDataPassed =  [
-				new NMRspectrumObject({},this.obj.members[0]), 
-				new NMRspectrumObject({},this.obj.members[1])
-			]; 
+                    const param = {
+                        creatorParam: {
+                            editor: "djeanner",
+                            version: "1",
+                            source: "MnovaJson",
+                            id: "none",
+                        },
+                    };
+                    const viewerDataPassed = new JgraphObject(param, {
+                        jsonSpectrum: this.obj.jsonSpectrum,
+                        jsonMolecule: this.obj.jsonMolecule,
+                        jsonDataInitial: this.obj.jsonDataInitial,
+                        origin: origin,
+                    });
+					console.log("UUZ viewerDataPassed", viewerDataPassed)
+
+		
 		} 
-		if (myName == "nmrSpectrum_AdditionalViewer") { // do not remove automatic code...
-			const nMRspectraObjectsDemo = [
-			   new NMRspectrumObject({demo : {arrayLorentzian : {
-						centers: [7.27, 5.0, 0.0],
-						widthsInHz: [0.7, 0.7, 0.7],
-						amplitudes: [1, 10, 1],
-					}}})
-			]; 
-				
-
-			 viewerDataPassed =  [
-				new NMRspectrumObject({},this.obj)
-			]; 
-		}
+		
 		// NSKEA end not viewer specific, object specific
 		// AZGLC start
 		function call(viewerDataPassed) {

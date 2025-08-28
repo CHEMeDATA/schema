@@ -200,23 +200,11 @@ createInstance(
 
 createNewTypeSchema("jGraphObject", [
 	{
-		name: "jsonSpectrum",
-		required: true,
-		array: true,
-		type: "object",
-		ref: "nmrSpectrumObject",	},
-		{
-		name: "jsonMolecule",
-		required: true,
-		array: true,
-		type: "object",
-		ref: "nmrSpectrumObject",	},
-		{
-		name: "jsonDataInitial",
-		required: true,
-		array: true,
-		type: "object",
-		ref: "nmrSpectrumObject",	},
+		name: "dummy",
+		required: false,
+		array: false,
+		type: "string",
+	}
 ]);
 
 //// UUUSSEEDD SHORT VERSION of array
