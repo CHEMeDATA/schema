@@ -31,7 +31,7 @@
 				jsonDataInitial: this.obj.jsonDataInitial,
 				origin: origin,
 			});
-			//	console.log("check1", viewerDataPassed.data.spectrumDataAllChopped)
+
 		}
 		// NSKEA end not viewer specific, object specific
 		// AZGLC start
@@ -82,7 +82,6 @@
 			const classes = [...nmrAssignmentList, spectrum];
 
 			// Register each class as a receiver for every other class based on data type compatibility
-
 			classes.forEach((sender) => {
 				classes.forEach((receiver) => {
 					if (sender !== receiver) {

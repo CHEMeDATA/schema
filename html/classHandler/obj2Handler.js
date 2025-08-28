@@ -567,7 +567,7 @@ export class Obj2Handler {
 		// NSKEA end not viewer specific, object specific
 
 		// AZGLC start
-		function call(viewerDataPassed) {
+		function callGenerationGraphic(viewerDataPassed)  {
 			const frame = document.createElement("div");
 			frame.id = myName;
 			frame.className = "frame green-frame";
@@ -586,7 +586,7 @@ export class Obj2Handler {
 		}
 		// AZGLC end
 
-		call(viewerDataPassed);
+		callGenerationGraphic(viewerDataPassed);
 	}
 
 }

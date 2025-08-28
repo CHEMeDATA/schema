@@ -608,7 +608,7 @@ export class SetSpectraHandler {
 		}
 		// NSKEA end not viewer specific, object specific
 		// AZGLC start
-		function call(viewerDataPassed) {
+		function callGenerationGraphic(viewerDataPassed)  {
 			const settings = initializeSettings({});
 			var svg = createSVG(myName, settings);
 			var spectrum = new NmrSpectrum(
@@ -619,6 +619,6 @@ export class SetSpectraHandler {
 			);
 		}
 		// AZGLC end
-		call(viewerDataPassed);
+		callGenerationGraphic(viewerDataPassed);
 	}
 }

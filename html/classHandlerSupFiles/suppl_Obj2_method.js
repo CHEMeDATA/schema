@@ -10,7 +10,7 @@
 		// NSKEA end not viewer specific, object specific
 
 		// AZGLC start
-		function call(viewerDataPassed) {
+		function callGenerationGraphic(viewerDataPassed)  {
 			const frame = document.createElement("div");
 			frame.id = myName;
 			frame.className = "frame green-frame";
@@ -29,5 +29,5 @@
 		}
 		// AZGLC end
 
-		call(viewerDataPassed);
+		callGenerationGraphic(viewerDataPassed);
 	}
