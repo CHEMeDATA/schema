@@ -403,7 +403,7 @@ export class Obj2Handler {
 		});
 		frame.appendChild(table);
 	}
-
+ 
 	#addFileInputListeners(dataObj, loadFileCallback, handleInputChange) {
 		const dataArray = dataObj.arrayOfItems;
 		dataArray.forEach((item) => {

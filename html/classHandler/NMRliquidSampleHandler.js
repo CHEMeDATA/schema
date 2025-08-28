@@ -402,7 +402,7 @@ export class NMRliquidSampleHandler {
 		});
 		frame.appendChild(table);
 	}
-
+ 
 	#addFileInputListeners(dataObj, loadFileCallback, handleInputChange) {
 		const dataArray = dataObj.arrayOfItems;
 		dataArray.forEach((item) => {
