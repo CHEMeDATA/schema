@@ -1,0 +1,93 @@
+// scripts/makeElevators.js
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
+import { classHandlerDir, derivationsFile } from "../scripts/config.js";
+// ES module __dirname equivalent
+
+// Generate supplement file for a given class
+function generateSupplementFile(config) {
+	const { base, derived, fieldsToAdd } = config;
+	const className = base;
+	const fileName = `supplement${className}.js`;
+
+	// Generate arrayOfItems content from fieldsToAdd
+	const arrayOfItems = fieldsToAdd
+		.map((field) => {
+			return `{
+            type: "baseType",
+            htmlID: "${field.name}",
+            baseType: "${field.type}",
+            comment: "${field.userRequest}",
+            defaultValue: ${field.defaultValue},
+            randomFrom: ${field.randomFrom},
+            randomTo: ${field.randomTo},
+            show: ${field.show}
+        }`;
+		})
+		.join(",\n");
+
+	// Generate field handling loop
+	const fieldLoop = fieldsToAdd
+		.map((field) => {
+			return `
+        const ${field.name} = this.#getValOrDefault(dataObj, "${field.name}");
+        if (${field.name} !== undefined) targetObj["${field.name}"] = ${field.name};`;
+		})
+		.join("\n");
+
+	// Template for the function
+	const content = `
+// Auto-generated supplement file for ${className}
+${className}_DataEnrichment(targetObjType, dataObj = {}) {
+    const myName = "${className}_DataEnrichment"; // don't automatize in case 'use strict'
+    const myName2 = "${className}_DataEnrichment"; // don't automatize in case 'use strict'
+    if (targetObjType == "info") {
+        return {
+            sourceObjType: "${base}",
+            targetObjType: "${derived}",
+            uniqueHTMLcode: myName2,
+            elevatorMethod: myName,
+            arrayOfItems: [
+                ${arrayOfItems}
+            ],
+        };
+    }
+
+    var targetObj = {
+        ...this.obj,
+        $schema: \`https://chemedata.github.io/schema/v1/schema/\${targetObjType}.json\`,
+    };
+
+    // Handle fields dynamically
+    ${fieldLoop}
+
+    const content = { content: targetObj };
+    if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
+    const encodedContent = JSON.stringify(content);
+    const linkUrl = \`https://chemedata.github.io/schema/html/\${targetObjType}.html#data=\${encodedContent}\`;
+
+    document.getElementById(\`mergeOutput\${dataObj.uniqueHTMLcode}\`).textContent = JSON.stringify(targetObj, null, 2);
+    window.open(linkUrl, "_blank");
+}
+
+//module.exports = ${className}_DataEnrichment;
+`;
+
+	fs.writeFileSync(path.join(classHandlerDir, fileName), content, "utf8");
+	console.log(`✅ File ${fileName} created successfully.`);
+}
+
+// Main function
+export async function runElevators() {
+	try {
+		const raw = fs.readFileSync(derivationsFile, "utf8");
+		const data = JSON.parse(raw);
+
+		data.derivations.forEach((config) => {
+			generateSupplementFile(config);
+		});
+	} catch (err) {
+		console.error("❌ Failed to generate supplements:", err);
+	}
+}
