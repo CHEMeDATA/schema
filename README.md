@@ -24,6 +24,7 @@ wget -q -O./html/src_objects/ObjectBase.js https://raw.githubusercontent.com/che
 cp /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js ./html/src_objects/
 cp /Users/djeanner/git/MnovaJson-reader/external/graphBase.js ./html/src_objects/
 cp /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js ./html/src_objects/
+cp hiden/jGraphViewer.js ./html/src_objects/
 
 echo "get javaScript for jGraphObject viewer" 
 
