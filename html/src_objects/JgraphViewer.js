@@ -1,3 +1,6 @@
+import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
+import { NmrAssignment } from "../src_objects/nmrAssignement.js";
+
 export class JgraphViewer {
 	constructor(viewerDataPassed, svg, settings) {
 		
