@@ -37,7 +37,7 @@ cp /Users/djeanner/git/MnovaJson-reader/src/getJgraphColor.js ./html/src_objects
 cp /Users/djeanner/git/MnovaJson-reader/src/jmolInterface.js ./html/src_objects/
 cp /Users/djeanner/git/MnovaJson-reader/src/getJisOK.js ./html/src_objects/
 
-cp /Users/djeanner/git/nmr-objects/dist/jGraphObject.js ./html/src_objects/
+cat /Users/djeanner/git/nmr-objects/dist/jGraphObject.js |  sed 's/ObjectBase.js/objectBase.js/g' > ./html/src_objects/jGraphObject.js
 
 echo "get data files for 01_assigned" 
 cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spectra.json data/

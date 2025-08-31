@@ -1,9 +1,19 @@
 import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
 import { NmrAssignment } from "../src_objects/nmrAssignement.js";
+import { ViewerBase } from "../src_objects/viewerBase.js";
 
-export class JgraphViewer {
-	constructor(viewerDataPassed, svg, settings) {
-		
+export class JgraphViewer extends ViewerBase {
+	constructor(
+		viewerDataPassed,
+		svg,
+		settings
+	) {
+		super("JgraphViewer", {
+			dataTypesSend: [],
+			dataTypesReceive: [],
+			logAllDataExchange: false, // Enable logging for this instance if true
+		});
+
 		var spectrum = new NmrSpectrum(
 			viewerDataPassed.data.spectrumDataAllChopped,
 			svg,
