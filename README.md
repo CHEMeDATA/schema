@@ -21,7 +21,8 @@ wget -q -O "./html/src_objects/mnovaJsonReader.js" "https://raw.githubuserconten
 echo "get /Users/djeanner/git/MnovaJson-reader/external/objectBase.js"
 wget -q -O "./html/src_objects/objectBase.js" https://raw.githubusercontent.com/chemedata/objects-base/main/src/objectBase.js
 
-cat /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js | sed 's/graphBase.js/viewerBase.js/g' | sed 's/GraphBase/ViewerBase/g' > ./html/src_objects/nmrSpectrum.js
+cat /Users/djeanner/git/NMRspectrum-viewer/src/nmrSpectrum.js > ./html/src_objects/nmrSpectrum.js
+
 cp /Users/djeanner/git/viewers-base/src/viewerBase.js ./html/src_objects/
 
 cat /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js | sed 's/graphBase.js/viewerBase.js/g' | sed 's/GraphBase/ViewerBase/g' > ./html/src_objects/nmrAssignement.js

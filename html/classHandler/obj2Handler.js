@@ -556,13 +556,14 @@ export class Obj2Handler {
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
 	obj2_AdditionalViewer() {
-		const myName = "obj2_AdditionalViewer"; // function name don't use js feature in case 'use strict'				
+		const objClassName = "obj2";
+		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'
 
 		// NSKEA DATA location of automatically inserted code
 
 		// NSKEA not viewer specific, object specific
-		function getProperDataForVisualization(inputData, myName) {
-			if (myName == "obj2_AdditionalViewer") { // do not remove automatic code...
+		function getProperDataForVisualization(inputData, objClassName) {
+			if (objClassName == "obj2") { // do not remove automatic code...
 				return inputData.obj.age;
 			}
 		}
@@ -575,13 +576,19 @@ export class Obj2Handler {
 			const frame = document.createElement("div");
 			frame.id = myName;
 			frame.className = "frame green-frame";
-			frame.innerHTML = `<svg width="200" height="100"></svg>`;
-
 			const container = document.getElementById("dynamicContent");
-			container.appendChild(frame);
+			container.appendChild(frame);	
+			/* const svg = d3.select("#" + myName)
+				  .append("svg")
+				  .attr("viewBox", "0 0 890 490")
+				  .attr("width", 890)
+				  .attr("height", 490)
+				  .style("display", "block")
+				  .append("g")
+				  .attr("transform", "translate(60,10)");
+			*/
+			const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);   
 
-
-			const svg = d3.select(frame).select("svg");
 			svg
 				.append("circle")
 				.attr("cx", 100)
@@ -590,7 +597,7 @@ export class Obj2Handler {
 				.style("fill", "red");	
 		}
 		// NSKEA end
-		const viewerDataPassed = getProperDataForVisualization(this, myName);
+		const viewerDataPassed = getProperDataForVisualization(this, objClassName);
 		callGenerationGraphic(myName, viewerDataPassed);
 	}
 

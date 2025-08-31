@@ -1,19 +1,20 @@
-import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
-import { NmrAssignment } from "../src_objects/nmrAssignement.js";
 import { ViewerBase } from "../src_objects/viewerBase.js";
 
+import { initializeSettings } from "../src_objects/nmrSpectrum.js"; // viewer
+import { NmrSpectrum } from "../src_objects/nmrSpectrum.js"; // viewer
+import { NmrAssignment } from "../src_objects/nmrAssignement.js"; // viewer
+
+import { JgraphObject } from "../src_objects/jGraphObject.js"; // object
+
 export class JgraphViewer extends ViewerBase {
-	constructor(
-		viewerDataPassed,
-		svg,
-		settings
-	) {
+	constructor(viewerDataPassed, svg, settings = {}) {
 		super("JgraphViewer", {
 			dataTypesSend: [],
 			dataTypesReceive: [],
 			logAllDataExchange: false, // Enable logging for this instance if true
 		});
-
+		if (Object.keys(settings).length === 0) settings = initializeSettings({});
+		
 		var spectrum = new NmrSpectrum(
 			viewerDataPassed.data.spectrumDataAllChopped,
 			svg,
@@ -74,4 +75,30 @@ export class JgraphViewer extends ViewerBase {
 			nmrAssignment.build();
 		});
 	}
+	// NSKEA not viewer specific, object specific
+	static getProperDataForVisualization(inputData, objClassName) {
+		if (objClassName == "jGraphObject") {
+			// do not remove automatic code...
+
+			const origin = {
+				timeStampConversion: "created by jGraphObject_AdditionalViewer",
+			};
+			const paramMnovaJsonConverter = {
+				creatorParam: {
+					editor: "djeanner",
+					version: "1",
+					source: "MnovaJson",
+					id: "none",
+				},
+			};
+			return new JgraphObject(paramMnovaJsonConverter, {
+				jsonSpectrum: inputData.obj.jsonSpectrum,
+				jsonMolecule: inputData.obj.jsonMolecule,
+				jsonDataInitial: inputData.obj.jsonDataInitial,
+				origin: origin,
+			});
+		}
+	}
+
+	// NSKEA end not viewer specific, object specific
 }
