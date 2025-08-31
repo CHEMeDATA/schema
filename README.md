@@ -19,7 +19,7 @@ node scripts/index.js
 wget -q -O "./html/src_objects/mnovaJsonReader.js" "https://raw.githubusercontent.com/chemedata/MnovaJson-reader/main/src/mnovaJsonReader.js"
 
 echo "get /Users/djeanner/git/MnovaJson-reader/external/ObjectBase.js"
-wget -q -O./html/src_objects/objectBase.js https://raw.githubusercontent.com/chemedata/objects-base/main/src/objectBase.js
+wget -q -O "./html/src_objects/objectBase.js" https://raw.githubusercontent.com/chemedata/objects-base/main/src/objectBase.js
 
 cat /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js | sed 's/graphBase.js/viewerBase.js/g' | sed 's/GraphBase/ViewerBase/g' > ./html/src_objects/nmrSpectrum.js
 cp /Users/djeanner/git/viewers-base/src/viewerBase.js ./html/src_objects/
