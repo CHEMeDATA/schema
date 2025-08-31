@@ -21,9 +21,10 @@ wget -q -O "./html/src_objects/mnovaJsonReader.js" "https://raw.githubuserconten
 echo "get /Users/djeanner/git/MnovaJson-reader/external/ObjectBase.js"
 wget -q -O./html/src_objects/ObjectBase.js https://raw.githubusercontent.com/chemedata/MnovaJson-reader/main/external/ObjectBase.js
 
-cp /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/external/graphBase.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js ./html/src_objects/
+cat /Users/djeanner/git/MnovaJson-reader/external/nmrSpectrum.js | sed 's/graphBase.js/viewerBase.js/g' | sed 's/GraphBase/ViewerBase/g' > ./html/src_objects/nmrSpectrum.js
+cp /Users/djeanner/git/viewers-base/src/viewerBase.js ./html/src_objects/
+
+cat /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js | sed 's/graphBase.js/viewerBase.js/g' | sed 's/GraphBase/ViewerBase/g' > ./html/src_objects/nmrAssignement.js
 cp hidden/jGraphViewer.js ./html/src_objects/
 
 echo "get javaScript for jGraphObject viewer" 

@@ -1,4 +1,4 @@
-import { GraphBase } from './graphBase.js';
+import { ViewerBase } from './viewerBase.js';
 import { updateColumnsPositions } from './updateColumnsPositions.js';
 import { updateColumnsAction } from './updateColumnsAction.js';
 import { updateBlockPosition } from './updateBlockPosition.js';
@@ -10,7 +10,7 @@ import { jmolUnselectAll } from './jmolInterface.js';
 import { jmolSelectAtom } from './jmolInterface.js';
 import { jmolGetNBbonds } from './jmolInterface.js';
 import { jmolGetInfo } from './jmolInterface.js';
-export class NmrAssignment extends GraphBase {
+export class NmrAssignment extends ViewerBase {
   constructor(
     jGraphDataIn,
     svg,
@@ -20,7 +20,7 @@ export class NmrAssignment extends GraphBase {
     instanceNumb = 0,
     name = 'nameIsWiredInConstructor_NmrAssignment1',
   ) {
-    // data for GraphBase which takes care of communication between classes
+    // data for ViewerBase which takes care of communication between classes
     super(name, {
       dataTypesSend: [],
       dataTypesReceive: [

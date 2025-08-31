@@ -1,4 +1,4 @@
-import { GraphBase } from "./graphBase.js";
+import { ViewerBase } from "./viewerBase.js";
 
 export function initializeSettings(overrideSettings = {}) {
 	// Default settings
@@ -87,7 +87,7 @@ export function createSVG(dataviz, settings) {
 	);
 }
 
-export class NmrSpectrum extends GraphBase {
+export class NmrSpectrum extends ViewerBase {
 	constructor(
 		chemShiftsInput,
 		svg,
@@ -96,7 +96,7 @@ export class NmrSpectrum extends GraphBase {
 		regionsData = {},
 		name = "nameIsWiredInConstructor_NmrSpectrum1"
 	) {
-		// data for GraphBase which takes care of communication between classes
+		// data for ViewerBase which takes care of communication between classes
 		super(name, {
 			dataTypesSend: ["xAxisSpectrum"],
 			dataTypesReceive: [
