@@ -10,9 +10,9 @@ run:
 
 ```zsh
 
-rm ./all_viewers.json
+rm ./all_tools.json
 
-wget -q -O ./all_viewers.json https://raw.githubusercontent.com/chemedata/nmr-objects/main/all_viewers.json
+wget -q -O ./all_tools.json https://raw.githubusercontent.com/chemedata/nmr-objects/main/all_tools.json
 
 node scripts/index.js
 

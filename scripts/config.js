@@ -12,5 +12,5 @@ export const classHandlerDir =  `${htmlDir}/classHandler/`;
 export const classHandlerSupFiles =  `${htmlDir}/classHandlerSupFiles/`;
 
 export const src_objects = `${htmlDir}/src_objects`;
-export const all_viewersFile = "./all_viewers.json";
+export const all_toolsFile = "./all_tools.json";
 export const derivationsFile = "derivations.json";

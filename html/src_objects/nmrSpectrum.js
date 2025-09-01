@@ -326,7 +326,7 @@ export class NmrSpectrum extends ViewerBase {
 					new NMRspectrumObject({},inputData.obj.members[1])
 				]; 
 			} 
-			if (objClassName == "nmrSpectrum") { // do not remove automatic code...
+			if (objClassName == "nmrSpectrumObject") { // do not remove automatic code...
 				const nMRspectraObjectsDemo = [
 				   new NMRspectrumObject({demo : {arrayLorentzian : {
 							centers: [7.27, 5.0, 0.0],

@@ -285,7 +285,7 @@ export function mainGeneration() {
 /**
  * Generates an index.html file listing all schemas
  */
-export function generateIndexPage(schemaList) {
+export function generateIndexPage(schemaList, fileName = "index.html") {
 	let indexContent = `
         <!DOCTYPE html>
         <html lang="en">
@@ -311,6 +311,6 @@ export function generateIndexPage(schemaList) {
         </html>
     `;
 
-	fs.writeFileSync(path.join(htmlDir, "index.html"), indexContent, "utf8");
-	console.log("✅ index.html generated successfully!");
+	fs.writeFileSync(path.join(htmlDir, fileName), indexContent, "utf8");
+	console.log(`✅ {$fileName} generated successfully!`);
 }

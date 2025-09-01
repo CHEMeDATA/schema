@@ -1,5 +1,5 @@
-	nmrSpectrum_AdditionalViewer() {
-		const objClassName = "nmrSpectrum";
+	nmrSpectrumObject_AdditionalViewer() {
+		const objClassName = "nmrSpectrumObject";
 		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'
 
 		// NSKEA DATA location of automatically inserted code

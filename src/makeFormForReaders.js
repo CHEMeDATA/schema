@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { all_viewersFile, classHandlerDir } from "../scripts/config.js";
+import { all_toolsFile, classHandlerDir } from "../scripts/config.js";
 
 /**
  * Generates a supplement file for the given className and config.
@@ -172,7 +172,7 @@ async function downloadFile(url, output) {
 
 export function mainMakeForm() {
 	// Load derivations
-	const data = JSON.parse(fs.readFileSync(all_viewersFile, "utf8"));
+	const data = JSON.parse(fs.readFileSync(all_toolsFile, "utf8"));
 
 	const result = [];
 
@@ -187,13 +187,14 @@ export function mainMakeForm() {
 				creatorParam: item.creatorParam,
 				repository: item.repository,
 			};
-
-			const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
-			const output = path.join(`./html/src_objects/${innerItem.object}.js`);
-
-			downloadFile(url, output).catch(console.error);
+			if (input.type === "import") {
+				const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
+				const output = path.join(`./html/src_objects/${innerItem.object}.js`);
+				console.log(`>>>✅ makeFormForReader : Getting (from nmr-objects ) ${innerItem.object}.js`)
+				downloadFile(url, output).catch(console.error);
+				generateSupplementFile(input);;
+			}
 			result.push(input);
-			generateSupplementFile(input);
 		});
 	});
 }

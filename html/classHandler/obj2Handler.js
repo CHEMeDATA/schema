@@ -572,12 +572,13 @@ export class Obj2Handler {
 		// NSKEA Method location of automatically inserted code
 
 		// NSKEA start
-		function callGenerationGraphic(myName, viewerDataPassed)  {
+		function callGenerationGraphic(myName, viewerDataPassed) {
 			const frame = document.createElement("div");
 			frame.id = myName;
 			frame.className = "frame green-frame";
 			const container = document.getElementById("dynamicContent");
-			container.appendChild(frame);	
+			container.appendChild(frame);
+			const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);
 			/* const svg = d3.select("#" + myName)
 				  .append("svg")
 				  .attr("viewBox", "0 0 890 490")
@@ -587,8 +588,6 @@ export class Obj2Handler {
 				  .append("g")
 				  .attr("transform", "translate(60,10)");
 			*/
-			const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);   
-
 			svg
 				.append("circle")
 				.attr("cx", 100)
