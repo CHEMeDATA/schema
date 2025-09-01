@@ -556,6 +556,7 @@ export class SetSpectraHandler {
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
+
 	setSpectra_AdditionalViewer() {
 		const objClassName = "setSpectra";
 		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'

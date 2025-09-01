@@ -1,13 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { all_toolsFile, classHandlerDir } from "../scripts/config.js";
+import { all_toolsFile, classHandlerDir, classHandlerSupFiles } from "../scripts/config.js";
 
 /**
  * Generates a supplement file for the given className and config.
  * @param {string} className - The class name for the function and file.
  * @param {Object} config - Configuration object containing base, derived, and fieldsToAdd.
  */
-function generateSupplementFile(config) {
+function generateSupplementFileImporter(config) {
 	const {
 		object,
 		objectObj,
@@ -159,6 +159,81 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 	console.log(`✅ File ${fileName} created successfully.`);
 }
 
+function generateSupplementFileViewer(config) {
+	const {
+		object,
+		type,
+		jsLibrary,
+		repository,
+		fieldsToAdd,
+		fileNameViewerUSELESSMAXBE_REDUNDANT,
+		listObjectSchema,
+		fileNameAsSavedHere
+	} = config;
+	//const className = object;
+	//const fileName = `supplement${className}.js`;
+	//const creatorParamStringified = JSON.stringify(creatorParam);
+	console.log("******************* >>>");
+	console.log("object", object);
+	console.log("type", type);
+	//console.log("jsLibrary", jsLibrary);
+	//console.log("fileNameViewerUSELESSMAXBE_REDUNDANT", fileNameViewerUSELESSMAXBE_REDUNDANT);
+	console.log("fieldsToAdd", fieldsToAdd);
+	console.log("repository", repository);
+	console.log("listObjectSchema", listObjectSchema);
+	console.log("******************* >>>IIIIIIII fileNameAsSavedHere:",fileNameAsSavedHere);
+	for (const curtObjSchema of listObjectSchema) {
+		console.log("******************* ====", object, "for", curtObjSchema);
+		var includeFile = "";
+		for (const item of jsLibrary) {
+			if (item.include) {
+				includeFile += `import { ${item.include} } from \"${fileNameAsSavedHere}/${path.basename(item.fileName)}\";\n`
+				console.log(`prepare: import { ${item.include} } from \"${fileNameAsSavedHere}/${path.basename(item.fileName)}\";`);
+			} 
+		}
+	//         
+		const content = `
+	${curtObjSchema}_AdditionalViewer() {
+		const objClassName = "${curtObjSchema}";
+		const myName = \`\${objClassName}_AdditionalViewer\`; // function name don't use js feature in case 'use strict'
+
+		// NSKEA DATA location of automatically inserted code
+
+		// NSKEA start
+		function callGenerationGraphic(myName, viewerDataPassed) {
+			const frame = document.createElement("div");
+			frame.id = myName;
+			frame.className = "frame red-frame";
+			const container = document.getElementById("dynamicContent");
+			container.appendChild(frame);
+			// const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);
+			const svg = d3.select("#" + myName)
+				.append("svg")
+				.attr("viewBox", "0 0 890 490")
+				.attr("width", 890)
+				.attr("height", 490)
+				.style("display", "block")
+				.append("g")
+				.attr("transform", "translate(60,10)");
+
+			var the${object} = new ${object}(viewerDataPassed, svg);
+		}
+		// NSKEA end
+		const viewerDataPassed = ${object}.getProperDataForVisualization(this, objClassName);
+		callGenerationGraphic(myName, viewerDataPassed);
+	}
+`
+		const fileNameMethod = "suppl_"+ curtObjSchema + "_method.js";
+		fs.writeFileSync(path.join(classHandlerSupFiles, fileNameMethod), content, "utf8");
+
+		const fileNameInclude = "suppl_"+ curtObjSchema + "_import.js";
+		fs.writeFileSync(path.join(classHandlerSupFiles, fileNameInclude), includeFile, "utf8");
+
+		console.log(`✅ Files for ${curtObjSchema} created successfully.`);
+	}
+}
+
+
 // ES module fetch wrapper
 async function downloadFile(url, output) {
 	const response = await fetch(url);
@@ -192,13 +267,15 @@ export function mainMakeForm() {
 				const output = path.join(`./html/src_objects/${innerItem.object}.js`);
 				console.log(`>>>✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
 				downloadFile(url, output).catch(console.error);
-				generateSupplementFile(input);;
+				generateSupplementFileImporter(input);
 				result.push(input);
 			}
 			if (innerItem.type === "viewer") {
-				console.log(`>>> For  ${innerItem.class}.js`)
+				console.log(`>>> For ${innerItem.object}.js`)
 
-				const target = "./html/src_objects"
+				const target = "html/src_objects"
+				innerItem.fileNameAsSavedHere = "../src_objects";
+
 				for (const lib of innerItem.jsLibrary) {
 	    			const { repository, fileName } = lib;
 					const url = `https://raw.githubusercontent.com/${repository}/main/${fileName}`;
@@ -207,7 +284,7 @@ export function mainMakeForm() {
 				 	downloadFile(url, output).catch(console.error);			
 				}
 
-				//generateSupplementFile(input);;
+				generateSupplementFileViewer(innerItem);
 				//result.push(input);
 			}
 		});

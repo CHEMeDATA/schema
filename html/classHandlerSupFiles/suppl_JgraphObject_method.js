@@ -1,3 +1,4 @@
+
 	jGraphObject_AdditionalViewer() {
 		const objClassName = "jGraphObject";
 		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'

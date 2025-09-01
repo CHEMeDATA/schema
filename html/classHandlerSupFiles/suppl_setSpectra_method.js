@@ -1,3 +1,4 @@
+
 	setSpectra_AdditionalViewer() {
 		const objClassName = "setSpectra";
 		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'

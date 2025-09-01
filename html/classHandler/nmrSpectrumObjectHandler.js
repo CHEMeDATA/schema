@@ -645,6 +645,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
+
 	nmrSpectrumObject_AdditionalViewer() {
 		const objClassName = "nmrSpectrumObject";
 		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'

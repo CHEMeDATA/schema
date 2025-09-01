@@ -2,8 +2,8 @@
 import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
-import { JgraphObject } from "../src_objects/jGraphObject.js";
 import { JgraphViewer } from "../src_objects/jGraphViewer.js";
+import { JgraphObject } from "../src_objects/jGraphObject.js";
 
 
 export class JGraphObjectHandler {
@@ -664,6 +664,7 @@ jGraphObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
+
 	jGraphObject_AdditionalViewer() {
 		const objClassName = "jGraphObject";
 		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'
