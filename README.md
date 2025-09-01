@@ -9,7 +9,8 @@ Main schema builder repository.
 run:
 
 ```zsh
-
+rm -r ./html/src_objects/
+mkdir -p ./html/src_objects/
 rm ./all_tools.json
 
 wget -q -O ./all_tools.json https://raw.githubusercontent.com/chemedata/nmr-objects/main/all_tools.json
@@ -21,24 +22,9 @@ wget -q -O "./html/src_objects/mnovaJsonReader.js" "https://raw.githubuserconten
 echo "get /Users/djeanner/git/MnovaJson-reader/external/objectBase.js"
 wget -q -O "./html/src_objects/objectBase.js" https://raw.githubusercontent.com/chemedata/objects-base/main/src/objectBase.js
 
-cat /Users/djeanner/git/NMRspectrum-viewer/src/nmrSpectrum.js > ./html/src_objects/nmrSpectrum.js
-
-cp /Users/djeanner/git/viewers-base/src/viewerBase.js ./html/src_objects/
-
-cat /Users/djeanner/git/MnovaJson-reader/src/nmrAssignement.js | sed 's/graphBase.js/viewerBase.js/g' | sed 's/GraphBase/ViewerBase/g' > ./html/src_objects/nmrAssignement.js
-cp hidden/jGraphViewer.js ./html/src_objects/
 
 echo "get javaScript for jGraphObject viewer" 
 
-cp /Users/djeanner/git/MnovaJson-reader/src/updateColumnsPositions.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/src/updateColumnsAction.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/src/updateBlockPosition.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/src/assignedCouplings.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/src/getJgraphColor.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/src/jmolInterface.js ./html/src_objects/
-cp /Users/djeanner/git/MnovaJson-reader/src/getJisOK.js ./html/src_objects/
-
-cat /Users/djeanner/git/nmr-objects/dist/jGraphObject.js |  sed 's/ObjectBase.js/objectBase.js/g' > ./html/src_objects/jGraphObject.js
 
 echo "get data files for 01_assigned" 
 cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spectra.json data/

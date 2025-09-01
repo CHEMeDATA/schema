@@ -167,7 +167,7 @@ async function downloadFile(url, output) {
 
 	const data = await response.text();
 	fs.writeFileSync(output, data, "utf8");
-	console.log(`File saved to ${output}`);
+	console.log(`...async File saved to ${output}`);
 }
 
 export function mainMakeForm() {
@@ -178,23 +178,38 @@ export function mainMakeForm() {
 
 	data.list.forEach((item) => {
 		item.listObject.forEach((innerItem) => {
-			const input = {
-				object: innerItem.object,
-				objectObj: innerItem.objectObj,
-				type: innerItem.type,
-				fieldsToAdd: innerItem.requiredInput,
-				jsLibrary: item.jsLibrary,
-				creatorParam: item.creatorParam,
-				repository: item.repository,
-			};
-			if (input.type === "import") {
+			if (innerItem.type === "import") {
+				const input = {
+					object: innerItem.object,
+					objectObj: innerItem.objectObj,
+					type: innerItem.type,
+					fieldsToAdd: innerItem.requiredInput,
+					jsLibrary: item.jsLibrary,
+					creatorParam: item.creatorParam,
+					repository: item.repository,
+				};
 				const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
 				const output = path.join(`./html/src_objects/${innerItem.object}.js`);
-				console.log(`>>>✅ makeFormForReader : Getting (from nmr-objects ) ${innerItem.object}.js`)
+				console.log(`>>>✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
 				downloadFile(url, output).catch(console.error);
 				generateSupplementFile(input);;
+				result.push(input);
 			}
-			result.push(input);
+			if (innerItem.type === "viewer") {
+				console.log(`>>> For  ${innerItem.class}.js`)
+
+				const target = "./html/src_objects"
+				for (const lib of innerItem.jsLibrary) {
+	    			const { repository, fileName } = lib;
+					const url = `https://raw.githubusercontent.com/${repository}/main/${fileName}`;
+					const output = path.join(`${target}/${path.basename(fileName)}`);
+					console.log(`>>>✅ makeFormForReader : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
+				 	downloadFile(url, output).catch(console.error);			
+				}
+
+				//generateSupplementFile(input);;
+				//result.push(input);
+			}
 		});
 	});
 }
