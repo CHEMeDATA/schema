@@ -163,6 +163,7 @@ function generateSupplementFileViewer(config) {
 	const {
 		object,
 		type,
+		jsLibraryView,
 		jsLibrary,
 		repository,
 		fieldsToAdd,
@@ -176,16 +177,16 @@ function generateSupplementFileViewer(config) {
 	console.log("******************* >>>");
 	console.log("object", object);
 	console.log("type", type);
-	//console.log("jsLibrary", jsLibrary);
+	//console.log("jsLibraryView", jsLibraryView);
 	//console.log("fileNameViewerUSELESSMAXBE_REDUNDANT", fileNameViewerUSELESSMAXBE_REDUNDANT);
-	console.log("fieldsToAdd", fieldsToAdd);
+	//console.log("fieldsToAdd", fieldsToAdd);
 	console.log("repository", repository);
 	console.log("listObjectSchema", listObjectSchema);
 	console.log("******************* >>>IIIIIIII fileNameAsSavedHere:",fileNameAsSavedHere);
 	for (const curtObjSchema of listObjectSchema) {
 		console.log("******************* ====", object, "for", curtObjSchema);
 		var includeFile = "";
-		for (const item of jsLibrary) {
+		for (const item of jsLibraryView) {
 			if (item.include) {
 				includeFile += `import { ${item.include} } from \"${fileNameAsSavedHere}/${path.basename(item.fileName)}\";\n`
 				console.log(`prepare: import { ${item.include} } from \"${fileNameAsSavedHere}/${path.basename(item.fileName)}\";`);
@@ -255,32 +256,67 @@ export function mainMakeForm() {
 		item.listObject.forEach((innerItem) => {
 			if (innerItem.type === "import") {
 				const input = {
+					// innerItem
 					object: innerItem.object,
 					objectObj: innerItem.objectObj,
 					type: innerItem.type,
 					fieldsToAdd: innerItem.requiredInput,
+					// item
 					jsLibrary: item.jsLibrary,
 					creatorParam: item.creatorParam,
 					repository: item.repository,
 				};
 				const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
 				const output = path.join(`./html/src_objects/${innerItem.object}.js`);
-				console.log(`>>>✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
+				console.log(`<<<✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
 				downloadFile(url, output).catch(console.error);
 				generateSupplementFileImporter(input);
 				result.push(input);
+			}		
+			if (innerItem.type === "export") {
+				const input = {
+					// innerItem
+					object: innerItem.object,
+					objectObj: innerItem.objectObj,
+					type: innerItem.type,
+					outputComponents: innerItem.outputComponents,
+					// item
+					jsLibrary: item.jsLibrary,
+					creatorParam: item.creatorParam,
+					repository: item.repository,
+				};
+
+				const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
+				const outputDEL = path.join("./html/src_objects", `${innerItem.object}.js`);
+				const output = path.join("html", "src_objects", `${innerItem.object}.js`);
+				console.log(`>>>✅ makeFormForWriter : Getting (from nmr-objects) ${innerItem.object}.js`)
+				downloadFile(url, output).catch(console.error);
+				//generateSupplementFileExporter(input);
+				//result.push(input);
 			}
 			if (innerItem.type === "viewer") {
-				console.log(`>>> For ${innerItem.object}.js`)
-
+				console.log(`=== For ${innerItem.object}.js`)
+				const input = {
+					// innerItem
+					object: innerItem.object,
+					type: innerItem.type,
+					repository: innerItem.repository,
+					fileNameViewerUSELESSMAXBE_REDUNDANT: innerItem.fileNameViewerUSELESSMAXBE_REDUNDANT,
+					listObjectSchema: innerItem.listObjectSchema,
+					jsLibraryView: innerItem.jsLibraryView,
+					// item
+					jsLibrary: item.jsLibrary,
+					creatorParam: item.creatorParam,
+					repository: item.repository,
+				};
 				const target = "html/src_objects"
 				innerItem.fileNameAsSavedHere = "../src_objects";
 
-				for (const lib of innerItem.jsLibrary) {
+				for (const lib of innerItem.jsLibraryView) {
 	    			const { repository, fileName } = lib;
 					const url = `https://raw.githubusercontent.com/${repository}/main/${fileName}`;
 					const output = path.join(`${target}/${path.basename(fileName)}`);
-					console.log(`>>>✅ makeFormForReader : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
+					console.log(`===✅ makeFormForReader : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
 				 	downloadFile(url, output).catch(console.error);			
 				}
 

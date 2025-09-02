@@ -2,8 +2,8 @@
 import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
-import { JgraphViewer } from "../src_objects/jGraphViewer.js";
 import { JgraphObject } from "../src_objects/jGraphObject.js";
+import { JgraphViewer } from "../src_objects/jGraphViewer.js";
 
 
 export class JGraphObjectHandler {
