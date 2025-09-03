@@ -3,6 +3,7 @@ import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
+import { NMRspectrumObject } from "../src_objects/nmrSpectrumObject.js";
 
 
 export class NmrSpectrumObjectHandler {
@@ -47,6 +48,11 @@ export class NmrSpectrumObjectHandler {
 			this.#showDataEnrichmentMethods(method.info); // Call for each elevator
 		});
 
+		const exporters = this.#listNonStaticMethods("_DataExport"); // get all elevator methods
+		exporters.forEach((method) => {
+			this.#showDataExportMethods(method.info); // Call for each elevator
+		});
+		
 		this.#showViewer();
 	}
 
@@ -152,14 +158,14 @@ export class NmrSpectrumObjectHandler {
 		});
 	}
 
-  	async loadSchemaPOO(input) {
-        const response = await fetch(input);
-        if (!response.ok) {
-            throw new Error(`Failed to load schema: ${response.status}`);
-        }
-        const schema = await response.json();
-        return schema;
-    }
+	async loadSchemaPOO(input) {
+		const response = await fetch(input);
+		if (!response.ok) {
+			throw new Error(`Failed to load schema: ${response.status}`);
+		}
+		const schema = await response.json();
+		return schema;
+	}
 	
 
 	default_showUpdateNoButton(param, dataObj = {}) {
@@ -351,9 +357,89 @@ export class NmrSpectrumObjectHandler {
 
 		
 	}
-	#generateTableOfInputForEnrichment(frame, dataObj) {
+	#generateTableOfInputForExport(frame, dataObj, title) {
+		console.log("LLOOGG Table ",dataObj);
+		const dataArray = dataObj.outputComponents;
+		frame.innerHTML = `<h4>${title}</h4>`;
+
+		const table = document.createElement("table");
+		table.style.borderCollapse = "collapse";
+		table.style.width = "100%";
+
+		dataArray.forEach((item) => {
+
+		const row = document.createElement("tr");
+
+		// First column: Comment
+		const commentCell = document.createElement("td");
+		commentCell.textContent = item.label;
+		commentCell.style.border = "1px solid black";
+		commentCell.style.padding = "5px";
+		row.appendChild(commentCell);
+
+		// Second column: Save-as box (for saving files instead of loading)
+		const inputCell = document.createElement("td");
+		inputCell.style.border = "1px solid black";
+		inputCell.style.padding = "5px";
+
+		let inputElement;
+
+		inputElement = document.createElement("button");
+		inputElement.textContent = "Save " + item.objDataField + " As...";
+		inputElement.id = item.htmlID + dataObj.uniqueHTMLcode;
+
+		// Add file saving logic depending on the file type
+		inputElement.addEventListener("click", () => {
+			let fileData = {};
+			if (Array.isArray(item.objDataField) && item.objDataField.length > 0) {
+			    // Copy only listed fields
+				item.objDataField.forEach((fieldName) => {
+					fileData[fieldName] = this.obj[fieldName];
+				});
+			} else {
+			    // Copy everything if no fields are listed
+				fileData = { ...this.obj };
+			}
+
+			let blob;
+			let fileName = item.defaultFileName || "Output";
+
+			if (item.type === "binary") {
+				blob = new Blob([fileData], { type: "application/octet-stream" });
+				fileName += ".bin";
+			} else if (item.type === "json") {
+				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
+				fileName += ".json";
+			} else if (item.type === "txt") {
+				blob = new Blob([fileData], { type: "text/plain" });
+				fileName += ".txt";
+			} else {
+				alert("Unsupported file type!");
+				return;
+			}
+
+		    // Create download link and trigger download
+			const a = document.createElement("a");
+			a.href = URL.createObjectURL(blob);
+			a.download = fileName;
+			a.click();
+			URL.revokeObjectURL(a.href);
+		});
+
+
+
+		if (inputElement) {
+			inputCell.appendChild(inputElement);
+		}
+		row.appendChild(inputCell);
+		table.appendChild(row);
+		});
+		frame.appendChild(table);
+	}
+
+	#generateTableOfInputForEnrichment(frame, dataObj, title) {
 		const dataArray = dataObj.arrayOfItems;
-		frame.innerHTML = "<h4>Data Enrichment</h4>"; // Clear previous content
+		frame.innerHTML =  `<h4>${title}</h4>`;
 		const table = document.createElement("table");
 		table.style.borderCollapse = "collapse";
 		table.style.width = "100%";
@@ -460,7 +546,7 @@ export class NmrSpectrumObjectHandler {
 		const frame = document.createElement("div");
 		frame.className = "frame red-frame";
 
-		this.#generateTableOfInputForEnrichment(frame, dataObj);
+		this.#generateTableOfInputForEnrichment(frame, dataObj, "Object Creation");
 
 		frame.innerHTML += `          <button id="mergeButton${dataObj.uniqueHTMLcode}">Create ${dataObj.targetObjType}</button>`;
 		frame.innerHTML += `          <pre id="mergeOutput${dataObj.uniqueHTMLcode}"></pre>`;
@@ -487,6 +573,75 @@ export class NmrSpectrumObjectHandler {
 			});
 	}
 
+	#showDataExportMethods(dataObj) {
+		console.log("LLOOKK showDataExportMethods ",dataObj);
+
+		const container = document.getElementById("dynamicContent");
+
+		// Create the container for the file input and input
+		const frame = document.createElement("div");
+		frame.className = "frame green-frame";
+
+		this.#generateTableOfInputForExport(frame, dataObj, `Export to ${dataObj.title}`);
+
+		let inputElement;
+
+        inputElement = document.createElement("button");
+        inputElement.textContent = "Save As";
+        inputElement.id = dataObj.uniqueHTMLcode;
+
+        // Add file saving logic depending on the file type
+        inputElement.addEventListener("click", () => {
+            let fileData = this.obj;  // Data to save, must be provided externally
+			// Find method to generate export methos
+
+			const methodName = dataObj.elevatorMethod; // "combineFiles"; // Dynamic method name
+			if (typeof this[methodName] !== "function") {
+					console.error(`Method "${methodName}" does not exist.`);
+			}
+			console.log(`Method AZU "${methodName}" is called.`);
+			console.log(`Method AZU dataObj.outputComponents `, dataObj.outputComponents);
+			console.log(`Method AZU dataObj`, dataObj);
+			// Call adder of content
+			// EMPTY ARRAY IF FORT ALL VALUES
+			const dataExport = this[methodName]([], dataObj);
+			console.log(`End "${methodName}" is called.`);
+			fileData.fromExport = dataExport;
+			//Object.assign(fileData, dataExport);  
+
+			let blob;
+			let fileName = "output";
+
+			const fileType = "json";
+			if (fileType === "binary") {
+				blob = new Blob([fileData], { type: "application/octet-stream" });
+				fileName += ".bin";
+			} else if (fileType === "json") {
+				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
+				fileName += ".json";
+			} else if (fileType === "txt") {
+				blob = new Blob([fileData], { type: "text/plain" });
+				fileName += ".txt";
+			} else {
+				alert("Unsupported file type!");
+			return;
+			}
+
+            // Create download link and trigger download
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
+        frame.appendChild(inputElement);
+		container.appendChild(frame);
+
+		this.#updateValuesInputDataEnrichment(dataObj);
+
+	}
+
 	#showDataUpdater(dataObj) {
 		const container = document.getElementById("dynamicContent");
 		const targetObjType = dataObj.targetObjType;
@@ -495,7 +650,7 @@ export class NmrSpectrumObjectHandler {
 		const frame = document.createElement("div");
 		frame.className = "frame blue-frame";
 
-		this.#generateTableOfInputForEnrichment(frame, dataObj);
+		this.#generateTableOfInputForEnrichment(frame, dataObj, "Data Enrichement");
 
 		frame.innerHTML += `          <button id="updateButton2${dataObj.uniqueHTMLcode}">Update</button>`;
 		frame.innerHTML += `          <pre id="mergeOutput${dataObj.uniqueHTMLcode}"></pre>`;
@@ -682,6 +837,77 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 // include..... jsLibrary: mnovaJsonReader.js
 // work on object:nmrSpectrumObject (object == className)
 // Auto-generated supplement file for className:nmrSpectrumObject
+nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
+	
+	const myName = "nmrSpectrumObject_DataExport"; // don't automatize in case 'use strict'
+	if (targetObjType == "info") {
+		return {
+			uniqueHTMLcode: myName,
+			elevatorMethod: myName,
+			"creatorParam": {
+					"editor": "djeanner",
+					"version": "1",
+					"source": "MnovaJson",
+					"id": "none"
+				},
+			"object": "nmrSpectrumObject",
+			"objectObj": "NMRspectrumObject",
+			"type": "export",
+			"title": "Mnova json spectrum",
+			"outputComponents": [
+				{
+					"objDataField" : ["firstPoint", "values"],
+					"label": "NMR file (.json)",
+					"type": "json",
+					"type comment" :"json binary txt"
+				}
+			]
+		};
+	}
+	console.log("nmrSpectrumObject_DataExport targetObjType: ", targetObjType);
+	console.log("nmrSpectrumObject_DataExport dataObj: ", dataObj);
+	console.log("nmrSpectrumObject_DataExport this.obj: ", this.obj);
+
+	// call converter...
+	console.log("nmrSpectrumObject_DataExport dataObj.outputComponents[0].objDataField[0]: ", dataObj.outputComponents[0].objDataField[0]);
+
+	let trueReturnedObjetWireFirst = {};
+	if (Array.isArray(targetObjType) && targetObjType.length === 0) {
+		console.log("Array is empty");
+		trueReturnedObjetWireFirst["selectorOfComponents"] = "all";
+	}	else {
+		trueReturnedObjetWireFirst["selectorOfComponents"] = "not all";
+	}
+
+
+	const outputFields = dataObj.outputComponents[0].objDataField;
+	outputFields.forEach(fieldName => {
+        trueReturnedObjetWireFirst[fieldName] = this.obj[fieldName];
+    });
+
+
+	// optional escape sourceObj // cancels action 
+	if ( 
+		false
+	) {
+		const errorMessage = "Failed because ...";
+		document.getElementById(
+			`mergeOutput${dataObj.uniqueHTMLcode}`
+		).textContent = errorMessage;
+		return;
+	}
+
+	// here create object from this
+	const thenmrSpectrumObject = new NMRspectrumObject([], this.obj);
+	const param = {
+		creatorParam : dataObj.creatorParam,
+		targetObjType:targetObjType,
+		outputFields:outputFields
+		};
+	const returedExport = thenmrSpectrumObject._saveExportedData(param);
+	return returedExport;
+}
+
 nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	const myName = "nmrSpectrumObject_DataEnrichment"; // don't automatize in case 'use strict'
 	if (targetObjType == "info") {
@@ -725,7 +951,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
 
-	const creatorParam = {creatorParam:{"editor":"djeanner","version":"1","source":"MnovaJson","id":"none"}}; 
+	const creatorParam = dataObj.creatorParam;
 	// here create object, call converter...
 
 	const thenmrSpectrumObject = new NMRspectrumObject(creatorParam, sourceObj);

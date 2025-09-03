@@ -178,6 +178,20 @@ export class ObjectBase {
 		);
 	}
 
+	_buildExportFunctionName(param) {
+		return (
+			"export" +
+			"_Editor" +
+			param.editor +
+			"_Version" +
+			param.version +
+			"_Source" +
+			param.source +
+			"_ID" +
+			param.id
+		);
+	}
+
 	_loadImportedData(param, input) {
 		const importFunctionName = this._buildImportFunctionName(
 			param.creatorParam
@@ -185,12 +199,30 @@ export class ObjectBase {
 
 		if (typeof this[importFunctionName] !== "function") {
 			throw new Error(
-				`Import function ${importFunctionName} does not exist on NMRspectrumObject`
+				`Import function ${importFunctionName} does not exist on ${this.name}`
 			);
 		}
 		this.constructorImporterFunctionName = importFunctionName;
 		this.constructorImporterParam = param;
 		this[importFunctionName](param, input);
 		if (this.verbose > 1) console.log(this.name + ".data:", this.data);
+	}
+
+	_saveExportedData(param) {
+		const exportFunctionName = this._buildExportFunctionName(
+			param.creatorParam
+		);
+			console.log("_saveExportedData param",param)
+
+		if (typeof this[exportFunctionName] !== "function") {
+			throw new Error(
+				`Export function ${exportFunctionName} does not exist on ${this.name}`
+			);
+		}
+		const exportedData = this[exportFunctionName](param);
+		if (this.verbose > 1) console.log("exported data from objectBase", exportedData);
+		console.log("_saveExportedData exportedData",exportedData)
+
+		return exportedData;
 	}
 }

@@ -16,7 +16,21 @@ function generateSupplementFileImporter(config) {
 		creatorParam,
 		fieldsToAdd,
 		repository,
+		jsLibraryGet,
 	} = config;
+
+	// included objects
+	var includeFile = "";
+	for (const item of jsLibraryGet) {
+		if (item.include) {
+			includeFile += `import { ${item.include} } from \"${fileNameAsSavedHere}/${path.basename(item.fileName)}\";\n`
+			console.log(`prepare: import { ${item.include} } from \"${fileNameAsSavedHere}/${path.basename(item.fileName)}\";`);
+		} 
+	}
+	const fileNameInclude = `supImp${className}.js`;
+	fs.writeFileSync(path.join(classHandlerSupFiles, fileNameInclude), includeFile, "utf8");
+
+	// main file
 	const className = object;
 	const fileName = `supplement${className}.js`;
 	const creatorParamStringified = JSON.stringify(creatorParam);
@@ -168,6 +182,7 @@ function generateSupplementFileViewer(config) {
 		repository,
 		fieldsToAdd,
 		fileNameViewerUSELESSMAXBE_REDUNDANT,
+		creatorParam,
 		listObjectSchema,
 		fileNameAsSavedHere
 	} = config;
@@ -175,6 +190,7 @@ function generateSupplementFileViewer(config) {
 	//const fileName = `supplement${className}.js`;
 	//const creatorParamStringified = JSON.stringify(creatorParam);
 	console.log("******************* >>>");
+	console.log("object", creatorParam);
 	console.log("object", object);
 	console.log("type", type);
 	//console.log("jsLibraryView", jsLibraryView);
@@ -261,6 +277,7 @@ export function mainMakeForm() {
 					objectObj: innerItem.objectObj,
 					type: innerItem.type,
 					fieldsToAdd: innerItem.requiredInput,
+					jsLibraryGet: innerItem.jsLibraryGet,
 					// item
 					jsLibrary: item.jsLibrary,
 					creatorParam: item.creatorParam,
@@ -280,6 +297,7 @@ export function mainMakeForm() {
 					objectObj: innerItem.objectObj,
 					type: innerItem.type,
 					outputComponents: innerItem.outputComponents,
+					jsLibraryGet: innerItem.jsLibraryGet,
 					// item
 					jsLibrary: item.jsLibrary,
 					creatorParam: item.creatorParam,

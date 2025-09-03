@@ -12,7 +12,7 @@ import { ingestSpectrumRegions } from "./mnovaJsonReader.js";
 
 import { processSf } from "./mnovaJsonReader.js";
 
-import { ObjectBase } from "./ObjectBase.js";
+import { ObjectBase } from "./objectBase.js";
 
 export class NMRspectrumObject extends ObjectBase {
 	constructor(param, input) {
@@ -103,15 +103,15 @@ export class NMRspectrumObject extends ObjectBase {
 
 	// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 //  export method // Should not minimize
-	export_Editordjeanner_Version1_SourceMnovaJson_IDnone(param, dataInput) {
-		if (param.requestedField) {
+	export_Editordjeanner_Version1_SourceMnovaJson_IDnone(param) {
+		var retObj = {paramOfCall: param};
 			if (param.requestedField === "first") {
-				return {dummy_data : 1};
+				retObj.dummy_data = 1;
+				return retObj;
+			} else {
+				retObj.dummy_data = 2;
+				return retObj;			
 			}
-			if (param.requestedField === "second") {
-				return {dummy_data : 2};
-			}
-		}
 	}
 //  import method // Should not minimize
 	import_Editordjeanner_Version1_SourceMnovaJson_IDnone(param, dataInput) {

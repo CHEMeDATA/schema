@@ -23,7 +23,14 @@ export function insertSupplementForFormInObjectClasses() {
 
 			// Extract object name: "supplementNMRspectrumObject.js" → "NMRspectrumObject"
 			const objectName = file.replace(/^supplement/, "").replace(/\.js$/, "");
+
 			console.log(`Object name: ${objectName}`);
+
+			const file2 = "supImp" + objectName + ".js";
+			const supplementFile2 = path.join(classHandlerSupFiles, file2);
+
+
+			console.log(`supplementFile2: ${supplementFile2}`);
 
 			const objectFile = path.join(classHandlerDir, `${objectName}Handler.js`);
 			const objectFileTmp = path.join(
@@ -36,6 +43,8 @@ export function insertSupplementForFormInObjectClasses() {
 
 				console.log(`Insertions of ${file} in ${objectFile}`);
 				console.log("-------------------------");
+				console.log(`Insertions of ${file2} in ${objectFile}`);
+				console.log("-------------------------");
 
 				// Show file details like ls -lart
 				execSync(`ls -lart "${objectFile}"`, { stdio: "inherit" });
@@ -43,12 +52,20 @@ export function insertSupplementForFormInObjectClasses() {
 				// Read object file and supplement file
 				const objectContent = fs.readFileSync(objectFile, "utf8");
 				const supplementContent = fs.readFileSync(supplementFile, "utf8");
+				const supplementContent2 = fs.readFileSync(supplementFile2, "utf8");
 
 				// Insert supplement content at marker
-				const updatedContent = objectContent.replace(
-					/\/\/ AUTOMATIC METHOD INSERTION WILL BE MADE HERE/,
-					`// AUTOMATIC METHOD INSERTION WILL BE MADE HERE\n${supplementContent}`
-				);
+		//		const updatedContent = objectContent.replace(
+		//			/\/\/ AUTOMATIC METHOD INSERTION WILL BE MADE HERE/,
+		//			`// AUTOMATIC METHOD INSERTION WILL BE MADE HERE\n${supplementContent}`
+		//);
+				const METHOD_MARKER = "// AUTOMATIC METHOD INSERTION WILL BE MADE HERE";
+				const IMPORT_MARKER = "// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE";
+
+				 updatedContent = objectContent
+				  .replace(new RegExp(METHOD_MARKER), `${METHOD_MARKER}\n${supplementContent}`)
+				  .replace(new RegExp(IMPORT_MARKER), `${IMPORT_MARKER}\n${supplementContent2}`);
+				
 
 				// Write to temporary file first
 				fs.writeFileSync(objectFileTmp, updatedContent, "utf8");
