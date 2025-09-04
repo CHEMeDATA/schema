@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 //import { fileURLToPath } from "url";
-import { schemaDir, instanceDir, htmlDir, srcDir } from "../scripts/config.js";
+import { schemaDir, instanceDir, htmlDir, srcDir, classHandlerSupFiles } from "../scripts/config.js";
 
 
 /**
@@ -53,7 +53,7 @@ function createHandlerForFile(fileName) {
 
 	// 4a. Conditionally append the supplemental file (e.g., supObj1.js)
 	const supFileName = `sup${shortName}.js`;
-	const supFilePath = path.join(path.dirname(handlerPathGeneric), supFileName);
+	const supFilePath = path.join(classHandlerSupFiles, supFileName);
 
 	if (fs.existsSync(supFilePath)) {
 		const supContent = fs.readFileSync(supFilePath, "utf8");
@@ -65,10 +65,7 @@ function createHandlerForFile(fileName) {
 
 	// 4b. Conditionally append the supplemental file (e.g., supObj1.js)
 	const supFileName1 = `supplement${shortName}.js`;
-	const supFilePath1 = path.join(
-		path.dirname(handlerPathGeneric),
-		supFileName1
-	);
+	const supFilePath1 = path.join(classHandlerSupFiles, supFileName1);
 
 	if (fs.existsSync(supFilePath1)) {
 		const supContent = fs.readFileSync(supFilePath1, "utf8");

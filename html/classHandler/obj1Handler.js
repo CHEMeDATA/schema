@@ -754,4 +754,195 @@ obj1_DataEnrichment(targetObjType, dataObj = {}) {
 
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
+
+	myDataEnrichment1_DataEnrichment(targetObjType, dataObj = {}) {
+		const myName = "myDataEnrichment1_DataEnrichment"; // dont automatize in case use strict
+		if (targetObjType == "info") {
+			return {
+				sourceObjType: "obj1",
+				targetObjType: "groupObject1",
+				uniqueHTMLcode: myName, // avoid name conflicts
+				elevatorMethod: myName,
+				arrayOfItems: [
+					{
+						type: "file",
+						htmlID: "input1",
+						comment: "Select JSON File 1 - mandatory",
+						show: true,
+					},
+					{
+						type: "file",
+						htmlID: "input2rr",
+						comment: "Select JSON File 2",
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "param1",
+						baseType: "int",
+						comment:
+							"Enter an Integer - this dummy test, not required by schema",
+						defaultValue: 10,
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "param2",
+						baseType: "float",
+						comment: "Enter a value in mm",
+						defaultValue: 5.5,
+						randomFrom: 1,
+						randomTo: 10,
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "param3",
+						baseType: "string",
+						comment: "Enter a String - this dummy test, not required by schema",
+						defaultValue: "toto",
+						show: true,
+					},
+				],
+			};
+		}
+
+		// optional escape
+		if (
+			!document.getElementById(`input1${dataObj.uniqueHTMLcode}`).dataset
+				.content
+		) {
+			const errorMessage = "Failed because of missing input1";
+			document.getElementById(
+				`mergeOutput${dataObj.uniqueHTMLcode}`
+			).textContent = errorMessage;
+			return;
+		}
+
+		const objm1 = this.#getValOrDefault(dataObj, "input1");
+		const objm2 = this.#getValOrDefault(dataObj, "input2rr");
+		const obj1 = this.#getValOrDefault(dataObj, "param1");
+		const obj2 = this.#getValOrDefault(dataObj, "param2");
+		const obj3 = this.#getValOrDefault(dataObj, "param3");
+		const groupObj = {
+			$schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
+			members: [this.obj, objm1, objm2],
+			param1: obj1,
+			param2: obj2,
+			param3: obj3,
+		};
+
+		const content = { content: groupObj };
+		const encodedContent = JSON.stringify(content);
+		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
+
+		document.getElementById(
+			`mergeOutput${dataObj.uniqueHTMLcode}`
+		).textContent = JSON.stringify(groupObj, null, 2);
+		window.open(linkUrl, "_blank");
+	}
+
+	myDataEnrichment2_DataEnrichment(targetObjType, dataObj = {}) {
+		const myName = "myDataEnrichment2_DataEnrichment"; // dont automatize in case use strict
+		if (targetObjType == "info") {
+			return {
+				targetObjType: "pairObj1",
+				uniqueHTMLcode: myName, // avoid name conflicts use different names
+				elevatorMethod: myName, // this is the name of the methods
+				arrayOfItems: [
+					{
+						type: "file",
+						htmlID: "input1",
+						comment: "Upload second object of type obj1",
+						show: true,
+					},
+					{
+						type: "baseType",
+						htmlID: "param1",
+						baseType: "int",
+						comment: "Enter an Integer",
+						defaultValue: 10,
+						show: true,
+					},
+				],
+			};
+		}
+
+		const objm = this.#getValOrDefault(dataObj, "input1");
+		const obj1 = this.#getValOrDefault(dataObj, "param1");
+
+		// optional escape
+		if (
+			!document.getElementById(`input1${dataObj.uniqueHTMLcode}`).dataset
+				.content
+		) {
+			const errorMessage = "Failed because of missing input1";
+			document.getElementById(
+				`mergeOutput${dataObj.uniqueHTMLcode}`
+			).textContent = errorMessage;
+			return;
+		}
+
+		const pairObj = {
+			$schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
+			object1: this.obj,
+			object2: objm,
+			param1: obj1,
+		};
+
+		const content = { content: pairObj };
+		const encodedContent = JSON.stringify(content);
+		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
+		document.getElementById(
+			`mergeOutput${dataObj.uniqueHTMLcode}`
+		).textContent = JSON.stringify(pairObj, null, 2);
+		window.open(linkUrl, "_blank");
+	}
+
+// Auto-generated supplement file for obj1
+obj1_DataEnrichment(targetObjType, dataObj = {}) {
+    const myName = "obj1_DataEnrichment"; // don't automatize in case 'use strict'
+    const myName2 = "obj1_DataEnrichment"; // don't automatize in case 'use strict'
+    if (targetObjType == "info") {
+        return {
+            sourceObjType: "obj1",
+            targetObjType: "obj1size",
+            uniqueHTMLcode: myName2,
+            elevatorMethod: myName,
+            arrayOfItems: [
+                {
+            type: "baseType",
+            htmlID: "size",
+            baseType: "float",
+            comment: "Enter a value in m (default 1.91m)",
+            defaultValue: 1.91,
+            randomFrom: 1.4,
+            randomTo: 2.1,
+            show: true
+        }
+            ],
+        };
+    }
+
+    var targetObj = {
+        ...this.obj,
+        $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
+    };
+
+    // Handle fields dynamically
+    
+        const size = this.#getValOrDefault(dataObj, "size");
+        if (size !== undefined) targetObj["size"] = size;
+
+    const content = { content: targetObj };
+    if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
+    const encodedContent2 = JSON.stringify(content);
+    const linkUrl = `${targetObjType}.html#data=${encodedContent2}`;
+
+    document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetObj, null, 2);
+    window.open(linkUrl, "_blank");
+}
+
+//module.exports = obj1_DataEnrichment;
+
 }

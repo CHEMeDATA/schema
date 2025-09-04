@@ -1,7 +1,7 @@
 // scripts/makeElevators.js
 import fs from "fs";
 import path from "path";
-import { classHandlerDir, derivationsFile } from "../scripts/config.js";
+import { classHandlerSupFiles, derivationsFile } from "../scripts/config.js";
 const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/html/" // ${urlLocalOrGithub}
 
 // ES module __dirname equivalent
@@ -79,7 +79,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
     console.log(`---------EEE generate supplement file for derivation  into ${path.join(classHandlerSupFiles, fileName)}`)
 
 	fs.writeFileSync(path.join(classHandlerSupFiles, fileName), content, "utf8");
-	console.log(`✅ File ${fileName} created successfully.`);
+	console.log(`✅ File ${classHandlerSupFiles}/${fileName} created successfully.`);
 }
 
 // Main function

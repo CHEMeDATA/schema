@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { all_toolsFile, classHandlerDir, classHandlerSupFiles } from "../scripts/config.js";
+import { all_toolsFile, classHandlerSupFiles } from "../scripts/config.js";
 const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/html/" // ${urlLocalOrGithub}
 /**
  * Generates a supplement file for the given className and config.
@@ -173,7 +173,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 `;
 
 	// Write the file
-	fs.writeFileSync(path.join(classHandlerDir, fileName), content, "utf8");
+	fs.writeFileSync(path.join(classHandlerSupFiles, fileName), content, "utf8");
 	console.log(`✅ File ${fileName} created successfully.`);
 }
 
@@ -257,13 +257,20 @@ function generateSupplementFileViewer(config) {
 
 // ES module fetch wrapper
 async function downloadFile(url, output) {
-	const response = await fetch(url);
-	if (!response.ok)
-		throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+    // ✅ Skip if file already exists
+    if (fs.existsSync(output)) {
+        console.log(`File already exists, skipping: ${output}`);
+        return;
+    }
 
-	const data = await response.text();
-	fs.writeFileSync(output, data, "utf8");
-	console.log(`...async File saved to ${output}`);
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+    }
+
+    const data = await response.text();
+    fs.writeFileSync(output, data, "utf8");
+    console.log(`...async File saved to ${output}`);
 }
 
 export function mainMakeForm() {

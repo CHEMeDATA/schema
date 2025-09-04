@@ -720,6 +720,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 			targetObjType: "nmrSpectrumObject",
 			uniqueHTMLcode: myName,
 			elevatorMethod: myName,
+			creatorParam: {"editor":"djeanner","version":"1","source":"MnovaJson","id":"none"},
 			arrayOfItems: [
 				{
 					type: "file",
@@ -752,14 +753,12 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`;
+	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType.objName}.json`;
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
 
-
-	//const creatorParam = {creatorParam:dataObj.creatorParam}; 
-	const creatorParam = dataObj.creatorParam; 
 	// here create object, call converter...
+	const creatorParam = dataObj.creatorParam; 
 
 	const thenmrSpectrumObject = new NMRspectrumObject(creatorParam, sourceObj);
 	console.log("3333p")
@@ -908,7 +907,6 @@ nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
 	const returedExport = thenmrSpectrumObject._saveExportedData(param);
 	return returedExport;
 }
-
 nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	const myName = "nmrSpectrumObject_DataEnrichment"; // don't automatize in case 'use strict'
 	if (targetObjType == "info") {
@@ -916,12 +914,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 			targetObjType: "nmrSpectrumObject",
 			uniqueHTMLcode: myName,
 			elevatorMethod: myName,
-			"creatorParam": {
-					"editor": "djeanner",
-					"version": "1",
-					"source": "MnovaJson",
-					"id": "none"
-				},
+			creatorParam: {"editor":"djeanner","version":"1","source":"MnovaJson","id":"none"},
 			arrayOfItems: [
 				{
 					type: "file",
@@ -954,14 +947,15 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`;
+	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType.objName}.json`;
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
-	const creatorParam = dataObj.creatorParam;
+
 	// here create object, call converter...
+	const creatorParam = dataObj.creatorParam; 
 
 	const thenmrSpectrumObject = new NMRspectrumObject(creatorParam, sourceObj);
-	console.log("3333")
+	console.log("3333p")
 	console.log("5555")
 
 	const targetData = {content :thenmrSpectrumObject.data};
@@ -976,8 +970,8 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	const encodedContent = JSON.stringify(targetData);
-	const linkUrl = `https://chemedata.github.io/schema/html/${targetData}.html#data=${encodedContent}`;
+	const encodedContent1 = JSON.stringify(targetData);
+	const linkUrl = `${targetData}.html#data=${encodedContent1}`;
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
@@ -988,7 +982,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		localStorage.clear();
 	    const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
 	    localStorage.setItem(storageKey, JSON.stringify(targetData));
-	    const linkUrlShort = `https://chemedata.github.io/schema/html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
+	    const linkUrlShort = `html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[ -~]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");

@@ -11,6 +11,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 			targetObjType: "nmrSpectrumObject",
 			uniqueHTMLcode: myName,
 			elevatorMethod: myName,
+			creatorParam: {"editor":"djeanner","version":"1","source":"MnovaJson","id":"none"},
 			arrayOfItems: [
 				{
 					type: "file",
@@ -43,14 +44,12 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`;
+	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType.objName}.json`;
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
 
-
-	//const creatorParam = {creatorParam:dataObj.creatorParam}; 
-	const creatorParam = dataObj.creatorParam; 
 	// here create object, call converter...
+	const creatorParam = dataObj.creatorParam; 
 
 	const thenmrSpectrumObject = new NMRspectrumObject(creatorParam, sourceObj);
 	console.log("3333p")
