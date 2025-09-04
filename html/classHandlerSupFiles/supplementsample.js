@@ -23,10 +23,9 @@ sample_DataEnrichment(targetObjType, dataObj = {}) {
             ],
         };
     }
-
     var targetObj = {
         ...this.obj,
-        $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
+        $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType.objName}.json`,
     };
 
     // Handle fields dynamically
@@ -37,7 +36,7 @@ sample_DataEnrichment(targetObjType, dataObj = {}) {
     const content = { content: targetObj };
     if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
     const encodedContent2 = JSON.stringify(content);
-    const linkUrl = `${targetObjType}.html#data=${encodedContent2}`;
+    const linkUrl = `${targetObjType.objName}.html#data=${encodedContent2}`;
 
     document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetObj, null, 2);
     window.open(linkUrl, "_blank");
