@@ -1,4 +1,5 @@
 
+const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/" // ${urlLocalOrGithub}
 
 export async function fetchSchemas(jsonData) {
     let schemaObjects = {};
@@ -65,7 +66,7 @@ export function validateJSON(data, schemas, resultList) {
             if (validate(obj)) {
                 const objName = schemaName.match(/([^/]+)\.json$/)[1];
                 const urlSafeData = encodeURIComponent(JSON.stringify(obj));
-                const linkToSchemaBase = "https://chemedata.github.io/schema/html/";
+                const linkToSchemaBase = `${urlLocalOrGithub}html/`;
 
                 const linkToSchemaPages = linkToSchemaBase + objName + ".html";
                 if (path == "Root") {

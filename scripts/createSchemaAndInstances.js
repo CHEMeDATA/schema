@@ -6,7 +6,7 @@ import {
 	createInstance,
 } from "../src/createSchemaSomeInstances.js";
 
-import { schemaDir, classHandlerDir, derivationsFile } from "./config.js";
+import { derivationsFile } from "./config.js";
 
 export function createSchemaAndInstances() {
 	// Example usage createNewTypeSchema
@@ -25,14 +25,9 @@ type: "baseType",
 	console.log("\n****** Create the schema for the objects in v1/schema\n");
 	console.log("\n****** Create the schema for the objects in v1/schema\n");
 
-	fs.rmSync(schemaDir, { recursive: true, force: true });
-	fs.mkdirSync(schemaDir, { recursive: true });
-
-	fs.rmSync(classHandlerDir, { recursive: true, force: true });
-	fs.mkdirSync(classHandlerDir, { recursive: true });
-
+	// this list the list of derived classes
 	if (fs.existsSync(derivationsFile)) {
-		fs.unlinkSync(derivationsFile);
+		fs.unlinkSync(derivationsFile); // delete
 	}
 
 	createNewTypeSchema("obj1", [

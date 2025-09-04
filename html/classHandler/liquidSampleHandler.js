@@ -2,6 +2,8 @@
 import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
+/// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
+
 
 export class LiquidSampleHandler {
 	constructor(obj = {}) {
@@ -45,6 +47,11 @@ export class LiquidSampleHandler {
 			this.#showDataEnrichmentMethods(method.info); // Call for each elevator
 		});
 
+		const exporters = this.#listNonStaticMethods("_DataExport"); // get all elevator methods
+		exporters.forEach((method) => {
+			this.#showDataExportMethods(method.info); // Call for each elevator
+		});
+		
 		this.#showViewer();
 	}
 
@@ -150,14 +157,14 @@ export class LiquidSampleHandler {
 		});
 	}
 
-  	async loadSchemaPOO(input) {
-        const response = await fetch(input);
-        if (!response.ok) {
-            throw new Error(`Failed to load schema: ${response.status}`);
-        }
-        const schema = await response.json();
-        return schema;
-    }
+	async loadSchemaPOO(input) {
+		const response = await fetch(input);
+		if (!response.ok) {
+			throw new Error(`Failed to load schema: ${response.status}`);
+		}
+		const schema = await response.json();
+		return schema;
+	}
 	
 
 	default_showUpdateNoButton(param, dataObj = {}) {
@@ -343,15 +350,91 @@ export class LiquidSampleHandler {
 
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
-
-
-
-
-		
 	}
-	#generateTableOfInputForEnrichment(frame, dataObj) {
+
+	#generateTableOfInputForExport(frame, dataObj, title) {
+		console.log("LLOOGG Table ",dataObj);
+		const dataArray = dataObj.outputComponents;
+		frame.innerHTML = `<h4>${title}</h4>`;
+
+		const table = document.createElement("table");
+		table.style.borderCollapse = "collapse";
+		table.style.width = "100%";
+
+		dataArray.forEach((item) => {
+
+		const row = document.createElement("tr");
+
+		// First column: Comment
+		const commentCell = document.createElement("td");
+		commentCell.textContent = item.label;
+		commentCell.style.border = "1px solid black";
+		commentCell.style.padding = "5px";
+		row.appendChild(commentCell);
+
+		// Second column: Save-as box (for saving files instead of loading)
+		const inputCell = document.createElement("td");
+		inputCell.style.border = "1px solid black";
+		inputCell.style.padding = "5px";
+
+		let inputElement;
+
+		inputElement = document.createElement("button");
+		inputElement.textContent = "Save " + item.objDataField + " As...";
+		inputElement.id = item.htmlID + dataObj.uniqueHTMLcode;
+
+		// Add file saving logic depending on the file type
+		inputElement.addEventListener("click", () => {
+			let fileData = {};
+			if (Array.isArray(item.objDataField) && item.objDataField.length > 0) {
+			    // Copy only listed fields
+				item.objDataField.forEach((fieldName) => {
+					fileData[fieldName] = this.obj[fieldName];
+				});
+			} else {
+			    // Copy everything if no fields are listed
+				fileData = { ...this.obj };
+			}
+
+			let blob;
+			let fileName = item.defaultFileName || "Output";
+
+			if (item.type === "binary") {
+				blob = new Blob([fileData], { type: "application/octet-stream" });
+				fileName += ".bin";
+			} else if (item.type === "json") {
+				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
+				fileName += ".json";
+			} else if (item.type === "txt") {
+				blob = new Blob([fileData], { type: "text/plain" });
+				fileName += ".txt";
+			} else {
+				alert("Unsupported file type!");
+				return;
+			}
+
+		    // Create download link and trigger download
+			const a = document.createElement("a");
+			a.href = URL.createObjectURL(blob);
+			a.download = fileName;
+			a.click();
+			URL.revokeObjectURL(a.href);
+		});
+
+
+
+		if (inputElement) {
+			inputCell.appendChild(inputElement);
+		}
+		row.appendChild(inputCell);
+		table.appendChild(row);
+		});
+		frame.appendChild(table);
+	}
+
+	#generateTableOfInputForEnrichment(frame, dataObj, title) {
 		const dataArray = dataObj.arrayOfItems;
-		frame.innerHTML = "<h4>Data Enrichment</h4>"; // Clear previous content
+		frame.innerHTML =  `<h4>${title}</h4>`;
 		const table = document.createElement("table");
 		table.style.borderCollapse = "collapse";
 		table.style.width = "100%";
@@ -458,7 +541,7 @@ export class LiquidSampleHandler {
 		const frame = document.createElement("div");
 		frame.className = "frame red-frame";
 
-		this.#generateTableOfInputForEnrichment(frame, dataObj);
+		this.#generateTableOfInputForEnrichment(frame, dataObj, "Object Creation");
 
 		frame.innerHTML += `          <button id="mergeButton${dataObj.uniqueHTMLcode}">Create ${dataObj.targetObjType}</button>`;
 		frame.innerHTML += `          <pre id="mergeOutput${dataObj.uniqueHTMLcode}"></pre>`;
@@ -485,6 +568,76 @@ export class LiquidSampleHandler {
 			});
 	}
 
+	#showDataExportMethods(dataObj) {
+		console.log("LLOOKK showDataExportMethods ",dataObj);
+
+		const container = document.getElementById("dynamicContent");
+		const targetObjType = dataObj.targetObjType;
+
+		// Create the container for the file input and input
+		const frame = document.createElement("div");
+		frame.className = "frame green-frame";
+
+		this.#generateTableOfInputForExport(frame, dataObj, `Export to ${dataObj.title}`);
+
+		let inputElement;
+
+        inputElement = document.createElement("button");
+        inputElement.textContent = "Save As";
+        inputElement.id = dataObj.uniqueHTMLcode;
+
+        // Add file saving logic depending on the file type
+        inputElement.addEventListener("click", () => {
+            let fileData = this.obj;  // Data to save, must be provided externally
+			// Find method to generate export methos
+
+			const methodName = dataObj.elevatorMethod; // "combineFiles"; // Dynamic method name
+			if (typeof this[methodName] !== "function") {
+					console.error(`Method "${methodName}" does not exist.`);
+			}
+			console.log(`Method AZU "${methodName}" is called.`);
+			console.log(`Method AZU dataObj.outputComponents `, dataObj.outputComponents);
+			console.log(`Method AZU dataObj`, dataObj);
+			// Call adder of content
+			// EMPTY ARRAY IF FORT ALL VALUES
+			const dataExport = this[methodName]([], dataObj);
+			console.log(`End "${methodName}" is called.`);
+			fileData.fromExport = dataExport;
+			//Object.assign(fileData, dataExport);  
+
+			let blob;
+			let fileName = "output";
+
+			const fileType = "json";
+			if (fileType === "binary") {
+				blob = new Blob([fileData], { type: "application/octet-stream" });
+				fileName += ".bin";
+			} else if (fileType === "json") {
+				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
+				fileName += ".json";
+			} else if (fileType === "txt") {
+				blob = new Blob([fileData], { type: "text/plain" });
+				fileName += ".txt";
+			} else {
+				alert("Unsupported file type!");
+			return;
+			}
+
+            // Create download link and trigger download
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = fileName;
+            a.click();
+            URL.revokeObjectURL(a.href);
+        });
+
+        frame.appendChild(inputElement);
+		container.appendChild(frame);
+
+		this.#updateValuesInputDataEnrichment(dataObj);
+
+	}
+
 	#showDataUpdater(dataObj) {
 		const container = document.getElementById("dynamicContent");
 		const targetObjType = dataObj.targetObjType;
@@ -493,7 +646,7 @@ export class LiquidSampleHandler {
 		const frame = document.createElement("div");
 		frame.className = "frame blue-frame";
 
-		this.#generateTableOfInputForEnrichment(frame, dataObj);
+		this.#generateTableOfInputForEnrichment(frame, dataObj, "Data Enrichement");
 
 		frame.innerHTML += `          <button id="updateButton2${dataObj.uniqueHTMLcode}">Update</button>`;
 		frame.innerHTML += `          <pre id="mergeOutput${dataObj.uniqueHTMLcode}"></pre>`;
@@ -590,121 +743,16 @@ liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
 
     const content = { content: targetObj };
     if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
-    const encodedContent = JSON.stringify(content);
-    const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
+    const encodedContent2 = JSON.stringify(content);
+    const linkUrl = `${targetObjType}.html#data=${encodedContent2}`;
 
     document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetObj, null, 2);
     window.open(linkUrl, "_blank");
 }
 
 //module.exports = liquidSample_DataEnrichment;
+
 
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
-
-	myDataEnrichment1_DataEnrichment(targetObjType, dataObj = {}) {
-		const myName = "myDataEnrichment1_DataEnrichment"; // dont automatize in case use strict
-		if (targetObjType == "info") {
-			return {
-				sourceObjType: "liquidSample",
-				targetObjType: "NMRliquidSample",
-				uniqueHTMLcode: myName, // avoid name conflicts
-				elevatorMethod: myName,
-				arrayOfItems: [
-					{
-						type: "baseType",
-						htmlID: "tubeDiameter_mm",
-						baseType: "float",
-						comment: "Enter a value in mm",
-						defaultValue: 5.5,
-						randomFrom: 1,
-						randomTo: 10,
-						show: true,
-					}
-				],
-			};
-		}		
-		var targetObj = {
-		    ...this.obj, // start with all fields from this.obj
-		    $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
-		};
-
-		// optional escape
-		const curField = "tubeDiameter_mm";
-		/*	if (
-					!document.getElementById(`${curField}${dataObj.uniqueHTMLcode}`).dataset.content
-				) {
-					const errorMessage = `Failed because of missing ${curField}`;
-					document.getElementById(
-						`mergeOutput${dataObj.uniqueHTMLcode}`
-					).textContent = errorMessage;
-					return;
-				}
-		*/
-			
-
-		// Override or add fields if they exist
-		const obj1 = this.#getValOrDefault(dataObj, curField);
-
-		if (obj1 !== undefined) targetObj[curField] = obj1;
-
-			
-		const content = { content: targetObj };
-		const encodedContent = JSON.stringify(content);
-		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
-		document.getElementById(
-			`mergeOutput${dataObj.uniqueHTMLcode}`
-		).textContent = JSON.stringify(targetObj, null, 2);
-		window.open(linkUrl, "_blank");
-	}
-
-
-
-
-// Auto-generated supplement file for liquidSample
-liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
-    const myName = "liquidSample_DataEnrichment"; // don't automatize in case 'use strict'
-    const myName2 = "liquidSample_DataEnrichment"; // don't automatize in case 'use strict'
-    if (targetObjType == "info") {
-        return {
-            sourceObjType: "liquidSample",
-            targetObjType: "NMRliquidSample",
-            uniqueHTMLcode: myName2,
-            elevatorMethod: myName,
-            arrayOfItems: [
-                {
-            type: "baseType",
-            htmlID: "tubeDiameter_mm",
-            baseType: "float",
-            comment: "Enter a value in mm",
-            defaultValue: 5.5,
-            randomFrom: 1,
-            randomTo: 10,
-            show: true
-        }
-            ],
-        };
-    }
-
-    var targetObj = {
-        ...this.obj,
-        $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
-    };
-
-    // Handle fields dynamically
-    
-        const tubeDiameter_mm = this.#getValOrDefault(dataObj, "tubeDiameter_mm");
-        if (tubeDiameter_mm !== undefined) targetObj["tubeDiameter_mm"] = tubeDiameter_mm;
-
-    const content = { content: targetObj };
-    if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
-    const encodedContent = JSON.stringify(content);
-    const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
-
-    document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetObj, null, 2);
-    window.open(linkUrl, "_blank");
-}
-
-//module.exports = liquidSample_DataEnrichment;
-
 }

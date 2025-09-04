@@ -212,7 +212,6 @@ export class ObjectBase {
 		const exportFunctionName = this._buildExportFunctionName(
 			param.creatorParam
 		);
-			console.log("_saveExportedData param",param)
 
 		if (typeof this[exportFunctionName] !== "function") {
 			throw new Error(
@@ -221,7 +220,6 @@ export class ObjectBase {
 		}
 		const exportedData = this[exportFunctionName](param);
 		if (this.verbose > 1) console.log("exported data from objectBase", exportedData);
-		console.log("_saveExportedData exportedData",exportedData)
 
 		return exportedData;
 	}

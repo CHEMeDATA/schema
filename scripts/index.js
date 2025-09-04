@@ -1,6 +1,6 @@
 import fs from "fs";
 
-import { processSchemas, loadSchemas } from "../src/resolveSchemas.js";
+import { processSchemasResolution } from "../src/resolveSchemas.js";
 
 import { generateIndexPage, mainGeneration } from "../src/generateHtmlForSchema.js";
 
@@ -12,7 +12,6 @@ import {
 	instanceDir,
 	htmlDir,
 	classHandlerDir,
-	derivationsFile,
 	schemaResolved,
 	src_objects,
 } from "./config.js";
@@ -31,9 +30,7 @@ fs.mkdirSync(schemaDir, { recursive: true });
 fs.rmSync(classHandlerDir, { recursive: true, force: true });
 fs.mkdirSync(classHandlerDir, { recursive: true });
 
-if (fs.existsSync(derivationsFile)) {
-	fs.unlinkSync(derivationsFile);
-}
+fs.mkdirSync(instanceDir, { recursive: true });
 
 createSchemaAndInstances() 
 
@@ -44,15 +41,10 @@ console.log(
 fs.rmSync(schemaResolved, { recursive: true, force: true });
 fs.mkdirSync(schemaResolved, { recursive: true });
 
-processSchemas();
+processSchemasResolution();
 
 fs.mkdirSync(htmlDir, { recursive: true });
 fs.mkdirSync(classHandlerDir, { recursive: true });
-fs.mkdirSync(instanceDir, { recursive: true });
-// Ensure the HTML output directory exists
-if (!fs.existsSync(htmlDir)) {
-	fs.mkdirSync(htmlDir, { recursive: true });
-}
 
 fs.rmSync(src_objects, { recursive: true, force: true });
 fs.mkdirSync(src_objects, { recursive: true });

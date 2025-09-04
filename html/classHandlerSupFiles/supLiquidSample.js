@@ -48,7 +48,8 @@
 			
 		const content = { content: targetObj };
 		const encodedContent = JSON.stringify(content);
-		const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
+		const linkUrlOld = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
+		const linkUrl = `html/${targetObjType}.html#data=${encodedContent}`;
 		document.getElementById(
 			`mergeOutput${dataObj.uniqueHTMLcode}`
 		).textContent = JSON.stringify(targetObj, null, 2);

@@ -157,11 +157,28 @@
          "object": "nmrSpectrumObject",
          "objectObj": "NMRspectrumObject",
          "type": "export",
+         "title": "Mnova json spectrum",
+         "jsLibraryGet": [
+           {
+             "repository": "CHEMeDATA/nmr-objects",
+             "fileName": "src/nmrSpectrumObject.js",
+             "include": "NMRspectrumObject"
+           }
+         ],
          "outputComponents": [
            {
              "objDataField": [],
              "label": "NMR file (.json)",
-             "type": "file"
+             "type": "json",
+             "defaultFileName": "output.spectrum",
+             "type possible values": "json binary txt"
+           },
+           {
+             "objDataField": [],
+             "label": "title (.txt)",
+             "type": "txt",
+             "defaultFileName": "output.title",
+             "type possible values": "json binary txt"
            }
          ]
        },
@@ -169,6 +186,13 @@
          "object": "nmrSpectrumObject",
          "objectObj": "NMRspectrumObject",
          "type": "import",
+         "jsLibraryGet": [
+           {
+             "repository": "CHEMeDATA/nmr-objects",
+             "fileName": "src/nmrSpectrumObject.js",
+             "include": "NMRspectrumObject"
+           }
+         ],
          "requiredInput": [
            {
              "dataPropertyName": "jsonSpectrum",
@@ -182,6 +206,13 @@
          "object": "jGraphObject",
          "objectObj": "JgraphObject",
          "type": "import",
+         "jsLibraryGet": [
+           {
+             "repository": "CHEMeDATA/nmr-objects",
+             "fileName": "src/nmrSpectrumObject.js",
+             "include": "NMRspectrumObject"
+           }
+         ],
          "requiredInput": [
            {
              "dataPropertyName": "jsonSpectrum",

@@ -26,13 +26,13 @@ export function insertSupplementForFormInObjectClasses() {
 
 			console.log(`Object name: ${objectName}`);
 
-			const file2 = "supImp" + objectName + ".js";
+			const file2 = "supImpZZ_" + objectName + ".js";
 			const supplementFile2 = path.join(classHandlerSupFiles, file2);
 
 
 			console.log(`supplementFile2: ${supplementFile2}`);
-
-			const objectFile = path.join(classHandlerDir, `${objectName}Handler.js`);
+			const objectNameCapMin = objectName.charAt(0).toLowerCase() + objectName.slice(1);
+			const objectFile = path.join(classHandlerDir, `${objectNameCapMin}Handler.js`);
 			const objectFileTmp = path.join(
 				classHandlerDir,
 				`${objectName}Handler_TMP.js`
@@ -52,7 +52,10 @@ export function insertSupplementForFormInObjectClasses() {
 				// Read object file and supplement file
 				const objectContent = fs.readFileSync(objectFile, "utf8");
 				const supplementContent = fs.readFileSync(supplementFile, "utf8");
-				const supplementContent2 = fs.readFileSync(supplementFile2, "utf8");
+				var supplementContent2 =  "";
+				if (fs.existsSync(supplementFile2)) {
+					supplementContent2 = fs.readFileSync(supplementFile2, "utf8");
+				}
 
 				// Insert supplement content at marker
 		//		const updatedContent = objectContent.replace(
@@ -62,7 +65,7 @@ export function insertSupplementForFormInObjectClasses() {
 				const METHOD_MARKER = "// AUTOMATIC METHOD INSERTION WILL BE MADE HERE";
 				const IMPORT_MARKER = "// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE";
 
-				 updatedContent = objectContent
+				const updatedContent = objectContent
 				  .replace(new RegExp(METHOD_MARKER), `${METHOD_MARKER}\n${supplementContent}`)
 				  .replace(new RegExp(IMPORT_MARKER), `${IMPORT_MARKER}\n${supplementContent2}`);
 				

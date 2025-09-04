@@ -28,8 +28,8 @@ export function insertSupplementForViewersClasses() {
 			console.log("file2",supplementFile2)
 
 			console.log(`Object name: ${objectName}`);
-
-			const objectFile = path.join(classHandlerDir, `${objectName}Handler.js`);
+			const objectNameCapMin = objectName.charAt(0).toLowerCase() + objectName.slice(1);
+			const objectFile = path.join(classHandlerDir, `${objectNameCapMin}Handler.js`);
 			const objectFileTmp = path.join(
 				classHandlerDir,
 				`${objectName}_Viewer_Handler_TMP.js`

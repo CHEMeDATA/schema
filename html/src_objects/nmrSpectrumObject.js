@@ -104,6 +104,7 @@ export class NMRspectrumObject extends ObjectBase {
 	// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 //  export method // Should not minimize
 	export_Editordjeanner_Version1_SourceMnovaJson_IDnone(param) {
+
 		var retObj = {paramOfCall: param};
 			if (param.requestedField === "first") {
 				retObj.dummy_data = 1;
@@ -116,7 +117,7 @@ export class NMRspectrumObject extends ObjectBase {
 //  import method // Should not minimize
 	import_Editordjeanner_Version1_SourceMnovaJson_IDnone(param, dataInput) {
 		if (!dataInput.origin) {
-			console.error("No origin data in dataInput", dataInput);
+			console.error("No origin data in dataInput for import", dataInput);
 			this.data = {};
 			// process.exit(1);
 		}

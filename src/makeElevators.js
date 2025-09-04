@@ -1,13 +1,16 @@
 // scripts/makeElevators.js
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 import { classHandlerDir, derivationsFile } from "../scripts/config.js";
+const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/html/" // ${urlLocalOrGithub}
+
 // ES module __dirname equivalent
 
 // Generate supplement file for a given class
 function generateSupplementFile(config) {
 	const { base, derived, fieldsToAdd } = config;
+    console.log(`---------EEE generate supplement file for derivation of ${base} into ${derived}`)
+
 	const className = base;
 	const fileName = `supplement${className}.js`;
 
@@ -64,8 +67,8 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 
     const content = { content: targetObj };
     if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
-    const encodedContent = JSON.stringify(content);
-    const linkUrl = \`https://chemedata.github.io/schema/html/\${targetObjType}.html#data=\${encodedContent}\`;
+    const encodedContent2 = JSON.stringify(content);
+    const linkUrl = \`${urlLocalOrGithub}\${targetObjType}.html#data=\${encodedContent2}\`;
 
     document.getElementById(\`mergeOutput\${dataObj.uniqueHTMLcode}\`).textContent = JSON.stringify(targetObj, null, 2);
     window.open(linkUrl, "_blank");
@@ -73,13 +76,15 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 
 //module.exports = ${className}_DataEnrichment;
 `;
+    console.log(`---------EEE generate supplement file for derivation  into ${path.join(classHandlerSupFiles, fileName)}`)
 
-	fs.writeFileSync(path.join(classHandlerDir, fileName), content, "utf8");
+	fs.writeFileSync(path.join(classHandlerSupFiles, fileName), content, "utf8");
 	console.log(`✅ File ${fileName} created successfully.`);
 }
 
 // Main function
 export async function runElevators() {
+    console.log(`--------- runElevators ---------`)
 	try {
 		const raw = fs.readFileSync(derivationsFile, "utf8");
 		const data = JSON.parse(raw);
@@ -90,4 +95,5 @@ export async function runElevators() {
 	} catch (err) {
 		console.error("❌ Failed to generate supplements:", err);
 	}
+    console.log(`--------- end runElevators ---------`)
 }

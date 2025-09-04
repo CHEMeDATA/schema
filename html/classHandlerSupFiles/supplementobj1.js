@@ -36,8 +36,8 @@ obj1_DataEnrichment(targetObjType, dataObj = {}) {
 
     const content = { content: targetObj };
     if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
-    const encodedContent = JSON.stringify(content);
-    const linkUrl = `https://chemedata.github.io/schema/html/${targetObjType}.html#data=${encodedContent}`;
+    const encodedContent2 = JSON.stringify(content);
+    const linkUrl = `${targetObjType}.html#data=${encodedContent2}`;
 
     document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetObj, null, 2);
     window.open(linkUrl, "_blank");

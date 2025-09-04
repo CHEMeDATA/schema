@@ -1,8 +1,8 @@
 // ES module imports
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
-import { schemaDir, instanceDir, htmlDir, srcDir, classHandlerSupFiles } from "../scripts/config.js";
+//import { fileURLToPath } from "url";
+import { schemaDir, instanceDir, htmlDir, srcDir } from "../scripts/config.js";
 
 
 /**
@@ -29,8 +29,10 @@ function createHandlerForFile(fileName) {
 		htmlDir,
 		classHandlerFolderRelativeToRootHTMLNoDot
 	);
-	const handlerPathGeneric = path.join(classHandlerSupFiles, "GENERIChandler.js");
-	const handlerPathOut = path.join(handlerPath, `${shortName}Handler.js`);
+	const handlerPathGeneric = path.join(srcDir, "GENERIChandler.js");
+	const refCapMin = shortName.charAt(0).toLowerCase() + shortName.slice(1);
+
+	const handlerPathOut = path.join(handlerPath, `${refCapMin}Handler.js`);
 
 	// 1. Read the generic template
 	let content = fs.readFileSync(handlerPathGeneric, "utf8");
@@ -159,7 +161,7 @@ ${instanceOptions}
             </select>
     `
 			: `            <p>No instances found for this schema.</p>`;
-	const refCapMaj = refCap.charAt(0).toUpperCase() + refCap.slice(1);
+	const refCapMaj = refCap; //refCap.charAt(0).toUpperCase() + refCap.slice(1);
 	const refCapMin = refCap.charAt(0).toLowerCase() + refCap.slice(1);
 	// Generate HTML content
 	const htmlContent = `

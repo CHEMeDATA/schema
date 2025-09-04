@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { all_toolsFile, classHandlerDir, classHandlerSupFiles } from "../scripts/config.js";
-
+const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/html/" // ${urlLocalOrGithub}
 /**
  * Generates a supplement file for the given className and config.
  * @param {string} className - The class name for the function and file.
@@ -17,9 +17,19 @@ function generateSupplementFileImporter(config) {
 		fieldsToAdd,
 		repository,
 		jsLibraryGet,
+		fileNameAsSavedHere
 	} = config;
-
+	console.log("******************* ");
+	console.log("object", object);
+	console.log("type", type);
+	console.log("jsLibrary", jsLibrary);
+	console.log("creatorParam", creatorParam);
+	//console.log("fieldsToAdd", fieldsToAdd);
+	console.log("repository", repository);
+	console.log("jsLibraryGet", jsLibraryGet);
 	// included objects
+	const className = object;
+
 	var includeFile = "";
 	for (const item of jsLibraryGet) {
 		if (item.include) {
@@ -27,20 +37,13 @@ function generateSupplementFileImporter(config) {
 			console.log(`prepare: import { ${item.include} } from \"${fileNameAsSavedHere}/${path.basename(item.fileName)}\";`);
 		} 
 	}
-	const fileNameInclude = `supImp${className}.js`;
+	const fileNameInclude = `supImpZZ_${className}.js`;
 	fs.writeFileSync(path.join(classHandlerSupFiles, fileNameInclude), includeFile, "utf8");
 
 	// main file
-	const className = object;
 	const fileName = `supplement${className}.js`;
 	const creatorParamStringified = JSON.stringify(creatorParam);
-	console.log("******************* ");
-	console.log("object", object);
-	console.log("type", type);
-	console.log("jsLibrary", jsLibrary);
-	console.log("creatorParam", creatorParam);
-	console.log("fieldsToAdd", fieldsToAdd);
-	console.log("repository", repository);
+	
 
 	// Generate arrayOfItems content from fieldsToAdd
 	const arrayOfItems = fieldsToAdd
@@ -98,6 +101,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 			targetObjType: "${className}",
 			uniqueHTMLcode: myName,
 			elevatorMethod: myName,
+			creatorParam: ${creatorParam},
 			arrayOfItems: [
 				${arrayOfItems}
 			],
@@ -123,15 +127,15 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	sourceObj["$schema"] = \`https://chemedata.github.io/schema/v1/schema/\${targetObjType}.json\`;
+	sourceObj["$schema"] = \`https://chemedata.github.io/schema/v1/schema/\${targetObjType.objName}.json\`;
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
 
-	const creatorParam = {creatorParam:${creatorParamStringified}}; 
 	// here create object, call converter...
+	const creatorParam = dataObj.creatorParam; 
 
 	const the${object} = new ${objectObj}(creatorParam, sourceObj);
-	console.log("3333")
+	console.log("3333p")
 	console.log("5555")
 
 	const targetData = {content :the${object}.data};
@@ -146,8 +150,8 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	const encodedContent = JSON.stringify(targetData);
-	const linkUrl = \`https://chemedata.github.io/schema/html/\${targetData}.html#data=\${encodedContent}\`;
+	const encodedContent1 = JSON.stringify(targetData);
+	const linkUrl = \`${urlLocalOrGithub}\${targetData}.html#data=\${encodedContent1}\`;
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(\`mergeOutput\${dataObj.uniqueHTMLcode}\`).textContent = JSON.stringify(targetData, null, 2);
@@ -158,7 +162,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 		localStorage.clear();
 	    const storageKey = \`data_\${Date.now()}_\${Math.floor(Math.random() * 1e6)}\`;
 	    localStorage.setItem(storageKey, JSON.stringify(targetData));
-	    const linkUrlShort = \`https://chemedata.github.io/schema/html/\${encodeURIComponent(targetObjType)}.html#storageKey=\${storageKey}\`;
+	    const linkUrlShort = \`${urlLocalOrGithub}html/\${encodeURIComponent(targetObjType)}.html#storageKey=\${storageKey}\`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[\x20-\x7E]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");
@@ -270,7 +274,10 @@ export function mainMakeForm() {
 
 	data.list.forEach((item) => {
 		item.listObject.forEach((innerItem) => {
+			var didSomething = false;
+
 			if (innerItem.type === "import") {
+				didSomething = true;
 				const input = {
 					// innerItem
 					object: innerItem.object,
@@ -283,6 +290,17 @@ export function mainMakeForm() {
 					creatorParam: item.creatorParam,
 					repository: item.repository,
 				};
+				const target = "html/src_objects"
+				input.fileNameAsSavedHere = "../src_objects";
+
+				for (const lib of innerItem.jsLibraryGet) {
+	    			const { repository, fileName } = lib;
+					const url = `https://raw.githubusercontent.com/${repository}/main/${fileName}`;
+					const output = path.join(`${target}/${path.basename(fileName)}`);
+					console.log(`===✅ makeFormForWriter : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
+				 	downloadFile(url, output).catch(console.error);			
+				}
+
 				const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
 				const output = path.join(`./html/src_objects/${innerItem.object}.js`);
 				console.log(`<<<✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
@@ -291,6 +309,7 @@ export function mainMakeForm() {
 				result.push(input);
 			}		
 			if (innerItem.type === "export") {
+				didSomething = true;
 				const input = {
 					// innerItem
 					object: innerItem.object,
@@ -313,6 +332,7 @@ export function mainMakeForm() {
 				//result.push(input);
 			}
 			if (innerItem.type === "viewer") {
+				didSomething = true;
 				console.log(`=== For ${innerItem.object}.js`)
 				const input = {
 					// innerItem

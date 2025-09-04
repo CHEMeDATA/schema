@@ -3,6 +3,8 @@ import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
+
+/// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
 import { NMRspectrumObject } from "../src_objects/nmrSpectrumObject.js";
 
 
@@ -351,12 +353,8 @@ export class NmrSpectrumObjectHandler {
 
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
-
-
-
-
-		
 	}
+
 	#generateTableOfInputForExport(frame, dataObj, title) {
 		console.log("LLOOGG Table ",dataObj);
 		const dataArray = dataObj.outputComponents;
@@ -540,7 +538,11 @@ export class NmrSpectrumObjectHandler {
 
 	#showDataEnrichmentMethods(dataObj) {
 		const container = document.getElementById("dynamicContent");
-		const targetObjType = dataObj.targetObjType;
+		const targetObjType = {
+			objName : dataObj.targetObjType, creatorParam:
+			dataObj.creatorParam,
+			inCaseDelete : dataObj
+		};
 
 		// Create the container for the file input and input
 		const frame = document.createElement("div");
@@ -577,6 +579,7 @@ export class NmrSpectrumObjectHandler {
 		console.log("LLOOKK showDataExportMethods ",dataObj);
 
 		const container = document.getElementById("dynamicContent");
+		const targetObjType = dataObj.targetObjType;
 
 		// Create the container for the file input and input
 		const frame = document.createElement("div");
@@ -754,15 +757,16 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`;
+	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType.objName}.json`;
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
 
-	const creatorParam = {creatorParam:{"editor":"djeanner","version":"1","source":"MnovaJson","id":"none"}}; 
-	// here create object, call converter...
 
+	//const creatorParam = {creatorParam:dataObj.creatorParam}; 
+	const creatorParam = dataObj.creatorParam; 
+	// here create object, call converter...
 	const thenmrSpectrumObject = new NMRspectrumObject(creatorParam, sourceObj);
-	console.log("3333")
+	console.log("3333p")
 	console.log("5555")
 
 	const targetData = {content :thenmrSpectrumObject.data};
@@ -777,8 +781,8 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	const encodedContent = JSON.stringify(targetData);
-	const linkUrl = `https://chemedata.github.io/schema/html/${targetData}.html#data=${encodedContent}`;
+	const encodedContent1 = JSON.stringify(targetData);
+	const linkUrl = `${targetData}.html#data=${encodedContent1}`;
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
@@ -789,7 +793,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		localStorage.clear();
 	    const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
 	    localStorage.setItem(storageKey, JSON.stringify(targetData));
-	    const linkUrlShort = `https://chemedata.github.io/schema/html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
+	    const linkUrlShort = `html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[ -~]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");
@@ -797,6 +801,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		window.open(linkUrl, "_blank");
 	}
 }
+
 
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
@@ -915,6 +920,12 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 			targetObjType: "nmrSpectrumObject",
 			uniqueHTMLcode: myName,
 			elevatorMethod: myName,
+			"creatorParam": {
+					"editor": "djeanner",
+					"version": "1",
+					"source": "MnovaJson",
+					"id": "none"
+				},
 			arrayOfItems: [
 				{
 					type: "file",
@@ -950,7 +961,6 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`;
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
-
 	const creatorParam = dataObj.creatorParam;
 	// here create object, call converter...
 

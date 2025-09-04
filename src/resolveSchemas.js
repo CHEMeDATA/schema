@@ -1,17 +1,9 @@
 // ES module imports
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from "url";
 
-// __dirname equivalent for ES modules
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-// Directories
-const source = "../v1/schema";
-const target = "../v1/schemaResolved";
-const inputDir = path.join(__dirname, source);
-const outputDir = path.join(__dirname, target);
+const inputDir = "v1/schema";
+const outputDir = "v1/schemaResolved";
 
 // Ensure output directory exists
 if (!fs.existsSync(outputDir)) {
@@ -19,7 +11,7 @@ if (!fs.existsSync(outputDir)) {
 }
 
 // Load all schemas into memory for resolving $refs
-export function loadSchemas() {
+function loadSchemas() {
 	const schemaCache = {};
 	const files = fs.readdirSync(inputDir);
 	files.forEach((file) => {
@@ -140,11 +132,13 @@ function replaceRefKeep(obj) {
 }
 
 // Process all schemas and generate effective versions
-export function processSchemas() {
+export function processSchemasResolution() {
 	const schemaCache = loadSchemas();
 	var curSchema = "";
 	Object.keys(schemaCache).forEach((file) => {
-		console.log(`🛠️ Processing ${file}...`);
+		console.log(
+			`🛠️ Processing ${file}... (make schema resolution in ${outputDir})`
+		);
 		curSchema = schemaCache[file];
 		const resolvedSchema = resolveRefs(schemaCache, curSchema, curSchema);
 		// Write the resolved schema
