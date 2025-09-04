@@ -45,10 +45,7 @@ export function updateFeatureOfObject(
 	if (data.$schema && mainObject) {
 		mainObject.updateContent(data);
 		const container = document.getElementById("dynamicContent");
-		console.log("call object's showAllOptionsInHTML")
 		if (container) mainObject.showAllOptionsInHTML(container);
-		console.log("end object's showAllOptionsInHTML")
-
 	}
 }
 

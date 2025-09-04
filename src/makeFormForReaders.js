@@ -101,7 +101,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 			targetObjType: "${className}",
 			uniqueHTMLcode: myName,
 			elevatorMethod: myName,
-			creatorParam: ${creatorParam},
+			creatorParam: ${JSON.stringify(creatorParam)},
 			arrayOfItems: [
 				${arrayOfItems}
 			],

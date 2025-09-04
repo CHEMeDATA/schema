@@ -536,8 +536,11 @@ export class SetSpectraHandler {
 
 	#showDataEnrichmentMethods(dataObj) {
 		const container = document.getElementById("dynamicContent");
-		const targetObjType = dataObj.targetObjType;
-
+		const targetObjType = {
+			objName : dataObj.targetObjType, 
+			creatorParam: dataObj.creatorParam,
+			inCaseDelete : dataObj
+		};
 		// Create the container for the file input and input
 		const frame = document.createElement("div");
 		frame.className = "frame red-frame";
@@ -596,13 +599,9 @@ export class SetSpectraHandler {
 			if (typeof this[methodName] !== "function") {
 					console.error(`Method "${methodName}" does not exist.`);
 			}
-			console.log(`Method AZU "${methodName}" is called.`);
-			console.log(`Method AZU dataObj.outputComponents `, dataObj.outputComponents);
-			console.log(`Method AZU dataObj`, dataObj);
 			// Call adder of content
 			// EMPTY ARRAY IF FORT ALL VALUES
 			const dataExport = this[methodName]([], dataObj);
-			console.log(`End "${methodName}" is called.`);
 			fileData.fromExport = dataExport;
 			//Object.assign(fileData, dataExport);  
 

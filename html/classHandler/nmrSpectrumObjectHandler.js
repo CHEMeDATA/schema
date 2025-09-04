@@ -539,11 +539,10 @@ export class NmrSpectrumObjectHandler {
 	#showDataEnrichmentMethods(dataObj) {
 		const container = document.getElementById("dynamicContent");
 		const targetObjType = {
-			objName : dataObj.targetObjType, creatorParam:
-			dataObj.creatorParam,
+			objName : dataObj.targetObjType, 
+			creatorParam: dataObj.creatorParam,
 			inCaseDelete : dataObj
 		};
-
 		// Create the container for the file input and input
 		const frame = document.createElement("div");
 		frame.className = "frame red-frame";
@@ -602,13 +601,9 @@ export class NmrSpectrumObjectHandler {
 			if (typeof this[methodName] !== "function") {
 					console.error(`Method "${methodName}" does not exist.`);
 			}
-			console.log(`Method AZU "${methodName}" is called.`);
-			console.log(`Method AZU dataObj.outputComponents `, dataObj.outputComponents);
-			console.log(`Method AZU dataObj`, dataObj);
 			// Call adder of content
 			// EMPTY ARRAY IF FORT ALL VALUES
 			const dataExport = this[methodName]([], dataObj);
-			console.log(`End "${methodName}" is called.`);
 			fileData.fromExport = dataExport;
 			//Object.assign(fileData, dataExport);  
 
@@ -757,7 +752,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 		return;
 	}
 
-	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType.objName}.json`;
+	sourceObj["$schema"] = `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`;
 	// TAKE CARE OF ORIGIN
 	sourceObj["origin"] = {};///// TO DO
 
@@ -765,6 +760,7 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	//const creatorParam = {creatorParam:dataObj.creatorParam}; 
 	const creatorParam = dataObj.creatorParam; 
 	// here create object, call converter...
+
 	const thenmrSpectrumObject = new NMRspectrumObject(creatorParam, sourceObj);
 	console.log("3333p")
 	console.log("5555")

@@ -1,15 +1,13 @@
-// ⚠️ This file was automatically generated. Do not edit manually.
 import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 /// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
 
-
-export class Obj1Handler {
+export class GENERIChandler {
 	constructor(obj = {}) {
 		this.obj = obj;
 		this.verbose = true;
-		this.verboseStartingString = "Obj1Handler";
+		this.verboseStartingString = "GENERIChandler";
 	}
 
 	#makeListMethods(suffix = "") {
@@ -705,53 +703,5 @@ export class Obj1Handler {
 
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 
-// Auto-generated supplement file for obj1
-obj1_DataEnrichment(targetObjType, dataObj = {}) {
-    const myName = "obj1_DataEnrichment"; // don't automatize in case 'use strict'
-    const myName2 = "obj1_DataEnrichment"; // don't automatize in case 'use strict'
-    if (targetObjType == "info") {
-        return {
-            sourceObjType: "obj1",
-            targetObjType: "obj1size",
-            uniqueHTMLcode: myName2,
-            elevatorMethod: myName,
-            arrayOfItems: [
-                {
-            type: "baseType",
-            htmlID: "size",
-            baseType: "float",
-            comment: "Enter a value in m (default 1.91m)",
-            defaultValue: 1.91,
-            randomFrom: 1.4,
-            randomTo: 2.1,
-            show: true
-        }
-            ],
-        };
-    }
-
-    var targetObj = {
-        ...this.obj,
-        $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType}.json`,
-    };
-
-    // Handle fields dynamically
-    
-        const size = this.#getValOrDefault(dataObj, "size");
-        if (size !== undefined) targetObj["size"] = size;
-
-    const content = { content: targetObj };
-    if (content && Object.keys(content).length === 0) {console.log("content is empty");return;} 
-    const encodedContent2 = JSON.stringify(content);
-    const linkUrl = `${targetObjType}.html#data=${encodedContent2}`;
-
-    document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetObj, null, 2);
-    window.open(linkUrl, "_blank");
-}
-
-//module.exports = obj1_DataEnrichment;
-
-
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
-}
