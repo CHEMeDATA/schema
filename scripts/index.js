@@ -57,7 +57,11 @@ console.log("****************************** 0");
 mainMakeForm();
 
 console.log("****************************** 1");
-insertSupplementForFormInObjectClasses();
+
+insertSupplementForFormInObjectClasses("supImpAA_", "supImpBB_"); 
+insertSupplementForFormInObjectClasses("supplement", "supImpZZ_");
+insertSupplementForFormInObjectClasses("supImpMe_", "supImpIn_");
+
 console.log("****************************** 2");
 insertSupplementForViewersClasses();
 console.log("****************************** End");

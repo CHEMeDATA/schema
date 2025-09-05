@@ -1,4 +1,4 @@
-// ⚠️ This file was automatically generated. Do not edit manually.
+// This file was automatically generated. Do not edit manually.
 import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
@@ -363,71 +363,71 @@ export class SampleHandler {
 
 		dataArray.forEach((item) => {
 
-		const row = document.createElement("tr");
+			const row = document.createElement("tr");
 
-		// First column: Comment
-		const commentCell = document.createElement("td");
-		commentCell.textContent = item.label;
-		commentCell.style.border = "1px solid black";
-		commentCell.style.padding = "5px";
-		row.appendChild(commentCell);
+			// First column: Comment
+			const commentCell = document.createElement("td");
+			commentCell.textContent = item.label;
+			commentCell.style.border = "1px solid black";
+			commentCell.style.padding = "5px";
+			row.appendChild(commentCell);
 
-		// Second column: Save-as box (for saving files instead of loading)
-		const inputCell = document.createElement("td");
-		inputCell.style.border = "1px solid black";
-		inputCell.style.padding = "5px";
+			// Second column: Save-as box (for saving files instead of loading)
+			const inputCell = document.createElement("td");
+			inputCell.style.border = "1px solid black";
+			inputCell.style.padding = "5px";
 
-		let inputElement;
+			let inputElement;
 
-		inputElement = document.createElement("button");
-		inputElement.textContent = "Save " + item.objDataField + " As...";
-		inputElement.id = item.htmlID + dataObj.uniqueHTMLcode;
+			inputElement = document.createElement("button");
+			inputElement.textContent = "Save " + item.defaultFileName + " ...";
+			inputElement.id = item.htmlID + dataObj.uniqueHTMLcode;
 
-		// Add file saving logic depending on the file type
-		inputElement.addEventListener("click", () => {
-			let fileData = {};
-			if (Array.isArray(item.objDataField) && item.objDataField.length > 0) {
-			    // Copy only listed fields
-				item.objDataField.forEach((fieldName) => {
-					fileData[fieldName] = this.obj[fieldName];
-				});
-			} else {
-			    // Copy everything if no fields are listed
-				fileData = { ...this.obj };
+			// Add file saving logic depending on the file type
+			
+			inputElement.addEventListener("click", () => {
+				// Find method to generate export methos
+
+				const methodName = dataObj.elevatorMethod; // "combineFiles"; // Dynamic method name
+				if (typeof this[methodName] !== "function") {
+						console.error(`Method "${methodName}" does not exist.`);
+				}
+				
+				// Call adder of content
+				dataObj.item = item;
+				const dataExport = this[methodName]([], dataObj);
+
+
+				let blob;
+				let fileName = item.defaultFileName || "Output";
+
+				if (item.type === "binary") {
+					blob = new Blob([dataExport], { type: "application/octet-stream" });
+					fileName += ".bin";
+				} else if (item.type === "json") {
+					blob = new Blob([JSON.stringify(dataExport, null, 2)], { type: "application/json" });
+					fileName += ".json";
+				} else if (item.type === "txt") {
+					blob = new Blob([JSON.stringify(dataExport, null, 2)], { type: "text/plain" });
+					fileName += ".txt";
+				} else {
+					alert("Unsupported file type!");
+					return;
+				}
+
+			    // Create download link and trigger download
+				const a = document.createElement("a");
+				a.href = URL.createObjectURL(blob);
+				a.download = fileName;
+				a.click();
+				URL.revokeObjectURL(a.href);
+			});
+
+			if (inputElement) {
+				inputCell.appendChild(inputElement);
 			}
-
-			let blob;
-			let fileName = item.defaultFileName || "Output";
-
-			if (item.type === "binary") {
-				blob = new Blob([fileData], { type: "application/octet-stream" });
-				fileName += ".bin";
-			} else if (item.type === "json") {
-				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
-				fileName += ".json";
-			} else if (item.type === "txt") {
-				blob = new Blob([fileData], { type: "text/plain" });
-				fileName += ".txt";
-			} else {
-				alert("Unsupported file type!");
-				return;
-			}
-
-		    // Create download link and trigger download
-			const a = document.createElement("a");
-			a.href = URL.createObjectURL(blob);
-			a.download = fileName;
-			a.click();
-			URL.revokeObjectURL(a.href);
-		});
-
-
-
-		if (inputElement) {
-			inputCell.appendChild(inputElement);
-		}
-		row.appendChild(inputCell);
-		table.appendChild(row);
+			row.appendChild(inputCell);
+			table.appendChild(row);
 		});
 		frame.appendChild(table);
 	}
@@ -583,54 +583,6 @@ export class SampleHandler {
 
 		this.#generateTableOfInputForExport(frame, dataObj, `Export to ${dataObj.title}`);
 
-		let inputElement;
-
-        inputElement = document.createElement("button");
-        inputElement.textContent = "Save As";
-        inputElement.id = dataObj.uniqueHTMLcode;
-
-        // Add file saving logic depending on the file type
-        inputElement.addEventListener("click", () => {
-            let fileData = this.obj;  // Data to save, must be provided externally
-			// Find method to generate export methos
-
-			const methodName = dataObj.elevatorMethod; // "combineFiles"; // Dynamic method name
-			if (typeof this[methodName] !== "function") {
-					console.error(`Method "${methodName}" does not exist.`);
-			}
-			// Call adder of content
-			// EMPTY ARRAY IF FORT ALL VALUES
-			const dataExport = this[methodName]([], dataObj);
-			fileData.fromExport = dataExport;
-			//Object.assign(fileData, dataExport);  
-
-			let blob;
-			let fileName = "output";
-
-			const fileType = "json";
-			if (fileType === "binary") {
-				blob = new Blob([fileData], { type: "application/octet-stream" });
-				fileName += ".bin";
-			} else if (fileType === "json") {
-				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
-				fileName += ".json";
-			} else if (fileType === "txt") {
-				blob = new Blob([fileData], { type: "text/plain" });
-				fileName += ".txt";
-			} else {
-				alert("Unsupported file type!");
-			return;
-			}
-
-            // Create download link and trigger download
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = fileName;
-            a.click();
-            URL.revokeObjectURL(a.href);
-        });
-
-        frame.appendChild(inputElement);
 		container.appendChild(frame);
 
 		this.#updateValuesInputDataEnrichment(dataObj);
@@ -778,7 +730,6 @@ sample_DataEnrichment(targetObjType, dataObj = {}) {
             ],
         };
     }
-    console.log("targetObjType1",targetObjType)
     var targetObj = {
         ...this.obj,
         $schema: `https://chemedata.github.io/schema/v1/schema/${targetObjType.objName}.json`,

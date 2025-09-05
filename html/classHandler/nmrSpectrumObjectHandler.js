@@ -1,4 +1,4 @@
-// ⚠️ This file was automatically generated. Do not edit manually.
+// This file was automatically generated. Do not edit manually.
 import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
@@ -6,6 +6,8 @@ import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
 
 /// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
 import { NMRspectrumObject } from "../src_objects/nmrSpectrumObject.js";
+
+// redundant import { NMRspectrumObject } from "../src_objects/nmrSpectrumObject.js";
 
 
 export class NmrSpectrumObjectHandler {
@@ -366,71 +368,71 @@ export class NmrSpectrumObjectHandler {
 
 		dataArray.forEach((item) => {
 
-		const row = document.createElement("tr");
+			const row = document.createElement("tr");
 
-		// First column: Comment
-		const commentCell = document.createElement("td");
-		commentCell.textContent = item.label;
-		commentCell.style.border = "1px solid black";
-		commentCell.style.padding = "5px";
-		row.appendChild(commentCell);
+			// First column: Comment
+			const commentCell = document.createElement("td");
+			commentCell.textContent = item.label;
+			commentCell.style.border = "1px solid black";
+			commentCell.style.padding = "5px";
+			row.appendChild(commentCell);
 
-		// Second column: Save-as box (for saving files instead of loading)
-		const inputCell = document.createElement("td");
-		inputCell.style.border = "1px solid black";
-		inputCell.style.padding = "5px";
+			// Second column: Save-as box (for saving files instead of loading)
+			const inputCell = document.createElement("td");
+			inputCell.style.border = "1px solid black";
+			inputCell.style.padding = "5px";
 
-		let inputElement;
+			let inputElement;
 
-		inputElement = document.createElement("button");
-		inputElement.textContent = "Save " + item.objDataField + " As...";
-		inputElement.id = item.htmlID + dataObj.uniqueHTMLcode;
+			inputElement = document.createElement("button");
+			inputElement.textContent = "Save " + item.defaultFileName + " ...";
+			inputElement.id = item.htmlID + dataObj.uniqueHTMLcode;
 
-		// Add file saving logic depending on the file type
-		inputElement.addEventListener("click", () => {
-			let fileData = {};
-			if (Array.isArray(item.objDataField) && item.objDataField.length > 0) {
-			    // Copy only listed fields
-				item.objDataField.forEach((fieldName) => {
-					fileData[fieldName] = this.obj[fieldName];
-				});
-			} else {
-			    // Copy everything if no fields are listed
-				fileData = { ...this.obj };
+			// Add file saving logic depending on the file type
+			
+			inputElement.addEventListener("click", () => {
+				// Find method to generate export methos
+
+				const methodName = dataObj.elevatorMethod; // "combineFiles"; // Dynamic method name
+				if (typeof this[methodName] !== "function") {
+						console.error(`Method "${methodName}" does not exist.`);
+				}
+				
+				// Call adder of content
+				dataObj.item = item;
+				const dataExport = this[methodName]([], dataObj);
+
+
+				let blob;
+				let fileName = item.defaultFileName || "Output";
+
+				if (item.type === "binary") {
+					blob = new Blob([dataExport], { type: "application/octet-stream" });
+					fileName += ".bin";
+				} else if (item.type === "json") {
+					blob = new Blob([JSON.stringify(dataExport, null, 2)], { type: "application/json" });
+					fileName += ".json";
+				} else if (item.type === "txt") {
+					blob = new Blob([JSON.stringify(dataExport, null, 2)], { type: "text/plain" });
+					fileName += ".txt";
+				} else {
+					alert("Unsupported file type!");
+					return;
+				}
+
+			    // Create download link and trigger download
+				const a = document.createElement("a");
+				a.href = URL.createObjectURL(blob);
+				a.download = fileName;
+				a.click();
+				URL.revokeObjectURL(a.href);
+			});
+
+			if (inputElement) {
+				inputCell.appendChild(inputElement);
 			}
-
-			let blob;
-			let fileName = item.defaultFileName || "Output";
-
-			if (item.type === "binary") {
-				blob = new Blob([fileData], { type: "application/octet-stream" });
-				fileName += ".bin";
-			} else if (item.type === "json") {
-				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
-				fileName += ".json";
-			} else if (item.type === "txt") {
-				blob = new Blob([fileData], { type: "text/plain" });
-				fileName += ".txt";
-			} else {
-				alert("Unsupported file type!");
-				return;
-			}
-
-		    // Create download link and trigger download
-			const a = document.createElement("a");
-			a.href = URL.createObjectURL(blob);
-			a.download = fileName;
-			a.click();
-			URL.revokeObjectURL(a.href);
-		});
-
-
-
-		if (inputElement) {
-			inputCell.appendChild(inputElement);
-		}
-		row.appendChild(inputCell);
-		table.appendChild(row);
+			row.appendChild(inputCell);
+			table.appendChild(row);
 		});
 		frame.appendChild(table);
 	}
@@ -586,54 +588,6 @@ export class NmrSpectrumObjectHandler {
 
 		this.#generateTableOfInputForExport(frame, dataObj, `Export to ${dataObj.title}`);
 
-		let inputElement;
-
-        inputElement = document.createElement("button");
-        inputElement.textContent = "Save As";
-        inputElement.id = dataObj.uniqueHTMLcode;
-
-        // Add file saving logic depending on the file type
-        inputElement.addEventListener("click", () => {
-            let fileData = this.obj;  // Data to save, must be provided externally
-			// Find method to generate export methos
-
-			const methodName = dataObj.elevatorMethod; // "combineFiles"; // Dynamic method name
-			if (typeof this[methodName] !== "function") {
-					console.error(`Method "${methodName}" does not exist.`);
-			}
-			// Call adder of content
-			// EMPTY ARRAY IF FORT ALL VALUES
-			const dataExport = this[methodName]([], dataObj);
-			fileData.fromExport = dataExport;
-			//Object.assign(fileData, dataExport);  
-
-			let blob;
-			let fileName = "output";
-
-			const fileType = "json";
-			if (fileType === "binary") {
-				blob = new Blob([fileData], { type: "application/octet-stream" });
-				fileName += ".bin";
-			} else if (fileType === "json") {
-				blob = new Blob([JSON.stringify(fileData, null, 2)], { type: "application/json" });
-				fileName += ".json";
-			} else if (fileType === "txt") {
-				blob = new Blob([fileData], { type: "text/plain" });
-				fileName += ".txt";
-			} else {
-				alert("Unsupported file type!");
-			return;
-			}
-
-            // Create download link and trigger download
-            const a = document.createElement("a");
-            a.href = URL.createObjectURL(blob);
-            a.download = fileName;
-            a.click();
-            URL.revokeObjectURL(a.href);
-        });
-
-        frame.appendChild(inputElement);
 		container.appendChild(frame);
 
 		this.#updateValuesInputDataEnrichment(dataObj);
@@ -708,7 +662,59 @@ export class NmrSpectrumObjectHandler {
 
 /// AUTOMATIC METHOD INSERTION WILL BE MADE HERE
 
-// generated by makeFormForReaders.js
+// Exporter generated by makeFormForReaders.js
+// include..... repository: MnovaJson-reader
+// include..... jsLibrary: mnovaJsonReader.js
+// work on object:nmrSpectrumObject (object == className)
+// Auto-generated supplement file for className:nmrSpectrumObject
+nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
+	const myName = "nmrSpectrumObject_DataExport"; // don't automatize in case 'use strict'
+	if (targetObjType == "info") {
+		return {
+			objSource: "nmrSpectrumObject",
+			objectObj: "NMRspectrumObject",
+			title: "Mnova json spectrum",
+			uniqueHTMLcode: myName,
+			elevatorMethod: myName,
+			creatorParam: {"editor":"djeanner","version":"1","source":"MnovaJson","id":"none"},
+			outputComponents: [
+				{
+					objDataField: {"passedList":["field1"]},
+					type: "json",
+					htmlID: "nmrSpectrumObject",
+					label: "NMR file (.json)",
+					defaultFileName: "output.spectrum",
+					show: true,
+				},
+{
+					objDataField: {"passedList":["field2"]},
+					type: "txt",
+					htmlID: "nmrSpectrumObject",
+					label: "title (.txt)",
+					defaultFileName: "output.title",
+					show: true,
+				}
+			],
+		};
+	}
+
+
+	// here create object from this
+	const theNMRspectrumObject = new NMRspectrumObject([], this.obj);
+	const param = {
+		dataObj : dataObj,
+		objDataField: dataObj.item.objDataField,
+		creatorParam : dataObj.creatorParam,
+		targetObjType: targetObjType,
+		object: dataObj.objSource,
+		objectObj: dataObj.objectObj,
+		};
+	const returedExport = theNMRspectrumObject._saveExportedData(param, this.obj);
+	return returedExport;
+}
+
+
+// Importer generated by makeFormForReaders.js
 // include..... repository: MnovaJson-reader
 // include..... jsLibrary: mnovaJsonReader.js
 // work on object:nmrSpectrumObject (object == className)
@@ -832,81 +838,11 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	}
 
 
-// generated by makeFormForReaders.js
+// Importer generated by makeFormForReaders.js
 // include..... repository: MnovaJson-reader
 // include..... jsLibrary: mnovaJsonReader.js
 // work on object:nmrSpectrumObject (object == className)
 // Auto-generated supplement file for className:nmrSpectrumObject
-nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
-	
-	const myName = "nmrSpectrumObject_DataExport"; // don't automatize in case 'use strict'
-	if (targetObjType == "info") {
-		return {
-			uniqueHTMLcode: myName,
-			elevatorMethod: myName,
-			"creatorParam": {
-					"editor": "djeanner",
-					"version": "1",
-					"source": "MnovaJson",
-					"id": "none"
-				},
-			"object": "nmrSpectrumObject",
-			"objectObj": "NMRspectrumObject",
-			"type": "export",
-			"title": "Mnova json spectrum",
-			"outputComponents": [
-				{
-					"objDataField" : ["firstPoint", "values"],
-					"label": "NMR file (.json)",
-					"type": "json",
-					"type comment" :"json binary txt"
-				}
-			]
-		};
-	}
-	console.log("nmrSpectrumObject_DataExport targetObjType: ", targetObjType);
-	console.log("nmrSpectrumObject_DataExport dataObj: ", dataObj);
-	console.log("nmrSpectrumObject_DataExport this.obj: ", this.obj);
-
-	// call converter...
-	console.log("nmrSpectrumObject_DataExport dataObj.outputComponents[0].objDataField[0]: ", dataObj.outputComponents[0].objDataField[0]);
-
-	let trueReturnedObjetWireFirst = {};
-	if (Array.isArray(targetObjType) && targetObjType.length === 0) {
-		console.log("Array is empty");
-		trueReturnedObjetWireFirst["selectorOfComponents"] = "all";
-	}	else {
-		trueReturnedObjetWireFirst["selectorOfComponents"] = "not all";
-	}
-
-
-	const outputFields = dataObj.outputComponents[0].objDataField;
-	outputFields.forEach(fieldName => {
-        trueReturnedObjetWireFirst[fieldName] = this.obj[fieldName];
-    });
-
-
-	// optional escape sourceObj // cancels action 
-	if ( 
-		false
-	) {
-		const errorMessage = "Failed because ...";
-		document.getElementById(
-			`mergeOutput${dataObj.uniqueHTMLcode}`
-		).textContent = errorMessage;
-		return;
-	}
-
-	// here create object from this
-	const thenmrSpectrumObject = new NMRspectrumObject([], this.obj);
-	const param = {
-		creatorParam : dataObj.creatorParam,
-		targetObjType:targetObjType,
-		outputFields:outputFields
-		};
-	const returedExport = thenmrSpectrumObject._saveExportedData(param);
-	return returedExport;
-}
 nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	const myName = "nmrSpectrumObject_DataEnrichment"; // don't automatize in case 'use strict'
 	if (targetObjType == "info") {

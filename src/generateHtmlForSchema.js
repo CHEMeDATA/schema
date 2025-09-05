@@ -39,7 +39,7 @@ function createHandlerForFile(fileName) {
 
 	// Add auto-generated comment at the top
 	content =
-		`// ⚠️ This file was automatically generated. Do not edit manually.\n` +
+		`// This file was automatically generated. Do not edit manually.\n` +
 		content;
 
 	// 2. Replace all occurrences of "GENERIChandler" with handlerClassName
