@@ -709,7 +709,7 @@ nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
 		object: dataObj.objSource,
 		objectObj: dataObj.objectObj,
 		};
-	const returedExport = theNMRspectrumObject._saveExportedData(param);
+	const returedExport = theNMRspectrumObject._saveExportedData(param, this.obj);
 	return returedExport;
 }
 

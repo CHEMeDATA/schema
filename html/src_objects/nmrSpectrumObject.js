@@ -113,9 +113,7 @@ export class NMRspectrumObject extends ObjectBase {
 	objoutputFields
 	*/
 	const obj = this.data;
-		const objDataField = param.objDataField;
-	if (!obj) { console.error(objDataField," no obj"); return ({});}
-
+	const objDataField = param.objDataField;
 	if (! param.objectObj) {
 		console.error("No objectObj in param from export_Editordjeanner_Version1_SourceMnovaJson_IDnone")
 		return {};
@@ -136,8 +134,8 @@ export class NMRspectrumObject extends ObjectBase {
     const nucleus = obj?.nucleus ?? "1H";
    
     const si = obj.values.length;
-    const lowest_frequency = spectrometer_frequency * obj.values[si - 1]//: -1644.45388739755,
-    const spectral_width =  (spectrometer_frequency * (obj.values[0] - obj.values[si - 1]) * si) / (si - 1); // 8012.82051282049
+    const lowest_frequency = spectrometer_frequency * obj.lastPoint//: -1644.45388739755,
+    const spectral_width =  (spectrometer_frequency * (obj.firstPoint - obj.lastPoint) * si) / (si - 1); // 8012.82051282049
     			// Step 1: build dimensional_parameters separately
     const dimensionalParameters = [
       {
@@ -151,7 +149,7 @@ export class NMRspectrumObject extends ObjectBase {
         "ph1": 0.0, //2.9646546646811123
       }
     ];
-    const arrayOfPoints = []
+    const arrayOfPoints = obj.values;
     // Step 2: build the whole dataset using dimensionalParameters
     const mnovaDataset = {
       "$mnova_schema": "https://mestrelab.com/json-schemas/mnova/2023-07/01/nmr/dataset",
