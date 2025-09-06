@@ -8,14 +8,16 @@
             "values": [0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1.8, 8, 1.8, 
 0, 0, 0, 0, 0],
             "firstPoint": 8,
-            "lastPoint": 0
+            "lastPoint": 0,
+            "frequency": 400
         },
         {
             "$schema": "https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json",
             "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
             "values": [0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 2, 10, 2, 0, 0, 0, 0, 0],
             "firstPoint": 8,
-            "lastPoint": -1
+            "lastPoint": -1,
+            "frequency": 400
         }
     ]
 }

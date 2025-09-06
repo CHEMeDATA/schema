@@ -14,11 +14,15 @@
         },
         "lastPoint": {
             "type": "number"
+        },
+        "frequency": {
+            "type": "number"
         }
     },
     "required": [
         "values",
         "firstPoint",
-        "lastPoint"
+        "lastPoint",
+        "frequency"
     ]
 }

@@ -137,6 +137,12 @@ type: "baseType",
 			array: false,
 			type: "double",
 		},
+		{
+			name: "frequency",
+			required: true,
+			array: false,
+			type: "double",
+		},
 		// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
 	]);
 
@@ -147,6 +153,7 @@ type: "baseType",
 		],
 		firstPoint: 8.0,
 		lastPoint: -1.0,
+		frequency: 400.0
 	});
 
 	createInstance(
@@ -158,7 +165,8 @@ type: "baseType",
 		0, 0, 0, 0, 1.8, 8, 1.8, 0, 0, 0, 0, 0
 	],
 	"firstPoint": 8.0,
-	"lastPoint": 0.0
+	"lastPoint": 0.0,
+	"frequency": 400.0
 }`
 	);
 

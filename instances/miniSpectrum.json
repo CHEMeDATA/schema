@@ -3,5 +3,6 @@
     "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
     "values": [0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 5, 1, 0, 0, 0, 0, 0, 2, 10, 2, 0, 0, 0, 0, 0],
     "firstPoint": 8,
-    "lastPoint": -1
+    "lastPoint": -1,
+    "frequency": 400
 }
