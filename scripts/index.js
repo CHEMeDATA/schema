@@ -77,23 +77,25 @@ console.log("****************************** End");
 
 console.log("****************************** Export instances as Linked data");
 
-const instancePath = path.join(instanceDir);
-fs.readdirSync(instancePath).forEach(file => {
-    if (file.endsWith('.json')) {
-		console.log(`Try Convert ${file} `);
+if (false) { // THIS IS CHANGING THE LINKED DATA EACH TIME BECAUSE OF RANDOM HASH
+	const instancePath = path.join(instanceDir);
+	fs.readdirSync(instancePath).forEach(file => {
+	    if (file.endsWith('.json')) {
+			console.log(`Try Convert ${file} `);
 
-        const instancePathFile = path.join(instancePath, file);
-        const instance = JSON.parse(fs.readFileSync(instancePathFile, 'utf8'));
+	        const instancePathFile = path.join(instancePath, file);
+	        const instance = JSON.parse(fs.readFileSync(instancePathFile, 'utf8'));
 
-        // Convert instance and add hashes
-        const ldInstance = processSchemaObject(instance);
+	        // Convert instance and add hashes
+	        const ldInstance = processSchemaObject(instance);
 
-        fs.writeFileSync(
-            path.join(instanceLDDir, file),
-            JSON.stringify(ldInstance, null, 4),
-            'utf8'
-        );
+	        fs.writeFileSync(
+	            path.join(instanceLDDir, file),
+	            JSON.stringify(ldInstance, null, 4),
+	            'utf8'
+	        );
 
-        console.log(`✅ Converted ${file} to Linked Data JSON with hashes for all schema objects.`);
-    }
-});
+	        console.log(`✅ Converted ${file} to Linked Data JSON with hashes for all schema objects.`);
+	    }
+	});
+}
