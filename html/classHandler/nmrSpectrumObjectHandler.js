@@ -691,8 +691,8 @@ nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
 					objDataField: {"passedList":["field2"]},
 					type: "txt",
 					htmlID: "nmrSpectrumObject",
-					label: "title (.txt)",
-					defaultFileName: "output.title",
+					label: "source not implemented (.txt)",
+					defaultFileName: "output.source",
 					show: true,
 				}
 			],
