@@ -163,6 +163,11 @@
              "repository": "CHEMeDATA/nmr-objects",
              "fileName": "src/nmrSpectrumObject.js",
              "include": "NMRspectrumObject"
+           },
+           {
+             "repository": "CHEMeDATA/MnovaJson-reader",
+             "fileName": "src/mnovaJasonBuilder.js",
+             "include": "buildFromNMRspectrumObject"
            }
          ],
          "outputComponents": [

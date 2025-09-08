@@ -6,6 +6,7 @@ import { NmrSpectrum } from "../src_objects/nmrSpectrum.js";
 
 /// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
 import { NMRspectrumObject } from "../src_objects/nmrSpectrumObject.js";
+import { buildFromNMRspectrumObject } from "../src_objects/mnovaJasonBuilder.js";
 
 // redundant import { NMRspectrumObject } from "../src_objects/nmrSpectrumObject.js";
 
