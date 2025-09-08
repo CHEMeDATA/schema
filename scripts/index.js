@@ -1,4 +1,5 @@
 import fs from "fs";
+import path from "path";
 
 import { processSchemasResolution } from "../src/resolveSchemas.js";
 
@@ -14,6 +15,7 @@ import {
 	classHandlerDir,
 	schemaResolved,
 	src_objects,
+	instanceLDDir,
 } from "./config.js";
 
 import { insertSupplementForFormInObjectClasses } from "../src/insertSupplementForFormInObjectClasses.js";
@@ -23,6 +25,10 @@ import {
 	createSchemaAndInstances,
 } from "./createSchemaAndInstances.js";
 
+
+import {
+	processSchemaObject,
+} from "../src/makeLinkedDataInstances.js";
 
 fs.rmSync(schemaDir, { recursive: true, force: true });
 fs.mkdirSync(schemaDir, { recursive: true });
@@ -69,3 +75,25 @@ console.log("****************************** End");
 
 
 
+console.log("****************************** Export instances as Linked data");
+
+const instancePath = path.join(instanceDir);
+fs.readdirSync(instancePath).forEach(file => {
+    if (file.endsWith('.json')) {
+		console.log(`Try Convert ${file} `);
+
+        const instancePathFile = path.join(instancePath, file);
+        const instance = JSON.parse(fs.readFileSync(instancePathFile, 'utf8'));
+
+        // Convert instance and add hashes
+        const ldInstance = processSchemaObject(instance);
+
+        fs.writeFileSync(
+            path.join(instanceLDDir, file),
+            JSON.stringify(ldInstance, null, 4),
+            'utf8'
+        );
+
+        console.log(`✅ Converted ${file} to Linked Data JSON with hashes for all schema objects.`);
+    }
+});

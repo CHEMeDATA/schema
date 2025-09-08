@@ -1,0 +1,11 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/obj1size.json",
+    "name": "Bob",
+    "size": 180,
+    "initialHash": "19bc0868bdd4a48731b96e2b8ddc733685942e008841d35966ecedf928cb656d",
+    "@id": "urn:uuid:dd3a0f9f-33fd-4872-88ba-7493f15c3ad4",
+    "@type": "Obj1size",
+    "timestamp": "2025-09-08T13:03:51.043Z",
+    "source": "Generated from schema conversion",
+    "finalHash": "5b709075982c06710288bf17f3bc1b12d05d22f777044005fed7029d4934ca6d"
+}

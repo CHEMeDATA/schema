@@ -1,0 +1,40 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/liquidStatesNMRproperties.json",
+    "spins": [
+        {
+            "spinSystemIndices": [
+                0
+            ],
+            "name": "H1",
+            "value": 2,
+            "valueType": "chemicalShift"
+        },
+        {
+            "spinSystemIndices": [
+                1
+            ],
+            "name": "H2",
+            "value": 1.05,
+            "valueType": "chemicalShift"
+        }
+    ],
+    "interactions": [
+        {
+            "spinSystemIndices": [
+                [
+                    0,
+                    1
+                ]
+            ],
+            "name": "H1",
+            "value": 7.2,
+            "valueType": "Jcoupling"
+        }
+    ],
+    "initialHash": "ef7a27517beac4e0cd4f2e2b3a0db71dba566f2637b8424b10909acc8b5060b9",
+    "@id": "urn:uuid:9be195eb-efed-437a-93b1-0b87f2466b61",
+    "@type": "LiquidStatesNMRproperties",
+    "timestamp": "2025-09-08T13:03:51.046Z",
+    "source": "Generated from schema conversion",
+    "finalHash": "fa37c0666577a17a98b7e9f14a850dfd5f841f813dde21f8a1d9fea8742b433a"
+}

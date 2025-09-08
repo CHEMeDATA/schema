@@ -1,0 +1,10 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/obj1.json",
+    "name": "Alice",
+    "initialHash": "49d03c9f0072fe23fdd3eb03916a4dfe212341667b4ba19dbda7f21d2ec658a6",
+    "@id": "urn:uuid:9d304885-05cd-4cae-86b7-38854bab9f87",
+    "@type": "Obj1",
+    "timestamp": "2025-09-08T13:03:51.042Z",
+    "source": "Generated from schema conversion",
+    "finalHash": "4a2b801cf236a09adbfeb3e9d6c002ac0c47287b96e0376ebd19261d3f012099"
+}

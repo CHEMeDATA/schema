@@ -1,0 +1,25 @@
+{
+    "object1": {
+        "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/obj1.json",
+        "name": "Alice",
+        "initialHash": "49d03c9f0072fe23fdd3eb03916a4dfe212341667b4ba19dbda7f21d2ec658a6",
+        "@id": "urn:uuid:1226c5da-98bf-4699-8337-6adadf58d5e6",
+        "@type": "Obj1",
+        "timestamp": "2025-09-08T13:03:51.045Z",
+        "source": "Generated from schema conversion",
+        "finalHash": "3040b019496c904b8514afb524767c50201df83ef1e1a483516d2c31a39c274f"
+    },
+    "object2": {
+        "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/obj2.json",
+        "name": "Bob",
+        "age": 53,
+        "initialHash": "26b7593590d0f34f0bb236dbeb0db027f37e1261e6275a088d3f6365586e27f3",
+        "@id": "urn:uuid:dbdb7100-6ab1-400e-9a31-9106ac7a05ec",
+        "@type": "Obj2",
+        "timestamp": "2025-09-08T13:03:51.045Z",
+        "source": "Generated from schema conversion",
+        "finalHash": "9570625d05f57aaa6847e8490d0798ec26aed9ea1e10e7ad12d2960c148ccf96"
+    },
+    "initialHash": "dab53e53fc53fac20396b5e626c9e078f0bee06343dcc19ebd6e5cf6bf1cac38",
+    "finalHash": "b8b1d82275ead2d16a0454642bb6ef31d050d910d9c24269b8c1a979d063bc6c"
+}

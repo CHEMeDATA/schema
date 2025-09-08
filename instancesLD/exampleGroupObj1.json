@@ -1,0 +1,20 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/groupObject1.json",
+    "members": [
+        {
+            "$schema": "https://chemedata.github.io/schema/v1/schema/obj1.json",
+            "name": "Alice"
+        },
+        {
+            "$schema": "https://chemedata.github.io/schema/v1/schema/obj1.json",
+            "name": "Bob",
+            "age": 53
+        }
+    ],
+    "initialHash": "23b446c3e766336460e088af4c512f87f4f16fde41b6ef2a955969a51f61044d",
+    "@id": "urn:uuid:3d834d83-b2bf-46d6-bd06-ac4f28808c33",
+    "@type": "GroupObject1",
+    "timestamp": "2025-09-08T13:03:51.043Z",
+    "source": "Generated from schema conversion",
+    "finalHash": "b743e04ba71c7c98c4d0bf8e960d07aa19890f13d7098970510f9ba34bf80ac3"
+}

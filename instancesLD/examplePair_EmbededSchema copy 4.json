@@ -1,0 +1,18 @@
+{
+    "object1": {
+        "name": "Alice"
+    },
+    "object2": {
+        "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/obj2.json",
+        "name": "Bob",
+        "age": 53,
+        "initialHash": "26b7593590d0f34f0bb236dbeb0db027f37e1261e6275a088d3f6365586e27f3",
+        "@id": "urn:uuid:d3d14808-5d74-409d-a3fc-b8d24edf5c17",
+        "@type": "Obj2",
+        "timestamp": "2025-09-08T13:03:51.045Z",
+        "source": "Generated from schema conversion",
+        "finalHash": "6fcafc5df790e3fc5b7fa113560daebf943504a1888df6f8fb95be407b7788cf"
+    },
+    "initialHash": "dab53e53fc53fac20396b5e626c9e078f0bee06343dcc19ebd6e5cf6bf1cac38",
+    "finalHash": "5217eff7f31524bc478d17ae66cf5af3b270259dd023fb57e2392c38f6645f81"
+}

@@ -1,0 +1,11 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schemaResolved/NMRliquidSample.json",
+    "volume_L": 0.0005,
+    "tubeDiameter_mm": 5,
+    "initialHash": "67dd217d07e47209b7e5bfbc13829fe528a9040e829a51c05834418e1e36c33d",
+    "@id": "urn:uuid:18873381-d086-4b4e-b430-12ea836e34bb",
+    "@type": "NMRliquidSample",
+    "timestamp": "2025-09-08T13:03:51.044Z",
+    "source": "Generated from schema conversion",
+    "finalHash": "15753974e592e509444947ade20a4d8e1e630c8c0323b0d46295a6fea4afd911"
+}
