@@ -33,5 +33,9 @@ cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned_Set.spi
 
 cp /Users/djeanner/git/MnovaJson-reader/testSpinFit_assigned/01_assigned.mol data/
 
+echo "INSTANCES: Validate the schema of all json in ./instances in file results_validation.txt"
+node src/testInstances.js instances > results_validation.txt
+echo "INSTANCES: Validate the schema of all json in ./instancesLD in file results_validationLD.txt"
+node src/testInstances.js instancesLD > results_validationLD.txt
 
 ```
