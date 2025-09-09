@@ -1,0 +1,24 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteractionMatch.json",
+    "allOf": [
+        {
+            "$ref": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json"
+        }
+    ],
+    "properties": {
+        "curQuality": {
+            "type": "qualityClass"
+        },
+        "satisfactory": {
+            "type": "bool"
+        },
+        "stepNumber": {
+            "type": "int"
+        }
+    },
+    "required": [
+        "satisfactory"
+    ]
+}

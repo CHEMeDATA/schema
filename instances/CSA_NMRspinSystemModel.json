@@ -1,0 +1,18 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json",
+    "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+    "spins": [
+        {
+            "$schema": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json",
+            "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+            "typeVariableString": "ChemicalShift",
+            "tensorValues": {
+                "$schema": "https://chemedata.github.io/schema/v1/schema/diagTensor.json",
+                "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+                "xx": 120,
+                "yy": 87,
+                "zz": 51
+            }
+        }
+    ]
+}

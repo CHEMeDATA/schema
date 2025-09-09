@@ -25,6 +25,10 @@ import {
 	createSchemaAndInstances,
 } from "./createSchemaAndInstances.js";
 
+import {
+	createSpinSystemSchema,
+} from "./createSpinSystemSchema.js";
+
 
 import {
 	processSchemaObject,
@@ -39,6 +43,7 @@ fs.mkdirSync(classHandlerDir, { recursive: true });
 fs.mkdirSync(instanceDir, { recursive: true });
 
 createSchemaAndInstances() 
+createSpinSystemSchema()
 
 console.log(
 	"\n****** In v1/schemaResolved, write a copy of each schema but removed all 'allOf' and explicit '$refs' except if recursive\n"

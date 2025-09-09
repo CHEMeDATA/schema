@@ -1,0 +1,43 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json",
+    "properties": {
+        "molAtomIndicesFull": {
+            "type": "array",
+            "items": {
+                "type": "int"
+            }
+        },
+        "molAtomIndices": {
+            "type": "array",
+            "items": {
+                "type": "int"
+            }
+        },
+        "spinSystemIndices": {
+            "type": "array",
+            "items": {
+                "type": "int"
+            }
+        },
+        "typeVariableString": {
+            "type": "string"
+        },
+        "value": {
+            "type": "number"
+        },
+        "tensorValues": {
+            "type": "tensor"
+        },
+        "diagTensorValues": {
+            "type": "diagTensor"
+        },
+        "labelVarSet": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "typeVariableString"
+    ]
+}

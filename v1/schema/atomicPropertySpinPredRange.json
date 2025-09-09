@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpinPredRange.json",
+    "allOf": [
+        {
+            "$ref": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json"
+        }
+    ],
+    "properties": {
+        "lowerBound": {
+            "type": "number"
+        },
+        "upperBound": {
+            "type": "number"
+        }
+    },
+    "required": [
+        "lowerBound",
+        "upperBound"
+    ]
+}
