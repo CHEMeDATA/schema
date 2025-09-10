@@ -13,7 +13,22 @@
 ❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json: Failed to fetch schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
 ❌ Root.spinSystems.0 - Schema "https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json" not found.
 
+********* Validating CSA_NMRspinSystemModel.json...
+⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json
+❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json: schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
+❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json" not found.
+
 ********* Validating RS_pump_120909.180.fid.json...
+
+********* Validating aCSAatomicPropertySpin.json...
+⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json
+❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json: schema is invalid: data/properties/molAtomIndicesFull/items/type must be equal to one of the allowed values, data/properties/molAtomIndicesFull/items/type must be array, data/properties/molAtomIndicesFull/items/type must match a schema in anyOf, data/properties/molAtomIndicesFull/items must be array, data/properties/molAtomIndicesFull/items must match a schema in anyOf
+❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json" not found.
+
+********* Validating aCSAdiagTensor.json...
+⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Root - https://chemedata.github.io/schema/v1/schema/diagTensor.json Valid
 
 ********* Validating alice.json...
 ⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1.json
@@ -137,6 +152,8 @@
 🔴 Summary: Failed Files
 CHEMeDATA_results3.json
 CHEMeDATA_starting3.json
+CSA_NMRspinSystemModel.json
+aCSAatomicPropertySpin.json
 liquidStatesNMRmodelExample1.json
 liquidStatesNMRmodelExample_fromNMRprop.json
 testEmbeddedSchemaFailed.json

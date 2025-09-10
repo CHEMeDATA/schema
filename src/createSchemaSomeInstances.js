@@ -1,7 +1,19 @@
 // ES module
 import fs from "fs";
 import path from "path";
-import { schemaRoot, schemaDir, instanceDir, dataDir, derivationsFile} from "../scripts/config.js";
+import {
+	schemaRoot,
+	schemaDir,
+	instanceDir,
+	dataDir,
+	derivationsFile,
+} from "../scripts/config.js";
+
+export function setFieldTrue(array, fieldName) {
+	return array.map((prop) =>
+		prop.name === fieldName ? { ...prop, required: true } : { ...prop }
+	);
+}
 
 // Throw error helper
 function generateError(message) {
@@ -97,7 +109,11 @@ function addDerivation(derivationsFileNameIn, base, derived, fieldsToAdd) {
 	ensureDerivationsFile(derivationsFileNameIn);
 	const content = JSON.parse(fs.readFileSync(derivationsFileNameIn, "utf8"));
 	content.derivations.push({ base, derived, fieldsToAdd });
-	fs.writeFileSync(derivationsFileNameIn, JSON.stringify(content, null, 4), "utf8");
+	fs.writeFileSync(
+		derivationsFileNameIn,
+		JSON.stringify(content, null, 4),
+		"utf8"
+	);
 }
 
 // Derive a schema

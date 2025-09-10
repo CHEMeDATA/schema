@@ -1,24 +1,24 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "$id": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteractionPredRange.json",
+    "$id": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json",
     "properties": {
         "molAtomIndicesFull": {
             "type": "array",
             "items": {
-                "type": "intPairs"
+                "type": "int"
             }
         },
         "molAtomIndices": {
             "type": "array",
             "items": {
-                "type": "intPairs"
+                "type": "int"
             }
         },
         "spinSystemIndices": {
             "type": "array",
             "items": {
-                "type": "intPairs"
+                "type": "int"
             }
         },
         "typeVariableString": {
@@ -33,25 +33,15 @@
         "diagTensorValues": {
             "type": "diagTensor"
         },
+        "diagTensorRotationMatrix": {
+            "type": "diagTensor"
+        },
         "labelVarSet": {
             "type": "string"
-        },
-        "numberBonds": {
-            "type": "int"
-        },
-        "numberBondslabelVarSet": {
-            "type": "string"
-        },
-        "lowerBound": {
-            "type": "number"
-        },
-        "upperBound": {
-            "type": "number"
         }
     },
     "required": [
         "typeVariableString",
-        "lowerBound",
-        "upperBound"
+        "value"
     ]
 }

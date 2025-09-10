@@ -4,7 +4,7 @@
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Schema: NMRspinSystemModel.json</title>
+            <title>Schema: NMRspinSystemModel-CSA.json</title>
 
 
             <style>
@@ -25,18 +25,25 @@
         </head>
         <body>
 
-            <h1>Schema: NMRspinSystemModel.json</h1>
+            <h1>Schema: NMRspinSystemModel-CSA.json</h1>
             <p><strong>Schema ID:</strong> 
-                <a href="https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json" target="_blank">https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json</a>
+                <a href="https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel-CSA.json" target="_blank">https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel-CSA.json</a>
             </p>
 
             <h2>Properties:</h2>
             <table>
                 <tr>  <th>Property</th>  <th>Type</th>  <th>Schema Reference</th>  <th>Required</th>  </tr>
-                <tr>  <td>spins</td>  <td>array</td>  <td>atomicPropertySpin</td>  <td>❌ No</td>  </tr>
+                <tr>  <td>spins</td>  <td>array</td>  <td>atomicPropertySpin-CSA</td>  <td>❌ No</td>  </tr>
                 <tr>  <td>interactions</td>  <td>array</td>  <td>atomicPropertySpinInteraction</td>  <td>❌ No</td>  </tr>
             </table>
-                        <p>No instances found for this schema.</p>
+            
+            <h2>Load JSON Instance</h2>
+            <select id="instanceSelector">
+                <option value="">Select an instance...</option>
+                <option value="CSA_NMRspinSystemModel.json">CSA_NMRspinSystemModel.json</option>
+                <option value="aCSA_NMRspinSystemModel.json">aCSA_NMRspinSystemModel.json</option>
+            </select>
+    
             <h2>Edit JSON Instance</h2>
             <textarea id="jsonEditor"></textarea>
             <p id="validationMessage"></p>
@@ -55,7 +62,7 @@
   import { fetchSchemas } from './src/validateSchema.js';
   //import * as htmlScripts from './src/htmlScripts.js';
   import { loadFromURL, loadInstance, updateFeatureOfObject } from './src/htmlScripts.js';
-  import { NMRspinSystemModelHandler } from './classHandler/nMRspinSystemModelHandler.js';
+  import { NMRspinSystemModel-CSAHandler } from './classHandler/nMRspinSystemModel-CSAHandler.js';
   import { JgraphObject } from './src_objects/jGraphObject.js';
   import { NMRspectrumObject } from './src_objects/nmrSpectrumObject.js';
 document.addEventListener("DOMContentLoaded", function () {
@@ -64,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const validationMessage = document.getElementById("validationMessage");
 
     // Create the mainObject after DOM is ready
-    const mainObject = new NMRspinSystemModelHandler({});
+    const mainObject = new NMRspinSystemModel-CSAHandler({});
 
     if (selector) {
         selector.addEventListener("change", function () {

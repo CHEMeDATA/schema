@@ -33,6 +33,9 @@
         "diagTensorValues": {
             "type": "diagTensor"
         },
+        "diagTensorRotationMatrix": {
+            "type": "diagTensor"
+        },
         "labelVarSet": {
             "type": "string"
         }

@@ -1,9 +1,9 @@
 {
-    "$schema": "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel-CSA.json",
+    "$schema": "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel_CSA.json",
     "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
     "spins": [
         {
-            "$schema": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin-CSA.json",
+            "$schema": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_CSA.json",
             "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
             "typeVariableString": "ChemicalShift",
             "tensorValues": {

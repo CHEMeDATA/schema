@@ -37,9 +37,10 @@ async function fetchSchema(url, ajvInstance, schemaCache, baseUrl = null) {
 	schemaCache[url] = "loading"; // Mark as loading
 
 	try {
-		console.log(`⏳ Fetching schema: ${url}`);
+		console.log(`Fetching schema: ${url}`);
 		const response = await fetch(url);
 		if (!response.ok) throw new Error(`Failed to fetch schema: ${url}`);
+		console.log(`✅ fetched ${url}`);
 
 		const schema = await response.json();
 		schemaCache[url] = schema;

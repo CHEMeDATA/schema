@@ -4,29 +4,33 @@ import {
 	createNewTypeSchema,
 	deriveSchema,
 	createInstance,
+	setFieldTrue,
 } from "../src/createSchemaSomeInstances.js";
 
 import { derivationsFile } from "./config.js";
 
 export function createSpinSystemSchema() {
-	
+	console.log(
+		"\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n"
+	);
+	console.log(
+		"\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n"
+	);
 
-	console.log("\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n");
-	console.log("\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n");
-
-
-createNewTypeSchema("tensor", [
+	createNewTypeSchema("tensor", [
 		{
 			name: "xx",
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "xy",
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "xz",
 			required: true,
 			array: false,
@@ -37,36 +41,40 @@ createNewTypeSchema("tensor", [
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "yy",
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "yz",
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "zx",
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "zy",
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "zz",
 			required: true,
 			array: false,
 			type: "double",
-		}
+		},
 	]);
 
-
-createNewTypeSchema("diagTensor", [
+	createNewTypeSchema("diagTensor", [
 		{
 			name: "xx",
 			required: true,
@@ -78,17 +86,16 @@ createNewTypeSchema("diagTensor", [
 			required: true,
 			array: false,
 			type: "double",
-		},{
+		},
+		{
 			name: "zz",
 			required: true,
 			array: false,
 			type: "double",
-		}
+		},
 	]);
 
-
-
-createNewTypeSchema("atomicPropertySpin", [
+	const atomicPropertySpin = [
 		{
 			name: "molAtomIndicesFull",
 			required: false,
@@ -132,18 +139,33 @@ createNewTypeSchema("atomicPropertySpin", [
 			type: "diagTensor",
 		},
 		{
+			name: "diagTensorRotationMatrix",
+			required: false,
+			array: false,
+			type: "diagTensor",
+		},
+		{
 			name: "labelVarSet",
 			required: false,
 			array: false,
 			type: "string",
 		},
-		
+	];
 
-	]);
+	createNewTypeSchema("atomicPropertySpin", atomicPropertySpin);
 
+	const atomicPropertySpinCSA = setFieldTrue(
+		atomicPropertySpin,
+		"diagTensorValues"
+	);
 
+	createNewTypeSchema("atomicPropertySpin_CSA", atomicPropertySpinCSA);
 
-/*
+	const atomicPropertySpinLiquid = setFieldTrue(atomicPropertySpin, "value");
+
+	createNewTypeSchema("atomicPropertySpin_Liquid", atomicPropertySpinLiquid);
+
+	/*
 const spins = [
 	{
 		molAtomIndicesFull: [3],
@@ -163,56 +185,61 @@ const spins = [
 ];
 */
 
-	deriveSchema("atomicPropertySpin", "atomicPropertySpinPredRange", [
-		{
-			name: "lowerBound",
-			mandatory: true,
-			type: "float",
-			userRequest: "Enter a minimal value",
-			defaultValue: 10,
-			randomFrom: 1,
-			randomTo: 10,
-			show: true,
-		},
-		{
-			name: "upperBound",
-			mandatory: true,
-			type: "float",
-			userRequest: "Enter a minimal value",
-			defaultValue: 10,
-			randomFrom: 1,
-			randomTo: 10,
-			show: true,
-		},
-	]);
-	deriveSchema("atomicPropertySpin", "atomicPropertySpinMatch", [
-		{
-			name: "curQuality",
-			mandatory: false,
-			type: "qualityClass",
-			show: true,
-		},
-		{
-			name: "satisfactory",
-			mandatory: true,
-			type: "bool",
-			userRequest: "Is the match with the experimental spectrum satisfactory ?",
-			defaultValue: 10,
-			randomFrom: 1,
-			randomTo: 10,
-			show: true,
-		},
-		{
-			name: "stepNumber",
-			mandatory: false,
-			type: "int",
-			userRequest: "Step number in parameter optimization",
-			defaultValue: 1,
-			show: true,
-		},
-	]);
+	const also_Range_and_Match_schema = false;
+	if (also_Range_and_Match_schema) {
+		deriveSchema("atomicPropertySpin", "atomicPropertySpinPredRange", [
+			{
+				name: "lowerBound",
+				mandatory: true,
+				type: "float",
+				userRequest: "Enter a minimal value",
+				defaultValue: 10,
+				randomFrom: 1,
+				randomTo: 10,
+				show: true,
+			},
+			{
+				name: "upperBound",
+				mandatory: true,
+				type: "float",
+				userRequest: "Enter a minimal value",
+				defaultValue: 10,
+				randomFrom: 1,
+				randomTo: 10,
+				show: true,
+			},
+		]);
 
-createNewTypeSchema("atomicPropertySpinInteraction", [
+		deriveSchema("atomicPropertySpin", "atomicPropertySpinMatch", [
+			{
+				name: "curQuality",
+				mandatory: false,
+				type: "qualityClass",
+				show: true,
+			},
+			{
+				name: "satisfactory",
+				mandatory: true,
+				type: "bool",
+				userRequest:
+					"Is the match with the experimental spectrum satisfactory ?",
+				defaultValue: 10,
+				randomFrom: 1,
+				randomTo: 10,
+				show: true,
+			},
+			{
+				name: "stepNumber",
+				mandatory: false,
+				type: "int",
+				userRequest: "Step number in parameter optimization",
+				defaultValue: 1,
+				show: true,
+			},
+		]);
+	} // also_Range_and_Match_schema
+
+	createNewTypeSchema("atomicPropertySpinInteraction", [
 		{
 			name: "molAtomIndicesFull",
 			required: false,
@@ -251,6 +278,12 @@ createNewTypeSchema("atomicPropertySpinInteraction", [
 		},
 		{
 			name: "diagTensorValues",
+			required: false,
+			array: false,
+			type: "diagTensor",
+		},
+		{
+			name: "diagTensorRotationMatrix",
 			required: false,
 			array: false,
 			type: "diagTensor",
@@ -273,7 +306,6 @@ createNewTypeSchema("atomicPropertySpinInteraction", [
 			array: false,
 			type: "string",
 		},
-
 	]);
 
 	/*
@@ -296,59 +328,69 @@ const interactions = [
 ];
 
 	*/
+	if (also_Range_and_Match_schema) {
+		deriveSchema(
+			"atomicPropertySpinInteraction",
+			"atomicPropertySpinInteractionPredRange",
+			[
+				{
+					name: "lowerBound",
+					mandatory: true,
+					type: "float",
+					userRequest: "Enter a minimal value",
+					defaultValue: 10,
+					randomFrom: 1,
+					randomTo: 10,
+					show: true,
+				},
+				{
+					name: "upperBound",
+					mandatory: true,
+					type: "float",
+					userRequest: "Enter a minimal value",
+					defaultValue: 10,
+					randomFrom: 1,
+					randomTo: 10,
+					show: true,
+				},
+			]
+		);
+		deriveSchema(
+			"atomicPropertySpinInteraction",
+			"atomicPropertySpinInteractionMatch",
+			[
+				{
+					name: "curQuality",
+					mandatory: false,
+					type: "qualityClass",
+					show: true,
+				},
+				{
+					name: "satisfactory",
+					mandatory: true,
+					type: "bool",
+					userRequest:
+						"Is the match with the experimental spectrum satisfactory ?",
+					defaultValue: 10,
+					randomFrom: 1,
+					randomTo: 10,
+					show: true,
+				},
+				{
+					name: "stepNumber",
+					mandatory: false,
+					type: "int",
+					userRequest: "Step number in parameter optimization",
+					defaultValue: 1,
+					show: true,
+				},
+			]
+		);
+	} // also_Range_and_Match_schema
 
-
-
-	deriveSchema("atomicPropertySpinInteraction", "atomicPropertySpinInteractionPredRange", [
+	// Three NMRspinSystems
+createNewTypeSchema("NMRspinSystemModel", [
 		{
-			name: "lowerBound",
-			mandatory: true,
-			type: "float",
-			userRequest: "Enter a minimal value",
-			defaultValue: 10,
-			randomFrom: 1,
-			randomTo: 10,
-			show: true,
-		},
-		{
-			name: "upperBound",
-			mandatory: true,
-			type: "float",
-			userRequest: "Enter a minimal value",
-			defaultValue: 10,
-			randomFrom: 1,
-			randomTo: 10,
-			show: true,
-		},
-	]);
-	deriveSchema("atomicPropertySpinInteraction", "atomicPropertySpinInteractionMatch", [
-		{
-			name: "curQuality",
-			mandatory: false,
-			type: "qualityClass",
-			show: true,
-		},
-		{
-			name: "satisfactory",
-			mandatory: true,
-			type: "bool",
-			userRequest: "Is the match with the experimental spectrum satisfactory ?",
-			defaultValue: 10,
-			randomFrom: 1,
-			randomTo: 10,
-			show: true,
-		},
-		{
-			name: "stepNumber",
-			mandatory: false,
-			type: "int",
-			userRequest: "Step number in parameter optimization",
-			defaultValue: 1,
-			show: true,
-		},
-	]);
-
-createNewTypeSchema("NMRspinSystemModel", [{
 			name: "spins",
 			required: false,
 			array: true,
@@ -365,31 +407,67 @@ createNewTypeSchema("NMRspinSystemModel", [{
 		//HashNetwork
 		//lineshapeVariables
 		//quantityVariables
-])
-
-createInstance("aCSAdiagTensor", "diagTensor", {
+	]);
+	createNewTypeSchema("NMRspinSystemModel_CSA", [
+		{
+			name: "spins",
+			required: false,
+			array: true,
+			type: "atomicPropertySpin_CSA",
+		},
+		{
+			name: "interactions",
+			required: false,
+			array: true,
+			type: "atomicPropertySpinInteraction",
+		},
+		// from specrum ? Experimental...
+		//is complete (as from calculations?)
+		//HashNetwork
+		//lineshapeVariables
+		//quantityVariables
+	]);
+	createNewTypeSchema("liquidStatesNMRproperties", [
+		{
+			name: "spins",
+			required: false,
+			array: true,
+			type: "atomicPropertySpin_Liquid",
+		},
+		{
+			name: "interactions",
+			required: false,
+			array: true,
+			type: "atomicPropertySpinInteraction",
+		},
+		// from specrum ? Experimental...
+		//is complete (as from calculations?)
+		//HashNetwork
+		//lineshapeVariables
+		//quantityVariables
+	]);
+	createInstance("aCSAdiagTensor", "diagTensor", {
 		xx: 120,
 		yy: 87,
-		zz: 51
+		zz: 51,
 	});
 
-createInstance(
+	createInstance(
 		"aCSAatomicPropertySpin",
-		"atomicPropertySpin",
-		`{"typeVariableString" : "ChemicalShift",
+		"atomicPropertySpin_CSA",
+		`{
+	"typeVariableString" : "ChemicalShift",
 	"tensorValues": _INSERT_FILE-aCSAdiagTensor__
-	}`
+}`
 	);
 
-createInstance(
-		"CSA_NMRspinSystemModel",
-		"NMRspinSystemModel",
+	createInstance(
+		"aCSA_NMRspinSystemModel",
+		"NMRspinSystemModel_CSA",
 		`{
 	"spins": [
-	_INSERT_FILE-aCSAatomicPropertySpin__
+		_INSERT_FILE-aCSAatomicPropertySpin__
 	]
-	}`
+}`
 	);
-
-
 }

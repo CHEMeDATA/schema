@@ -1,5 +1,5 @@
 {
-    "$schema": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json",
+    "$schema": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_CSA.json",
     "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
     "typeVariableString": "ChemicalShift",
     "tensorValues": {

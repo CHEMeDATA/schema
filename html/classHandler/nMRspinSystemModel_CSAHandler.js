@@ -4,11 +4,11 @@ import { processJSONData } from '../src/htmlScripts.js';
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 /// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
 
-export class AtomicPropertySpinPredRangeHandler {
+export class NMRspinSystemModel_CSAHandler {
 	constructor(obj = {}) {
 		this.obj = obj;
 		this.verbose = true;
-		this.verboseStartingString = "AtomicPropertySpinPredRangeHandler";
+		this.verboseStartingString = "NMRspinSystemModel_CSAHandler";
 	}
 
 	#makeListMethods(suffix = "") {

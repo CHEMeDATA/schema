@@ -1,7 +1,7 @@
 {
     "$schema": "http://json-schema.org/draft-07/schema#",
     "type": "object",
-    "$id": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpinPredRange.json",
+    "$id": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_CSA.json",
     "properties": {
         "molAtomIndicesFull": {
             "type": "array",
@@ -33,19 +33,15 @@
         "diagTensorValues": {
             "type": "diagTensor"
         },
+        "diagTensorRotationMatrix": {
+            "type": "diagTensor"
+        },
         "labelVarSet": {
             "type": "string"
-        },
-        "lowerBound": {
-            "type": "number"
-        },
-        "upperBound": {
-            "type": "number"
         }
     },
     "required": [
         "typeVariableString",
-        "lowerBound",
-        "upperBound"
+        "diagTensorValues"
     ]
 }

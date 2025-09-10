@@ -4,11 +4,11 @@ import { processJSONData } from '../src/htmlScripts.js';
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
 /// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
 
-export class AtomicPropertySpinMatchHandler {
+export class AtomicPropertySpin_LiquidHandler {
 	constructor(obj = {}) {
 		this.obj = obj;
 		this.verbose = true;
-		this.verboseStartingString = "AtomicPropertySpinMatchHandler";
+		this.verboseStartingString = "AtomicPropertySpin_LiquidHandler";
 	}
 
 	#makeListMethods(suffix = "") {
