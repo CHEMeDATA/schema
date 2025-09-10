@@ -163,6 +163,8 @@ export async function loadInstance(
 		validationMessage.textContent =
 			"❌ Failed to load instance or schema : " + err.message;
 		console.log("❌ Failed to load instance or schema ::", err);
+				updateFeatureOfObject(editor.data, mainObject, editor, validationMessage);
+
 	}
 }
 
@@ -173,6 +175,8 @@ export async function processJSONData(data, mainObject, validationMessage) {
 	if (!data) return;
 
 	try {
+		console.log("hre1")
+
 		let schemas = {};
 		if (data && data.$schema) {
 			schemas = await fetchSchemas(data);
@@ -181,7 +185,7 @@ export async function processJSONData(data, mainObject, validationMessage) {
 		}
 
 		validateJSON(data, schemas, validationMessage);
-
+console.log("hre2")
 		if (mainObject) {
 			mainObject.updateContent(data);
 			const container = document.getElementById("dynamicContent");

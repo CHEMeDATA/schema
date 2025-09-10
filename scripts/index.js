@@ -69,19 +69,19 @@ mainMakeForm();
 
 console.log("****************************** 1");
 
+insertSupplementForViewersClasses();
+
+console.log("****************************** 2");
+
 insertSupplementForFormInObjectClasses("supImpAA_", "supImpBB_"); 
 insertSupplementForFormInObjectClasses("supplement", "supImpZZ_");
 insertSupplementForFormInObjectClasses("supImpMe_", "supImpIn_");
 
-console.log("****************************** 2");
-insertSupplementForViewersClasses();
 console.log("****************************** End");
-
-
-
 
 console.log("****************************** Export instances as Linked data");
 
+// write linked data
 if (false) { // THIS IS CHANGING THE LINKED DATA EACH TIME BECAUSE OF RANDOM HASH
 	const instancePath = path.join(instanceDir);
 	fs.readdirSync(instancePath).forEach(file => {

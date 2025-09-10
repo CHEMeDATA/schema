@@ -2,6 +2,9 @@
 import { processJSONData } from '../src/htmlScripts.js';
   
 /// AUTOMATIC viewer IMPORT INSERTION WILL BE MADE HERE
+import { ControlSliders } from "../src_objects/controlSliders.js";
+import { SsSpectrum } from "../src_objects/ssSpectrum.js";
+
 /// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
 
 export class NMRspinSystemModel_CSAHandler {
@@ -10,7 +13,7 @@ export class NMRspinSystemModel_CSAHandler {
 		this.verbose = true;
 		this.verboseStartingString = "NMRspinSystemModel_CSAHandler";
 	}
-
+	
 	#makeListMethods(suffix = "") {
     return Object.getOwnPropertyNames(Object.getPrototypeOf(this))
       .filter(
@@ -22,9 +25,13 @@ export class NMRspinSystemModel_CSAHandler {
   	}
 	// called by htmlScript.ps
 	showAllOptionsInHTML(container) {
-		if (this.verbose)
+
+		console.log("aah1");
+
+			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
+			console.log(` before alling`);
 
 		const methodsVA = this.#makeListMethods("_AdditionalViewer");
 		methodsVA.forEach((method) => {
@@ -113,6 +120,7 @@ export class NMRspinSystemModel_CSAHandler {
 				this.obj.age = newAge; // Update the object's age
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");        
+console.log("hh3")
 
 				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
@@ -143,6 +151,7 @@ export class NMRspinSystemModel_CSAHandler {
 				this.obj.age = newAge; // Update or create age
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");    
+console.log("hh4")
 
 				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
@@ -247,7 +256,7 @@ export class NMRspinSystemModel_CSAHandler {
 	});
 
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
-
+console.log("hh1")
 			processJSONData(this.obj, this, validationMessage); // Trigger processing
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
@@ -344,6 +353,7 @@ export class NMRspinSystemModel_CSAHandler {
 
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
 			const validationMessage = document.getElementById("validationMessage");        
+console.log("hh2")
 
 			processJSONData(this.obj, this, validationMessage); // Trigger processing
 
@@ -658,4 +668,35 @@ export class NMRspinSystemModel_CSAHandler {
 
 
 /// AUTOMATIC viewer METHOD INSERTION WILL BE MADE HERE
+
+	NMRspinSystemModel_CSA_AdditionalViewer() {
+		const objClassName = "NMRspinSystemModel_CSA";
+		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'
+console.log("JHHH ")
+		// NSKEA DATA location of automatically inserted code
+
+		// NSKEA start
+		function callGenerationGraphic(myName, viewerDataPassed) {
+			const frame = document.createElement("div");
+			frame.id = myName;
+			frame.className = "frame red-frame";
+			const container = document.getElementById("dynamicContent");
+			container.appendChild(frame);
+			// const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);
+			const svg = d3.select("#" + myName)
+				.append("svg")
+				.attr("viewBox", "0 0 890 490")
+				.attr("width", 890)
+				.attr("height", 490)
+				.style("display", "block")
+				.append("g")
+				.attr("transform", "translate(60,10)");
+
+			var theSsSpectrum = new SsSpectrum(viewerDataPassed, svg);
+		}
+		// NSKEA end
+		const viewerDataPassed = SsSpectrum.getProperDataForVisualization(this, objClassName);
+		callGenerationGraphic(myName, viewerDataPassed);
+	}
+
 }
