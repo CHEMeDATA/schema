@@ -6,7 +6,6 @@ export async function fetchSchemas(jsonData) {
 
     async function fetchSchema(url) {
         if (schemaObjects[url]) return;
-        console.log(`⏳ Fetching schema: ${url}`);
         let response = await fetch(url);
         if (response.ok) {
             schemaObjects[url] = await response.json();

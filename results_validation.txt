@@ -4,47 +4,51 @@
 ********* Validating 01_assigned_molecule.json...
 
 ********* Validating CHEMeDATA_results3.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
-❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json: Failed to fetch schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+❌ Error : schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
 ❌ Root.spinSystems.0 - Schema "https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json" not found.
 
 ********* Validating CHEMeDATA_starting3.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
-❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json: Failed to fetch schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+❌ Error : schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
 ❌ Root.spinSystems.0 - Schema "https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json" not found.
 
 ********* Validating CSA_NMRspinSystemModel.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json
-❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json: schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
-❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel.json" not found.
+❌ Error : ❌ Failed to fetch schema: https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel-CSA.json
+❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel-CSA.json" not found.
 
 ********* Validating RS_pump_120909.180.fid.json...
 
+********* Validating aCSA_NMRspinSystemModel.json...
+✅ fetched https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel_CSA.json
+❌ Error : schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
+❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel_CSA.json" not found.
+
 ********* Validating aCSAatomicPropertySpin.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json
-❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json: schema is invalid: data/properties/molAtomIndicesFull/items/type must be equal to one of the allowed values, data/properties/molAtomIndicesFull/items/type must be array, data/properties/molAtomIndicesFull/items/type must match a schema in anyOf, data/properties/molAtomIndicesFull/items must be array, data/properties/molAtomIndicesFull/items must match a schema in anyOf
-❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin.json" not found.
+✅ fetched https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_CSA.json
+❌ Error : schema is invalid: data/properties/molAtomIndicesFull/items/type must be equal to one of the allowed values, data/properties/molAtomIndicesFull/items/type must be array, data/properties/molAtomIndicesFull/items/type must match a schema in anyOf, data/properties/molAtomIndicesFull/items must be array, data/properties/molAtomIndicesFull/items must match a schema in anyOf
+❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_CSA.json" not found.
 
 ********* Validating aCSAdiagTensor.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/diagTensor.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/diagTensor.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/diagTensor.json Valid
 
 ********* Validating alice.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/obj1.json Valid
 
 ********* Validating bob190.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1size.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj1size.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj1size.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/obj1size.json Valid
 
 ********* Validating exampleGroupObj1.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/groupObject1.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/groupObject1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/groupObject1.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/groupObject1.json Valid
@@ -52,9 +56,9 @@
 ✅ Root.members.1 - https://chemedata.github.io/schema/v1/schema/obj1.json Valid
 
 ********* Validating exampleNMRsample.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/NMRliquidSample.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/liquidSample.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/sample.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/NMRliquidSample.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/liquidSample.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/sample.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/sample.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/liquidSample.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/NMRliquidSample.json
@@ -63,23 +67,23 @@
 ********* Validating examplePair.json...
 
 ********* Validating examplePair_EmbededSchema copy 4.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj2.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Root.object2 - https://chemedata.github.io/schema/v1/schema/obj2.json Valid
 
 ********* Validating examplePair_EmbededSchema copy.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Root.object1 - https://chemedata.github.io/schema/v1/schema/obj1.json Valid
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj2.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Root.object2 - https://chemedata.github.io/schema/v1/schema/obj2.json Valid
 
 ********* Validating examplePair_EmbededSchema.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/pairObj1.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/pairObj1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj1.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj2.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/pairObj1.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/pairObj1.json Valid
@@ -87,33 +91,32 @@
 ✅ Root.object2 - https://chemedata.github.io/schema/v1/schema/obj2.json Valid
 
 ********* Validating liquidStatesNMRmodelExample1.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
-❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json: Failed to fetch schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+❌ Error : schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
 ❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json" not found.
 
 ********* Validating liquidStatesNMRmodelExample_fromNMRprop.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/nmrProp.json
-❌ Error loading schema from https://chemedata.github.io/schema/v1/schema/nmrProp.json: Failed to fetch schema: https://chemedata.github.io/schema/v1/schema/nmrProp.json
+❌ Error : ❌ Failed to fetch schema: https://chemedata.github.io/schema/v1/schema/nmrProp.json
 ❌ Root - Schema "https://chemedata.github.io/schema/v1/schema/nmrProp.json" not found.
 
 ********* Validating miniSpectrum.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json Valid
 
 ********* Validating miniSpectrum2.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json Valid
 
 ********* Validating myFirstJgraphObject.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/jGraphObject.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/jGraphObject.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/jGraphObject.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/jGraphObject.json Valid
 
 ********* Validating sampleSimple.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/liquidSample.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/sample.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/liquidSample.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/sample.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/sample.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/liquidSample.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/liquidSample.json Valid
@@ -121,28 +124,28 @@
 ********* Validating spinfit-Opt-01_assigned-Exp.DirDesR.Ny.Obj0.2nd100_4.spinFitResult.json...
 
 ********* Validating test1.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj2.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/obj2.json Valid
 
 ********* Validating test1TimestampID.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj2.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/obj2.json Valid
 
 ********* Validating testEmbeddedSchema.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj1.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj1.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/obj1.json Valid
 
 ********* Validating testEmbeddedSchemaFailed.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/obj2.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/obj2.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/obj2.json
 ❌ Root - https://chemedata.github.io/schema/v1/schema/obj2.json Invalid: data must have required property 'age'
 
 ********* Validating twoSpectra.json...
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/setSpectra.json
-⏳ Fetching schema: https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/setSpectra.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json
 ✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/setSpectra.json
 ✅ Root - https://chemedata.github.io/schema/v1/schema/setSpectra.json Valid
@@ -153,6 +156,7 @@
 CHEMeDATA_results3.json
 CHEMeDATA_starting3.json
 CSA_NMRspinSystemModel.json
+aCSA_NMRspinSystemModel.json
 aCSAatomicPropertySpin.json
 liquidStatesNMRmodelExample1.json
 liquidStatesNMRmodelExample_fromNMRprop.json
