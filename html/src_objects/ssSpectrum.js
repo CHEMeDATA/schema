@@ -27,6 +27,14 @@ export class SsSpectrum extends ViewerBase {
     d3.select(selector).style('shape-rendering', 'crispEdges');
   }
 
+static getProperDataForVisualization(inputData, objClassName) {
+console.log("method inputData.. ", inputData)
+console.log("method objClassName.. ", objClassName)
+			if (objClassName == "NMRspinSystemModel_CSA") { // do not remove automatic code...
+				return inputData;
+      }
+}
+
   plotCalculatingIntegral(deltaIso, deltaZz, eta, freqMin2, freqMax2, refIntegral = 1.0, useIntegral = false) {
     //plotCalculatingIntegral(xx2,yy2,zz2, freqMin2, freqMax2) {
     // const deltaIso2 = (xx2 + yy2 + zz2) / 3.0;

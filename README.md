@@ -2,6 +2,12 @@
 
 Under construction!
 
+# Funding
+
+This project has received funding from the European Union’s Horizon 2020 research and innovation program PANACEA under grant agreement No. 101008500. See the [CHEMeDATA panacea page](https://chemedata.github.io/panacea/) for more details.
+
+# Update
+
  [index](https://chemedata.github.io/schema/html/index.html)
 
 Main schema builder repository.
