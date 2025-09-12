@@ -17,6 +17,30 @@ export function createSpinSystemSchema() {
 		"\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n"
 	);
 
+createNewTypeSchema("intPair", [
+		{
+			name: "first",
+			required: true,
+			array: false,
+			type: "integer",
+		},
+		{
+			name: "second",
+			required: true,
+			array: false,
+			type: "integer",
+		},
+]);
+
+	createInstance(
+		"aIntPair",
+		"intPair",
+		`{
+	"first": 1,
+	"second": 2
+}`
+	);
+
 	createNewTypeSchema("tensor", [
 		{
 			name: "xx",

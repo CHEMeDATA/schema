@@ -1,0 +1,6 @@
+{
+    "$schema": "https://chemedata.github.io/schema/v1/schema/intPair.json",
+    "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+    "first": 1,
+    "second": 2
+}

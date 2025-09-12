@@ -1,0 +1,17 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/intPair.json",
+    "properties": {
+        "first": {
+            "type": "integer"
+        },
+        "second": {
+            "type": "integer"
+        }
+    },
+    "required": [
+        "first",
+        "second"
+    ]
+}
