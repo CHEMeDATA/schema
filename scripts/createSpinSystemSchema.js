@@ -169,7 +169,7 @@ createNewTypeSchema("intPair", [
 			required: false,
 			array: false,
 			type: "object",
-			ref: "diagTensor",
+			ref: "tensor",
 		},
 		{
 			name: "labelVarSet",
@@ -320,7 +320,7 @@ const spins = [
 			required: false,
 			array: false,
 			type: "object",
-			ref: "diagTensor",
+			ref: "tensor",
 		},
 		{
 			name: "labelVarSet",
@@ -498,7 +498,7 @@ createNewTypeSchema("NMRspinSystemModel", [
 		"atomicPropertySpin_CSA",
 		`{
 	"typeVariableString" : "ChemicalShift",
-	"tensorValues": _INSERT_FILE-aCSAdiagTensor__
+	"diagTensorValues": _INSERT_FILE-aCSAdiagTensor__
 }`
 	);
 

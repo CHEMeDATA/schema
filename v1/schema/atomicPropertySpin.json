@@ -34,7 +34,7 @@
             "$ref": "https://chemedata.github.io/schema/v1/schema/diagTensor.json"
         },
         "diagTensorRotationMatrix": {
-            "$ref": "https://chemedata.github.io/schema/v1/schema/diagTensor.json"
+            "$ref": "https://chemedata.github.io/schema/v1/schema/tensor.json"
         },
         "labelVarSet": {
             "type": "string"

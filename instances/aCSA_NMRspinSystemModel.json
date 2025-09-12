@@ -6,7 +6,7 @@
             "$schema": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_CSA.json",
             "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
             "typeVariableString": "ChemicalShift",
-            "tensorValues": {
+            "diagTensorValues": {
                 "$schema": "https://chemedata.github.io/schema/v1/schema/diagTensor.json",
                 "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
                 "xx": 120,

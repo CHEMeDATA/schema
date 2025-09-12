@@ -41,9 +41,9 @@ export class SsSpectrum extends ViewerBase {
     // { dispValue1: 600 },
     // { dispValue1: -300 }
     // ]
-    const xx = inputData.data.spins[0].tensorValues.xx;
-    const yy = inputData.data.spins[0].tensorValues.yy;
-    const zz = inputData.data.spins[0].tensorValues.zz;
+    const xx = inputData.data.spins[0].diagTensorValues.xx;
+    const yy = inputData.data.spins[0].diagTensorValues.yy;
+    const zz = inputData.data.spins[0].diagTensorValues.zz;
     this.data = [{ dispValue1: xx }, { dispValue1: yy }, { dispValue1: zz }];
     this.svg = svg;
     this.width = +this.svg.attr("width"); // "+" converts string to number

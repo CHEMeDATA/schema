@@ -5,13 +5,33 @@
 
 ********* Validating CHEMeDATA_results3.json...
 ✅ fetched https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
-❌ Error : schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
-❌ Root.spinSystems.0 - Schema "https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json" not found.
+✅ fetched https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/tensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/tensor.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/intPair.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/intPair.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+❌ Root.spinSystems.0 - https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json Invalid: data/spins/0 must have required property 'typeVariableString'
 
 ********* Validating CHEMeDATA_starting3.json...
 ✅ fetched https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
-❌ Error : schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
-❌ Root.spinSystems.0 - Schema "https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json" not found.
+✅ fetched https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/tensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/tensor.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/intPair.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/intPair.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json
+❌ Root.spinSystems.0 - https://chemedata.github.io/schema/v1/schema/liquidStatesNMRproperties.json Invalid: data/spins/0 must have required property 'typeVariableString'
 
 ********* Validating RS_pump_120909.180.fid.json...
 
@@ -69,8 +89,18 @@
 
 ********* Validating liquidStatesNMRmodelExample1.json...
 ✅ fetched https://chemedata.github.io/schema/v1/schemaResolved/liquidStatesNMRproperties.json
-❌ Error : schema is invalid: data/properties/spins/items/type must be equal to one of the allowed values, data/properties/spins/items/type must be array, data/properties/spins/items/type must match a schema in anyOf, data/properties/spins/items must be array, data/properties/spins/items must match a schema in anyOf
-❌ Root - Schema "https://chemedata.github.io/schema/v1/schemaResolved/liquidStatesNMRproperties.json" not found.
+✅ fetched https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/tensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/tensor.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/diagTensor.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json
+✅ fetched https://chemedata.github.io/schema/v1/schema/intPair.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/intPair.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json
+✅ Loaded schema: https://chemedata.github.io/schema/v1/schemaResolved/liquidStatesNMRproperties.json
+❌ Root - https://chemedata.github.io/schema/v1/schemaResolved/liquidStatesNMRproperties.json Invalid: data/spins/0 must have required property 'typeVariableString'
 
 ********* Validating liquidStatesNMRmodelExample_fromNMRprop.json...
 ❌ Error : ❌ Failed to fetch schema: https://chemedata.github.io/schema/v1/schemaResolved/nmrProp.json
