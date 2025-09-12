@@ -9,6 +9,52 @@ import {
 	derivationsFile,
 } from "../scripts/config.js";
 
+export function checkSchemaTypes(obj, path = "") {
+  const allowedTypes = [
+	"object",
+	"array",
+	"string",
+	"number",
+	"integer",
+	"boolean",
+	"null"
+  ];
+
+  for (const key in obj) {
+	const value = obj[key];
+	const currentPath = path ? `${path}.${key}` : key;
+
+	if (key === "type") {
+	  if (typeof value === "string") {
+		if (!allowedTypes.includes(value)) {
+		  throw new Error(
+			`Invalid type "${value}" found at path "${currentPath}". ` +
+			`Allowed types: ${allowedTypes.join(", ")}`
+		  );
+		}
+	  } else if (Array.isArray(value)) {
+		for (const v of value) {
+		  if (!allowedTypes.includes(v)) {
+			throw new Error(
+			  `Invalid type "${v}" found in array at path "${currentPath}". ` +
+			  `Allowed types: ${allowedTypes.join(", ")}`
+			);
+		  }
+		}
+	  } else {
+		throw new Error(
+		  `Invalid "type" value (not string/array) at path "${currentPath}".`
+		);
+	  }
+	}
+
+	// Recurse into nested objects/arrays
+	if (typeof value === "object" && value !== null) {
+	  checkSchemaTypes(value, currentPath);
+	}
+  }
+}
+
 export function setFieldTrue(array, fieldName) {
 	return array.map((prop) =>
 		prop.name === fieldName ? { ...prop, required: true } : { ...prop }
@@ -158,7 +204,7 @@ export function deriveSchema(sourceClass, derivedClass, fieldsToAdd) {
 	if (requiredFields.length > 0) {
 		derivedSchema["required"] = requiredFields;
 	}
-
+	checkSchemaTypes(derivedSchema);
 	fs.writeFileSync(derivedPath, JSON.stringify(derivedSchema, null, 4));
 	console.log(`✅ ${derivedClass} schema created at:`, derivedPath);
 }
@@ -219,7 +265,7 @@ export function createNewTypeSchema(newSchemaName, propertiesList) {
 		properties: properties,
 		required: requiredFields.length > 0 ? requiredFields : undefined,
 	};
-
+	checkSchemaTypes(newSchema);
 	fs.writeFileSync(schemaPath, JSON.stringify(newSchema, null, 4));
 	console.log(`✅ ${newSchemaName} schema created at:`, schemaPath);
 }

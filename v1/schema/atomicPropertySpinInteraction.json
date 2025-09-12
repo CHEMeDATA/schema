@@ -28,19 +28,19 @@
             "type": "number"
         },
         "tensorValues": {
-            "type": "tensor"
+            "$ref": "https://chemedata.github.io/schema/v1/schema/tensor.json"
         },
         "diagTensorValues": {
-            "type": "diagTensor"
+            "$ref": "https://chemedata.github.io/schema/v1/schema/diagTensor.json"
         },
         "diagTensorRotationMatrix": {
-            "type": "diagTensor"
+            "$ref": "https://chemedata.github.io/schema/v1/schema/diagTensor.json"
         },
         "labelVarSet": {
             "type": "string"
         },
         "numberBonds": {
-            "type": "int"
+            "type": "integer"
         },
         "numberBondslabelVarSet": {
             "type": "string"

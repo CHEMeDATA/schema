@@ -28,19 +28,79 @@
             "type": "number"
         },
         "tensorValues": {
-            "type": "tensor"
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "$id": "https://chemedata.github.io/schema/v1/schema/tensor.json",
+            "properties": {
+                "xx": {
+                    "type": "number"
+                },
+                "xy": {
+                    "type": "number"
+                },
+                "xz": {
+                    "type": "number"
+                },
+                "yx": {
+                    "type": "number"
+                },
+                "yy": {
+                    "type": "number"
+                },
+                "yz": {
+                    "type": "number"
+                },
+                "zx": {
+                    "type": "number"
+                },
+                "zy": {
+                    "type": "number"
+                },
+                "zz": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "xx",
+                "xy",
+                "xz",
+                "yx",
+                "yy",
+                "yz",
+                "zx",
+                "zy",
+                "zz"
+            ]
         },
         "diagTensorValues": {
-            "type": "diagTensor"
+            "$schema": "http://json-schema.org/draft-07/schema#",
+            "type": "object",
+            "$id": "https://chemedata.github.io/schema/v1/schema/diagTensor.json",
+            "properties": {
+                "xx": {
+                    "type": "number"
+                },
+                "yy": {
+                    "type": "number"
+                },
+                "zz": {
+                    "type": "number"
+                }
+            },
+            "required": [
+                "xx",
+                "yy",
+                "zz"
+            ]
         },
         "diagTensorRotationMatrix": {
-            "type": "diagTensor"
+            "$ref": "https://chemedata.github.io/schema/v1/schema/diagTensor.json"
         },
         "labelVarSet": {
             "type": "string"
         },
         "numberBonds": {
-            "type": "int"
+            "type": "integer"
         },
         "numberBondslabelVarSet": {
             "type": "string"

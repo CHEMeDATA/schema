@@ -100,19 +100,19 @@ export function createSpinSystemSchema() {
 			name: "molAtomIndicesFull",
 			required: false,
 			array: true,
-			type: "int",
+			type: "integer",
 		},
 		{
 			name: "molAtomIndices",
 			required: false,
 			array: true,
-			type: "int",
+			type: "integer",
 		},
 		{
 			name: "spinSystemIndices",
 			required: false,
 			array: true,
-			type: "int",
+			type: "integer",
 		},
 		{
 			name: "typeVariableString",
@@ -130,19 +130,22 @@ export function createSpinSystemSchema() {
 			name: "tensorValues",
 			required: false,
 			array: false,
-			type: "tensor",
+			type: "object",
+			ref: "tensor",
 		},
 		{
 			name: "diagTensorValues",
 			required: false,
 			array: false,
-			type: "diagTensor",
+			type: "object",
+			ref: "diagTensor",
 		},
 		{
 			name: "diagTensorRotationMatrix",
 			required: false,
 			array: false,
-			type: "diagTensor",
+			type: "object",
+			ref: "diagTensor",
 		},
 		{
 			name: "labelVarSet",
@@ -214,7 +217,8 @@ const spins = [
 			{
 				name: "curQuality",
 				mandatory: false,
-				type: "qualityClass",
+				type: "object",
+				ref: "qualityClass",
 				show: true,
 			},
 			{
@@ -231,7 +235,7 @@ const spins = [
 			{
 				name: "stepNumber",
 				mandatory: false,
-				type: "int",
+				type: "integer",
 				userRequest: "Step number in parameter optimization",
 				defaultValue: 1,
 				show: true,
@@ -277,19 +281,22 @@ const spins = [
 			name: "tensorValues",
 			required: false,
 			array: false,
-			type: "tensor",
+			type: "object",
+			ref: "tensor",
 		},
 		{
 			name: "diagTensorValues",
 			required: false,
 			array: false,
-			type: "diagTensor",
+			type: "object",
+			ref: "diagTensor",
 		},
 		{
 			name: "diagTensorRotationMatrix",
 			required: false,
 			array: false,
-			type: "diagTensor",
+			type: "object",
+			ref: "diagTensor",
 		},
 		{
 			name: "labelVarSet",
@@ -301,7 +308,7 @@ const spins = [
 			name: "numberBonds",
 			required: false,
 			array: false,
-			type: "int",
+			type: "integer",
 		},
 		{
 			name: "numberBondslabelVarSet",
@@ -365,7 +372,8 @@ const interactions = [
 				{
 					name: "curQuality",
 					mandatory: false,
-					type: "qualityClass",
+					type: "object",
+					ref: "qualityClass",
 					show: true,
 				},
 				{
@@ -382,7 +390,7 @@ const interactions = [
 				{
 					name: "stepNumber",
 					mandatory: false,
-					type: "int",
+					type: "integer",
 					userRequest: "Step number in parameter optimization",
 					defaultValue: 1,
 					show: true,
