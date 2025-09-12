@@ -6,19 +6,19 @@
         "molAtomIndicesFull": {
             "type": "array",
             "items": {
-                "type": "intPairs"
+                "$ref": "https://chemedata.github.io/schema/v1/schema/intPairs.json"
             }
         },
         "molAtomIndices": {
             "type": "array",
             "items": {
-                "type": "intPairs"
+                "$ref": "https://chemedata.github.io/schema/v1/schema/intPairs.json"
             }
         },
         "spinSystemIndices": {
             "type": "array",
             "items": {
-                "type": "intPairs"
+                "$ref": "https://chemedata.github.io/schema/v1/schema/intPairs.json"
             }
         },
         "typeVariableString": {

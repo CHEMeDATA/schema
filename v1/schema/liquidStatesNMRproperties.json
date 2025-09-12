@@ -6,13 +6,13 @@
         "spins": {
             "type": "array",
             "items": {
-                "type": "atomicPropertySpin_Liquid"
+                "$ref": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpin_Liquid.json"
             }
         },
         "interactions": {
             "type": "array",
             "items": {
-                "type": "atomicPropertySpinInteraction"
+                "$ref": "https://chemedata.github.io/schema/v1/schema/atomicPropertySpinInteraction.json"
             }
         }
     }

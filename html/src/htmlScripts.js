@@ -127,7 +127,7 @@ export async function loadInstance(
 	try {
 		const response = await fetch("../instances/" + fileName);
 		if (!response.ok)
-			throw new Error("Failed to fetch instance: " + response.status);
+			throw new Error("loadInstance Failed to fetch instance: " + response.status);
 
 		// Try to get Content-Length header (optional, may be null)
 		const contentLength = response.headers.get("Content-Length");
@@ -152,18 +152,18 @@ export async function loadInstance(
 		// Otherwise load full JSON normally
 
 		const schemas = await fetchSchemas(editor.data);
-		console.log("validateJSON ...", schemas);
+		console.log("loadInstance validateJSON ... schemas : ", schemas);
 		validateJSON(editor.data, schemas, validationMessage);
-		console.log("updateFeatureOfObject ...");
+		console.log("loadInstance finished validateJSON");
 		updateFeatureOfObject(editor.data, mainObject, editor, validationMessage);
-		console.log("end ...");
+		console.log("loadInstance finished updateFeatureOfObject");
 
 		editor.dataset.schema = JSON.stringify(schemas);
 	} catch (err) {
 		validationMessage.textContent =
 			"❌ Failed to load instance or schema : " + err.message;
-		console.log("❌ Failed to load instance or schema ::", err);
-				updateFeatureOfObject(editor.data, mainObject, editor, validationMessage);
+		console.log("❌ loadInstance Failed to load instance or schema ::", err);
+		updateFeatureOfObject(editor.data, mainObject, editor, validationMessage);
 
 	}
 }

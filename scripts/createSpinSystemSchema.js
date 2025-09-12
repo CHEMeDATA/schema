@@ -244,19 +244,22 @@ const spins = [
 			name: "molAtomIndicesFull",
 			required: false,
 			array: true,
-			type: "intPairs",
+			type: "object",
+			ref: "intPairs",
 		},
 		{
 			name: "molAtomIndices",
 			required: false,
 			array: true,
-			type: "intPairs",
+			type: "object",
+			ref: "intPairs",
 		},
 		{
 			name: "spinSystemIndices",
 			required: false,
 			array: true,
-			type: "intPairs",
+			type: "object",
+			ref: "intPairs",
 		},
 		{
 			name: "typeVariableString",
@@ -394,13 +397,15 @@ createNewTypeSchema("NMRspinSystemModel", [
 			name: "spins",
 			required: false,
 			array: true,
-			type: "atomicPropertySpin",
+			type: "object",
+			ref: "atomicPropertySpin",
 		},
 		{
 			name: "interactions",
 			required: false,
 			array: true,
-			type: "atomicPropertySpinInteraction",
+			type: "object",
+			ref: "atomicPropertySpinInteraction",
 		},
 		// from specrum ? Experimental...
 		//is complete (as from calculations?)
@@ -413,13 +418,15 @@ createNewTypeSchema("NMRspinSystemModel", [
 			name: "spins",
 			required: false,
 			array: true,
-			type: "atomicPropertySpin_CSA",
+			type: "object",
+			ref: "atomicPropertySpin_CSA",
 		},
 		{
 			name: "interactions",
 			required: false,
 			array: true,
-			type: "atomicPropertySpinInteraction",
+			type: "object",
+			ref: "atomicPropertySpinInteraction",
 		},
 		// from specrum ? Experimental...
 		//is complete (as from calculations?)
@@ -432,13 +439,15 @@ createNewTypeSchema("NMRspinSystemModel", [
 			name: "spins",
 			required: false,
 			array: true,
-			type: "atomicPropertySpin_Liquid",
+			type: "object",
+			ref: "atomicPropertySpin_Liquid",
 		},
 		{
 			name: "interactions",
 			required: false,
 			array: true,
-			type: "atomicPropertySpinInteraction",
+			type: "object",
+			ref: "atomicPropertySpinInteraction",
 		},
 		// from specrum ? Experimental...
 		//is complete (as from calculations?)

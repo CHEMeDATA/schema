@@ -44,15 +44,29 @@ export async function fetchSchemas(jsonData) {
 }
 
 export function validateJSON(data, schemas, resultList) {
-    const ajv = new Ajv({ schemas });
+    var ajv;
+    try {
+        ajv = new Ajv({ schemas });
+    } catch (error) {
+      console.log("problematic schemas : ", schemas);
+      console.error("validateJSON Error while initializing Ajv:", error);
+      // Optionally rethrow or handle gracefully
+      throw error;
+    }
     resultList.innerHTML = "";
 
     console.log("Validating JSON:", data);
     console.log("Available schemas:", Object.keys(schemas));
 
-    async function validateObject(obj, path = "Root") {
-        if (!obj || typeof obj !== "object") return;
+    async function validateObject(objIn, path = "Root") {
+        console.log("validateObject object:", objIn);
 
+        if (!objIn || typeof objIn !== "object") return;
+        var obj = objIn;
+        if (Array.isArray(objIn) ) {
+            //obj = objIn[0];
+            console.warning("obj is ARRAY")
+        }       // true if obj is an array
         if (obj["$schema"]) {
             let schemaName = obj["$schema"];
             if (!(schemaName in schemas)) {
