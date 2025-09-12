@@ -1,41 +1,80 @@
-import { ViewerBase } from './viewerBase.js';
-
+import { ViewerBase } from "./viewerBase.js";
+import { rank2ssbs } from "./rank2ssbs.js";
+import { rank2stat } from "./rank2stat.js";
 export class SsSpectrum extends ViewerBase {
+  /* Structure of input data
+  {
+    "$schema": "https://chemedata.github.io/schema/v1/schema/NMRspinSystemModel_CSA.json",
+    "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+    "spins": [
+        {
+            "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+            "typeVariableString": "ChemicalShift",
+            "tensorValues": {
+                "wildComment": "Created by schema/scripts/createSchemaSomeInstances.js using function createInstance",
+                "xx": 120,
+                "yy": 87,
+                "zz": 51
+            }
+        }
+    ]
+}
+*/
   constructor(
-    selector,
-    JmolAppletA,
-    width = 500,
-    height = 252,
-    name = 'nameIsWiredInConstructor_SsSpectrum',
+    inputData,
+    svg,
+    settingsInput = {},
+    smallScreen = false,
+    regionsData = {},
+    name = "nameIsWiredInConstructor_SsSpectrum"
   ) {
     // data for ViewerBase which takes care of communication between classes
     super(name, {
       dataTypesSend: [],
-      dataTypesReceive: ['controlSliders'],
+      dataTypesReceive: ["controlSliders"],
       logAllDataExchange: false, // Enable logging for this instance if true
     });
+
     this.showAlsoReclaculated = true;
-   
-    this.JmolAppletA = JmolAppletA;
-    this.selector = selector;
-    this.width = width;
-    this.height = height;
-    this.svg = d3
-      .select(selector)
-      .attr('width', this.width)
-      .attr('height', this.height);
-    d3.select(selector).style('shape-rendering', 'crispEdges');
+    // Structure data: [
+    // { dispValue1: 50 },
+    // { dispValue1: 600 },
+    // { dispValue1: -300 }
+    // ]
+    console.log("inputData", inputData)
+    console.log("inputData.data", inputData.data)
+    const xx = inputData.data.spins[0].tensorValues.xx;
+    const yy = inputData.data.spins[0].tensorValues.yy;
+    const zz = inputData.data.spins[0].tensorValues.zz;
+    this.data = [{ dispValue1: xx }, { dispValue1: yy }, { dispValue1: zz }];
+    this.svg = svg;
+    this.width = +this.svg.attr("width"); // "+" converts string to number
+    this.height = +this.svg.attr("height");
+    console.log("width, height", this.width, this.height);
+
+    this.rank2ssbs = rank2ssbs;
+    this.rank2stat = rank2stat;
+
+    this.init();
   }
 
-static getProperDataForVisualization(inputData, objClassName) {
-console.log("method inputData.. ", inputData)
-console.log("method objClassName.. ", objClassName)
-			if (objClassName == "NMRspinSystemModel_CSA") { // do not remove automatic code...
-				return inputData;
-      }
-}
+  static getProperDataForVisualization(inputData, objClassName) {
+  console.log("method inputData.. ", inputData)
+  console.log("method objClassName.. ", objClassName)
+        if (objClassName == "NMRspinSystemModel_CSA") { // do not remove automatic code...
+  				return {data: inputData.obj};
+        }
+  }
 
-  plotCalculatingIntegral(deltaIso, deltaZz, eta, freqMin2, freqMax2, refIntegral = 1.0, useIntegral = false) {
+  plotCalculatingIntegral(
+    deltaIso,
+    deltaZz,
+    eta,
+    freqMin2,
+    freqMax2,
+    refIntegral = 1.0,
+    useIntegral = false
+  ) {
     //plotCalculatingIntegral(xx2,yy2,zz2, freqMin2, freqMax2) {
     // const deltaIso2 = (xx2 + yy2 + zz2) / 3.0;
     //const xx = xx2-deltaIso2 * 0;
@@ -75,7 +114,6 @@ console.log("method objClassName.. ", objClassName)
 
     // Function to compute the powder pattern distribution
     function computePowderPattern(refIntegral = 1.0, useIntegral = false) {
-
       // Create an empty histogram
       var histogramx = new Array(numBins).fill(0);
       var histogram = new Array(numBins).fill(0);
@@ -113,10 +151,10 @@ console.log("method objClassName.. ", objClassName)
 
     const dataxy = computePowderPattern();
     this.plota = dataxy.x;
-   const factorNbPoint = this.plota.length / this.plotx.length;
+    const factorNbPoint = this.plota.length / this.plotx.length;
     if (useIntegral) {
       this.plotz = dataxy.y.map(
-        (x) => (x * factorNbPoint * refIntegral) / dataxy.integral,
+        (x) => (x * factorNbPoint * refIntegral) / dataxy.integral
       );
     } else {
       const maxVal = Math.max(...dataxy.y);
@@ -130,12 +168,12 @@ console.log("method objClassName.. ", objClassName)
     let etaRoundedDown = (Math.floor(eta * 100) / 100).toFixed(2); // Rounds down to 2 decimal places and converts to a string
     let etaRoundedUp = (Math.ceil(eta * 100) / 100).toFixed(2); // Rounds down to 2 decimal places and converts to a string
     const factorCorr = (eta - etaRoundedDown) * 100;
-    console.log('factorCorr :', factorCorr);
+    console.log("factorCorr :", factorCorr);
     const crudeArrayDown = this.rank2stat[etaRoundedDown];
-    console.log('etaString :', etaRoundedDown);
-    console.log('etaString :', etaRoundedUp);
-    console.log('etaRoundedDown :', this.rank2stat[etaRoundedDown]);
-    console.log('etaRoundedUp :', this.rank2stat[etaRoundedUp]);
+    console.log("etaString :", etaRoundedDown);
+    console.log("etaString :", etaRoundedUp);
+    console.log("etaRoundedDown :", this.rank2stat[etaRoundedDown].i0);
+    console.log("etaRoundedUp :", this.rank2stat[etaRoundedUp].i0);
     const i0Down = this.rank2stat[etaRoundedDown].i0;
     const crudeArrayUp = this.rank2stat[etaRoundedUp];
     const i0Up = this.rank2stat[etaRoundedUp].i0;
@@ -150,7 +188,6 @@ console.log("method objClassName.. ", objClassName)
     var previousValue = -100;
     var integralDown = -100;
     var integralUp = -100;
-    
 
     for (var i = 0; i < crudeArrayDown.y.length; i++) {
       const valx =
@@ -164,43 +201,39 @@ console.log("method objClassName.. ", objClassName)
         let diff = crudeArrayUp.y[ishift] - crudeArrayDown.y[i];
         valy0 += diff * factorCorr;
       }
-      
+
       // integrate
       integral += valy0;
-      if (previousValue >= valy0) { // DEBU
+      if (previousValue >= valy0) {
+        // DEBU
         integralUp += valy0;
       } else {
         integralDown += valy0;
       }
 
-
       previousValue = valy0;
       y.push(valy0);
-
     }
     this.plotx = x;
     this.ploty = y;
-    console.log(' ratio integralDown/integralUp :', integralDown/integralUp);
+    console.log(" ratio integralDown/integralUp :", integralDown / integralUp);
 
     return integral;
   }
 
   updatePrincipalComponents() {
     var values = [];
-    values.push(Number(this.data[0]));
-    values.push(Number(this.data[1]));
-    values.push(Number(this.data[2]));
-    console.log(' values :', values);
-
+    values.push(Number(this.data[0].dispValue1));
+    values.push(Number(this.data[1].dispValue1));
+    values.push(Number(this.data[2].dispValue1));
+    console.log(" updatePrincipalComponents  values:", values);
     const iso = (values[0] + values[1] + values[2]) / 3.0;
-    console.log(' iso :', iso);
-    console.log(' 0 :', this.data[0]);
-    console.log(' 1 :', this.data[1]);
-    console.log(' 2 :', this.data[2]);
+    console.log(" iso :", iso);
+    console.log(" 0 :", this.data[0].dispValue1);
+    console.log(" 1 :", this.data[1].dispValue1);
+    console.log(" 2 :", this.data[2].dispValue1);
     //const sorted = this.data.sort((a, b) => a - b);
-    const sorted = this.data.sort(
-      (a, b) => Math.abs(a - iso) - Math.abs(b - iso),
-    );
+    const sorted = values.sort((a, b) => Math.abs(a - iso) - Math.abs(b - iso));
     const zz = sorted[2]; // largest
     const xx = sorted[1]; // second largest
     const yy = sorted[0]; // smallest
@@ -208,31 +241,35 @@ console.log("method objClassName.. ", objClassName)
     const eta = Math.abs(sAni) < 1e-10 ? 0.0 : (yy - xx) / sAni;
     const mi = Math.min(yy, xx, zz);
     const ma = Math.max(yy, xx, zz);
+    console.log("P iso :", iso, " sAni :", sAni, " eta :", eta);
 
     const refIntegral = this.updateXYfromPickUP(iso, sAni, eta); // from Thomas Vosegaard
-    if (this.showAlsoReclaculated) this.plotCalculatingIntegral(iso, sAni, eta, mi, ma, refIntegral, true); // integration
-
-    console.log(' zz :', zz, ' yy :', yy, ' xx :', xx);
-    console.log(' sAni :', sAni);
-    console.log(
-      'Sorted zz :',
-      Math.abs(zz - iso),
-      ' yy :',
-      Math.abs(yy - iso),
-      ' xx :',
-      Math.abs(xx - iso),
-    );
-    console.log('eta :', eta);
-    console.log('1 +eta :', 1 + eta);
-    console.log('1 -eta :', 1 - eta);
-    console.log('sAni :', sAni);
-    console.log('x :', this.plotx);
-    console.log('y :', this.ploty);
-    console.log('vvinit :', iso);
-    console.log('vvmax :', Math.sqrt(xx*xx + yy*yy + zz*zz));
+    if (this.showAlsoReclaculated)
+      this.plotCalculatingIntegral(iso, sAni, eta, mi, ma, refIntegral, true); // integration
+    if (this.verbose) {
+      console.log(" zz :", zz, " yy :", yy, " xx :", xx);
+      console.log(" sAni :", sAni);
+      console.log(
+        "Sorted zz :",
+        Math.abs(zz - iso),
+        " yy :",
+        Math.abs(yy - iso),
+        " xx :",
+        Math.abs(xx - iso)
+      );
+      console.log("eta :", eta);
+      console.log("1 +eta :", 1 + eta);
+      console.log("1 -eta :", 1 - eta);
+      console.log("sAni :", sAni);
+      console.log("x :", this.plotx);
+      console.log("y :", this.ploty);
+      console.log("vvinit :", iso);
+      console.log("vvmax :", Math.sqrt(xx * xx + yy * yy + zz * zz));
+    }
   }
 
   async loadPickupDataFiles() {
+    /*
     this.rank2ssbs = await d3
       .json('./src/rank2ssbs.json')
       .catch((error) => {
@@ -246,18 +283,20 @@ console.log("method objClassName.. ", objClassName)
         console.error('Error loading the rank2stat file:', error);
         return null; // Ensure null is returned to avoid further processing
       });
+      */
   }
 
   controlSliders_UpdateFunction(data, sender) {
     // this is the method called when receiving data catenate the datatype (see dataTypesReceive)
     const value = data.content;
-    if (typeof value === 'undefined') {
-      console.error('no data.content in recieved data');
+    if (typeof value === "undefined") {
+      console.error("no data.content in recieved data");
       return;
     }
+    console.log("from slider value: ", value);
 
     // Clear the SVG before redrawing
-    this.svg.selectAll('*').remove();
+    this.svg.selectAll("*").remove();
 
     // Ensure 'this.data' is defined
     if (!this.data) {
@@ -266,32 +305,41 @@ console.log("method objClassName.. ", objClassName)
 
     value.forEach((aValue, index) => {
       //this.data[`dispValue${index}`] = aValue;
-      this.data[index] = aValue;
+      this.data[index] = { dispValue1: +aValue };
     });
+    console.log("after set from sliders this.data: ", this.data);
 
     this.updatePrincipalComponents();
 
     // Redraw the SVG with updated data
     this.#draw();
 
+    console.log(
+      "DRAW width, height",
+      +this.svg.attr("width"),
+      +this.svg.attr("height")
+    );
+
     var inContent = null;
-    inContent = { reception: 'sliderUpdateOK' };
+    inContent = { reception: "sliderUpdateOK" };
     return inContent;
   }
 
-  async init() {
-    try {
-      // Wait for the files to be loaded
-      await this.loadPickupDataFiles();
+  init() {
+    //try {
+    // Wait for the files to be loaded
+    //   await this.loadPickupDataFiles();
 
-      // After loading, you can do any additional initialization here
-      console.log('Initialization complete, data is loaded');
+    // After loading, you can do any additional initialization here
+    //   console.log('Initialization complete, data is loaded');
 
-      // Call any other methods that need the data to be loaded first
-      this.updatePrincipalComponents();
-    } catch (error) {
-      console.error('Initialization failed:', error);
-    }
+    // Call any other methods that need the data to be loaded first
+    this.updatePrincipalComponents();
+
+    this.updateValue({ value: this.data });
+    //  } catch (error) {
+    //   console.error('Initialization failed:', error);
+    //  }
 
     //this.#initialize(jsonData, options);
   }
@@ -299,7 +347,7 @@ console.log("method objClassName.. ", objClassName)
   updateValue(updateContainer) {
     const { value, showIngestionInLog, callerClass } = updateContainer;
 
-    if (typeof value === 'undefined') {
+    if (typeof value === "undefined") {
       return;
     }
 
@@ -311,11 +359,11 @@ console.log("method objClassName.. ", objClassName)
     }
 
     // Clear the SVG before redrawing
-    this.svg.selectAll('*').remove();
+    this.svg.selectAll("*").remove();
 
     // Ensure 'this.data' is defined
     if (!this.data) {
-      console.error('Data is not initialized');
+      console.error("Data is not initialized");
       return;
     }
     if (Array.isArray(value)) {
@@ -343,8 +391,8 @@ console.log("method objClassName.. ", objClassName)
 
     // Create a group element within the SVG to apply margins
     const g = this.svg
-      .append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+      .append("g")
+      .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Define the scales for x and y
     const xScale = d3
@@ -359,12 +407,12 @@ console.log("method objClassName.. ", objClassName)
       .range([height, 0]); // Scale to fit in the available height (inverted for y)
 
     // Create and append x-axis
-    g.append('g')
-      .attr('transform', `translate(0, ${height})`)
+    g.append("g")
+      .attr("transform", `translate(0, ${height})`)
       .call(d3.axisBottom(xScale));
 
     // Create and append y-axis
-    g.append('g').call(d3.axisLeft(yScale));
+    g.append("g").call(d3.axisLeft(yScale));
 
     // Create the line generator function
     const line = d3
@@ -376,19 +424,19 @@ console.log("method objClassName.. ", objClassName)
       .x((d, i) => xScale(this.plota[i])) // x based on the xScale
       .y((d, i) => yScale(this.plotz[i])); // y based on the yScale
     // Append the line to the plot
-    g.append('path')
+    g.append("path")
       .datum(this.plotz) // Bind y data to the line
-      .attr('fill', 'none')
-      .attr('stroke', 'green') // Line color
-      .attr('stroke-width', 2)
-      .attr('d', line2); // Call the line generator to create the path
-    g.append('path')
+      .attr("fill", "none")
+      .attr("stroke", "green") // Line color
+      .attr("stroke-width", 2)
+      .attr("d", line2); // Call the line generator to create the path
+    g.append("path")
       .datum(this.ploty) // Bind y data to the line
-      .attr('fill', 'none')
-      .attr('stroke', 'red') // Line color
-      .attr('stroke-width', 2)
-      .attr('d', line); // Call the line generator to create the path
-    
+      .attr("fill", "none")
+      .attr("stroke", "red") // Line color
+      .attr("stroke-width", 2)
+      .attr("d", line); // Call the line generator to create the path
+
     return;
   }
 }

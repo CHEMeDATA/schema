@@ -13,7 +13,7 @@ export class NMRspinSystemModel_CSAHandler {
 		this.verbose = true;
 		this.verboseStartingString = "NMRspinSystemModel_CSAHandler";
 	}
-	
+
 	#makeListMethods(suffix = "") {
     return Object.getOwnPropertyNames(Object.getPrototypeOf(this))
       .filter(
@@ -25,13 +25,9 @@ export class NMRspinSystemModel_CSAHandler {
   	}
 	// called by htmlScript.ps
 	showAllOptionsInHTML(container) {
-
-		console.log("aah1");
-
-			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
+		if (this.verbose)
 			console.log(this.verboseStartingString + "starts showAllOptionsInHTML");
 		container.innerHTML = ""; // Clear existing content before adding new elements
-			console.log(` before alling`);
 
 		const methodsVA = this.#makeListMethods("_AdditionalViewer");
 		methodsVA.forEach((method) => {
@@ -120,7 +116,6 @@ export class NMRspinSystemModel_CSAHandler {
 				this.obj.age = newAge; // Update the object's age
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");        
-console.log("hh3")
 
 				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
@@ -151,7 +146,6 @@ console.log("hh3")
 				this.obj.age = newAge; // Update or create age
 				document.getElementById("ageDisplay").textContent = inputVal; // Update display
 				const validationMessage = document.getElementById("validationMessage");    
-console.log("hh4")
 
 				processJSONData(this.obj, this, validationMessage); // Trigger processing
 
@@ -256,7 +250,7 @@ console.log("hh4")
 	});
 
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
-console.log("hh1")
+
 			processJSONData(this.obj, this, validationMessage); // Trigger processing
 			const editor = document.getElementById("jsonEditor");
 			editor.value = JSON.stringify(this.obj, null, 4);
@@ -353,7 +347,6 @@ console.log("hh1")
 
 		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
 			const validationMessage = document.getElementById("validationMessage");        
-console.log("hh2")
 
 			processJSONData(this.obj, this, validationMessage); // Trigger processing
 
@@ -672,7 +665,7 @@ console.log("hh2")
 	NMRspinSystemModel_CSA_AdditionalViewer() {
 		const objClassName = "NMRspinSystemModel_CSA";
 		const myName = `${objClassName}_AdditionalViewer`; // function name don't use js feature in case 'use strict'
-console.log("JHHH ")
+
 		// NSKEA DATA location of automatically inserted code
 
 		// NSKEA start
@@ -688,9 +681,9 @@ console.log("JHHH ")
 				.attr("viewBox", "0 0 890 490")
 				.attr("width", 890)
 				.attr("height", 490)
-				.style("display", "block")
-				.append("g")
-				.attr("transform", "translate(60,10)");
+				.style("display", "block");
+				//.append("g")
+				//.attr("transform", "translate(60,10)");
 
 			var theSsSpectrum = new SsSpectrum(viewerDataPassed, svg);
 		}
