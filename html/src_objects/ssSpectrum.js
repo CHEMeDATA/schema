@@ -41,8 +41,6 @@ export class SsSpectrum extends ViewerBase {
     // { dispValue1: 600 },
     // { dispValue1: -300 }
     // ]
-    console.log("inputData", inputData)
-    console.log("inputData.data", inputData.data)
     const xx = inputData.data.spins[0].tensorValues.xx;
     const yy = inputData.data.spins[0].tensorValues.yy;
     const zz = inputData.data.spins[0].tensorValues.zz;

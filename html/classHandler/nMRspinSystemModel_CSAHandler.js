@@ -682,8 +682,6 @@ export class NMRspinSystemModel_CSAHandler {
 				.attr("width", 890)
 				.attr("height", 490)
 				.style("display", "block");
-				//.append("g")
-				//.attr("transform", "translate(60,10)");
 
 			var theSsSpectrum = new SsSpectrum(viewerDataPassed, svg);
 		}

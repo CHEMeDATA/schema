@@ -19,8 +19,6 @@
 				.attr("width", 890)
 				.attr("height", 490)
 				.style("display", "block");
-				//.append("g")
-				//.attr("transform", "translate(60,10)");
 
 			var theJgraphViewer = new JgraphViewer(viewerDataPassed, svg);
 		}
