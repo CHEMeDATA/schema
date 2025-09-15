@@ -20,6 +20,11 @@ export class SsSpectrum extends ViewerBase {
     ]
 }
 */
+
+/// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
+
+			
+
   constructor(
     inputData,
     svg,
@@ -46,15 +51,37 @@ export class SsSpectrum extends ViewerBase {
     const zz = inputData.data.spins[0].diagTensorValues.zz;
     this.data = [{ dispValue1: xx }, { dispValue1: yy }, { dispValue1: zz }];
     this.svg = svg;
-    this.width = +this.svg.attr("width"); // "+" converts string to number
-    this.height = +this.svg.attr("height");
-    console.log("width, height", this.width, this.height);
+  //  this.width = +this.svg.attr("width"); // "+" converts string to number
+  //  this.height = +this.svg.attr("height");
+//    console.log("width, height", this.width, this.height);
 
     this.rank2ssbs = rank2ssbs;
     this.rank2stat = rank2stat;
 
     this.init();
+          this.resizeAccordingToDivSize();
+
+    	window.addEventListener('resize', this.resizeAccordingToDivSize);
   }
+
+resizeAccordingToDivSize = () => {
+  const container = d3.select('#chart-container');
+  if (container.node()) {
+
+    const containerWidth = container.node().getBoundingClientRect().width;
+    this.width = containerWidth;
+    this.height = containerWidth < 600 ? 220 : 300;
+        console.log("resizing ", containerWidth);
+  this.svg.attr("viewBox", `0 0 ${this.width} ${this.height}`);
+
+  }
+      this.svg.selectAll("*").remove();
+
+
+  this.#draw();
+
+
+};
 
   static getProperDataForVisualization(inputData, objClassName) {
   console.log("method inputData.. ", inputData)
@@ -63,6 +90,20 @@ export class SsSpectrum extends ViewerBase {
   				return {data: inputData.obj};
         }
   }
+
+ resizeAccordingToDivSize() {
+
+  const container = d3.select('#chart-container');
+  if (container) {
+    	console.log("resizing2")
+
+  const containerWidth = container.node().getBoundingClientRect().width;
+  this.width = containerWidth;
+  this.height = containerWidth < 400 ? 220 : 300;
+  }
+  this.#draw();
+}
+
 
   plotCalculatingIntegral(
     deltaIso,
@@ -386,12 +427,18 @@ export class SsSpectrum extends ViewerBase {
     const margin = { top: 20, right: 30, bottom: 30, left: 40 };
     const width = this.width - margin.left - margin.right;
     const height = this.height - margin.top - margin.bottom;
-
+console.log("widht", this.width, width)
     // Create a group element within the SVG to apply margins
     const g = this.svg
       .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
-
+      .attr("transform", `translate(${margin.left},${margin.top})`)
+      ;
+/*
+.attr("viewBox", `0 0 ${this.width} ${this.height}`)
+.attr("preserveAspectRatio", "xMidYMid meet")
+.style("width", "100%")
+.style("height", "auto");
+*/
     // Define the scales for x and y
     const xScale = d3
       .scaleLinear()

@@ -369,9 +369,9 @@ function generateSupplementFileViewer(config) {
 			// const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);
 			const svg = d3.select("#" + myName)
 				.append("svg")
-				.attr("viewBox", "0 0 890 490")
-				.attr("width", 890)
-				.attr("height", 490)
+				.attr("viewBox", "0 0 800 400") // may be controled by frame size
+				.style("width", "100%") // scales with container
+				.style("height", "auto")
 				.style("display", "block");
 
 			var the${object} = new ${object}(viewerDataPassed, svg);
