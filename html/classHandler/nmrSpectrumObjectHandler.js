@@ -826,8 +826,8 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 			// const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);
 			const svg = d3.select("#" + myName)
 				.append("svg")
-				.attr("viewBox", "0 0 890 490")
-				.style("width", "100%")   // scales with container
+				.attr("viewBox", "0 0 900 500") // may be controled by frame size
+				.style("width", "100%") // scales with container
 				.style("height", "auto")
 				.style("display", "block");
 

@@ -5,6 +5,8 @@ import { processJSONData } from '../src/htmlScripts.js';
 import { ControlSliders } from "../src_objects/controlSliders.js";
 import { SsSpectrum } from "../src_objects/ssSpectrum.js";
 
+/// AUTOMATIC IMPORT INSERTION WILL BE MADE HERE
+
 export class NMRspinSystemModel_CSAHandler {
 	constructor(obj = {}) {
 		this.obj = obj;
@@ -676,10 +678,11 @@ export class NMRspinSystemModel_CSAHandler {
 			// const svg = d3.select("#" + myName).append("svg").attr("width", 200).attr("height", 100);
 			const svg = d3.select("#" + myName)
 				.append("svg")
-				.attr("viewBox", "0 0 800 400") // will be controled by objects
-				.style("width", "100%")   // scales with container
+				.attr("viewBox", "0 0 900 500") // may be controled by frame size
+				.style("width", "100%") // scales with container
 				.style("height", "auto")
 				.style("display", "block");
+
 			var theSsSpectrum = new SsSpectrum(viewerDataPassed, svg);
 		}
 		// NSKEA end

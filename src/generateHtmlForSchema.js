@@ -169,6 +169,7 @@ ${instanceOptions}
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>Schema: ${fileName}</title>
 
+            <div id="chart-container" style="width: 98vw; max-width: 800px; margin: auto;"></div>
 
             <style>
                 body { font-family: Arial, sans-serif; margin: 20px; }
