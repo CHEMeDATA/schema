@@ -418,6 +418,85 @@ export function mainMakeForm() {
 
 	data.list.forEach((item) => {
 		item.listObject.forEach((innerItem) => {
+			if (innerItem.type === "bridge44") {
+				/*
+"objectSchemaSource": "NMRspinSystemModel_CSA",
+			"object": "NMRspinSystemModel_CSA",
+			"objectSchemaTarget": "nmrSpectrumObject",
+			"objectTarget": "NMRspectrumObject",
+			"type": "bridge",
+			"title": "Simulation powder-pattern spectrum from diagonal CSA",
+			"sourceVersion": 1,
+			"targetVersion": 1,
+			"jsLibraryGet": [
+				{"repository":"CHEMeDATA/solidStateNMRCSA-reader", "fileName": "src/rank2ssbs.js"},
+				{"repository":"CHEMeDATA/solidStateNMRCSA-reader", "fileName": "src/rank2stat.js"},
+				{"repository":"CHEMeDATA/solidStateNMRCSA-reader", "fileName": "src/csa2xyNMR.js", "include": "csa2xyNMR"},
+				{"repository":"CHEMeDATA/nmr-objects", "fileName": "src/nMRspinSystemModel_CSA.js"}
+			],
+			"formFields" :[
+				{
+					"dataPropertyName": "jsonSpectrum",
+					"label": "NMR file (.json) - testing needing input file to complement one object towards another",
+					"defaultValue": "dummy.json",
+					"type": "file"
+				},	
+				{
+					"dataPropertyName": "origin",
+					"label": "origin",
+					"defaultValue": "[Insert here the source of the data]",
+					"type": "string"
+				},	
+				{
+					"dataPropertyName": "frequency",
+					"label": "Larmor frequency",
+					"defaultValue": 500.0,
+					"type": "double"
+				}
+			]
+		}
+	],
+	"repository": "solidStateNMRCSA-reader",
+	"creatorParam": {
+		"editor": "djeanner",
+		"version": "1",
+		"source": "solidStateNMRCSA",
+		"id": "none"
+	}
+				
+
+				*/
+				const input = {
+					// innerItem
+					object: innerItem.object,
+					objectObj: innerItem.objectObj,
+					type: innerItem.type,
+					fieldsToAdd: innerItem.requiredInput, // diff
+					jsLibraryGet: innerItem.jsLibraryGet,
+					// item
+					jsLibrary: item.jsLibrary,
+					creatorParam: item.creatorParam,
+					repository: item.repository,
+				};
+				const target = "html/src_objects"
+				input.fileNameAsSavedHere = "../src_objects";
+
+				for (const lib of innerItem.jsLibraryGet) {
+	    			const { repository, fileName } = lib;
+					const url = `https://raw.githubusercontent.com/${repository}/main/${fileName}`;
+					const output = path.join(`${target}/${path.basename(fileName)}`);
+					console.log(`===✅ makeFormForWriter : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
+				 	downloadFile(url, output).catch(console.error);			
+				}
+
+				const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
+				const outputDEL = path.join(`./html/src_objects/${innerItem.object}.js`);
+				const output = path.join("html", "src_objects", `${innerItem.object}.js`);
+				console.log(`<<<✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
+				downloadFile(url, output).catch(console.error);
+				generateSupplementFileImporter(input);
+				result.push(input);
+			}		
 			if (innerItem.type === "import") {
 				const input = {
 					// innerItem

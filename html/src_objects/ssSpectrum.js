@@ -1,6 +1,5 @@
 import { ViewerBase } from "./viewerBase.js";
-import { rank2ssbs } from "./rank2ssbs.js";
-import { rank2stat } from "./rank2stat.js";
+import { csa2xyNMR } from "./csa2xyNMR.js";
 export class SsSpectrum extends ViewerBase {
 	/* Structure of input data
   {
@@ -46,9 +45,11 @@ export class SsSpectrum extends ViewerBase {
 		const zz = inputData.data.spins[0].diagTensorValues.zz;
 		this.data = [{ dispValue1: xx }, { dispValue1: yy }, { dispValue1: zz }];
 		this.svg = svg;
-		
-		this.rank2ssbs = rank2ssbs;
-		this.rank2stat = rank2stat;
+		this.width = +this.svg.attr("width");
+		this.height = +this.svg.attr("height");
+
+		//this.rank2ssbs = rank2ssbs;
+		//this.rank2stat = rank2stat;
 
 		this.init();
 		this.resizeAccordingToDivSize();
@@ -169,90 +170,20 @@ export class SsSpectrum extends ViewerBase {
 		}
 	}
 
-	updateXYfromPickUP(iso, sAni, eta) {
-		//const eta = (yy - xx) / sAni;
-		var integral = 0.0;
-		let etaRoundedDown = (Math.floor(eta * 100) / 100).toFixed(2); // Rounds down to 2 decimal places and converts to a string
-		let etaRoundedUp = (Math.ceil(eta * 100) / 100).toFixed(2); // Rounds down to 2 decimal places and converts to a string
-		const factorCorr = (eta - etaRoundedDown) * 100;
-		console.log("factorCorr :", factorCorr);
-		const crudeArrayDown = this.rank2stat[etaRoundedDown];
-		console.log("etaString :", etaRoundedDown);
-		console.log("etaString :", etaRoundedUp);
-		console.log("etaRoundedDown :", this.rank2stat[etaRoundedDown].i0);
-		console.log("etaRoundedUp :", this.rank2stat[etaRoundedUp].i0);
-		const i0Down = this.rank2stat[etaRoundedDown].i0;
-		const crudeArrayUp = this.rank2stat[etaRoundedUp];
-		const i0Up = this.rank2stat[etaRoundedUp].i0;
-
-		let fullDown = new Array(crudeArrayDown.i0).fill(0.0);
-		fullDown = fullDown.concat(crudeArrayDown.y);
-		let fullUp = new Array(crudeArrayUp.i0).fill(0.0);
-		fullUp = fullUp.concat(crudeArrayUp.y);
-
-		var x = [];
-		var y = [];
-		var previousValue = -100;
-		var integralDown = -100;
-		var integralUp = -100;
-
-		for (var i = 0; i < crudeArrayDown.y.length; i++) {
-			const valx =
-				this.rank2stat.x.origin + (i0Down + i) * this.rank2stat.x.increment;
-			const valxFiexedAnis = (sAni * valx) / 1000.0 + iso;
-			x.push(valxFiexedAnis);
-			// first order correction
-			let valy0 = crudeArrayDown.y[i];
-			const ishift = i + i0Down - i0Up;
-			if (ishift > 0 && ishift < crudeArrayUp.y.length) {
-				let diff = crudeArrayUp.y[ishift] - crudeArrayDown.y[i];
-				valy0 += diff * factorCorr;
-			}
-
-			// integrate
-			integral += valy0;
-			if (previousValue >= valy0) {
-				// DEBU
-				integralUp += valy0;
-			} else {
-				integralDown += valy0;
-			}
-
-			previousValue = valy0;
-			y.push(valy0);
-		}
-		this.plotx = x;
-		this.ploty = y;
-		console.log(" ratio integralDown/integralUp :", integralDown / integralUp);
-
-		return integral;
-	}
-
 	updatePrincipalComponents() {
 		var values = [];
 		values.push(Number(this.data[0].dispValue1));
 		values.push(Number(this.data[1].dispValue1));
 		values.push(Number(this.data[2].dispValue1));
-		console.log(" updatePrincipalComponents  values:", values);
-		const iso = (values[0] + values[1] + values[2]) / 3.0;
-		console.log(" iso :", iso);
-		console.log(" 0 :", this.data[0].dispValue1);
-		console.log(" 1 :", this.data[1].dispValue1);
-		console.log(" 2 :", this.data[2].dispValue1);
-		//const sorted = this.data.sort((a, b) => a - b);
-		const sorted = values.sort((a, b) => Math.abs(a - iso) - Math.abs(b - iso));
-		const zz = sorted[2]; // largest
-		const xx = sorted[1]; // second largest
-		const yy = sorted[0]; // smallest
-		const sAni = zz - iso; // > 0
-		const eta = Math.abs(sAni) < 1e-10 ? 0.0 : (yy - xx) / sAni;
-		const mi = Math.min(yy, xx, zz);
-		const ma = Math.max(yy, xx, zz);
-		console.log("P iso :", iso, " sAni :", sAni, " eta :", eta);
 
-		const refIntegral = this.updateXYfromPickUP(iso, sAni, eta); // from Thomas Vosegaard
+		const returnedData = csa2xyNMR(values);
+
+		const { x, y, iso, sAni, eta, mi, ma, integral, source } = returnedData;
+		this.source = source; // not fulfilling any format - just reminder of necessity to report source
+		this.plotx = x;
+		this.ploty = y;
 		if (this.showAlsoReclaculated)
-			this.plotCalculatingIntegral(iso, sAni, eta, mi, ma, refIntegral, true); // integration
+			this.plotCalculatingIntegral(iso, sAni, eta, mi, ma, integral, true); // integration
 		if (this.verbose) {
 			console.log(" zz :", zz, " yy :", yy, " xx :", xx);
 			console.log(" sAni :", sAni);

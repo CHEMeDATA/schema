@@ -47,12 +47,10 @@ createSchemaAndInstances()
 createSpinSystemSchema()
 
 console.log(
-	"\n****** In v1/schemaResolved, write a copy of each schema but removed all 'allOf' and explicit '$refs' except if recursive\n"
+	"****** In v1/schemaResolved, write a copy of each schema but removed all 'allOf' and explicit '$refs' except if recursive"
 );
-
 fs.rmSync(schemaResolved, { recursive: true, force: true });
 fs.mkdirSync(schemaResolved, { recursive: true });
-
 processSchemasResolution();
 
 fs.mkdirSync(htmlDir, { recursive: true });

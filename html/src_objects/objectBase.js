@@ -206,15 +206,17 @@ export class ObjectBase {
 		const exportFunctionName = this._buildFunctionName(
 			param.creatorParam, "export"
 		);
-		const bridgeFunctionName = this._buildFunctionName(
-			param.creatorParam, "bridge"
-		);
-
+		
 		if (typeof this[exportFunctionName] === "function") {
 			const exportedData = this[exportFunctionName](param);
 			if (this.verbose > 1) console.log("exported data from objectBase", exportedData);
 			return exportedData;
 		}
+
+		const bridgeFunctionName = this._buildFunctionName(
+			param.creatorParam, "bridge"
+		);
+
 		if (typeof this[bridgeFunctionName] === "function") {
 			const exportedData = this[bridgeFunctionName](param);
 			if (this.verbose > 1) console.log("bridged data from objectBase", exportedData);
