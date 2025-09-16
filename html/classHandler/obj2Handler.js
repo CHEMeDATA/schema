@@ -33,26 +33,29 @@ export class Obj2Handler {
 			this[method]();
 		});
 
-		this.#showUpdateWithButton();
-		this.#showUpdateNoButton();
+		const testAdditionalFrames = false;
+		if (testAdditionalFrames) this.#showUpdateWithButton();
+		if (testAdditionalFrames) this.#showUpdateNoButton();
 
 		const methodsUpdater = this.#listNonStaticMethods("_showUpdateNoButton"); // get all elevator methods
 		methodsUpdater.forEach((method) => {
-			console.log("method", method.info)
+			if (this.verbose) console.log("showAllOptionsInHTML _showUpdateNoButton method", method.info)
 			this.#showDataUpdater(method.info); // Call for each elevator
 		});
 
 		const methods = this.#listNonStaticMethods("_DataEnrichment"); // get all elevator methods
 		methods.forEach((method) => {
+			if (this.verbose) console.log("showAllOptionsInHTML _DataEnrichment method", method.info)
 			this.#showDataEnrichmentMethods(method.info); // Call for each elevator
 		});
 
 		const exporters = this.#listNonStaticMethods("_DataExport"); // get all elevator methods
 		exporters.forEach((method) => {
+			if (this.verbose) console.log("showAllOptionsInHTML _DataExport method", method.info)
 			this.#showDataExportMethods(method.info); // Call for each elevator
 		});
 		
-		this.#showViewer();
+		if (testAdditionalFrames) this.#showViewer();
 	}
 
 	#listNonStaticMethods(include) {
@@ -149,10 +152,6 @@ export class Obj2Handler {
 
 				const editor = document.getElementById("jsonEditor");
 				editor.value = JSON.stringify(this.obj, null, 4);
-			
-				//ageDisplay.textContent = newAge; // Update display
-				//editor.value = JSON.stringify(this.obj, null, 4); // Update editor
-				//	window.processJSONData(this.obj, this, validationMessage); // Trigger processing
 			}
 		});
 	}
@@ -247,24 +246,12 @@ export class Obj2Handler {
 	    this.obj[item.htmlID] = value;
 	});
 
-		//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
+	//	document.getElementById("ageDisplay").textContent = inputVal; // Update display
 
-			processJSONData(this.obj, this, validationMessage); // Trigger processing
-			const editor = document.getElementById("jsonEditor");
-			editor.value = JSON.stringify(this.obj, null, 4);
+	processJSONData(this.obj, this, validationMessage); // Trigger processing
+	const editor = document.getElementById("jsonEditor");
+	editor.value = JSON.stringify(this.obj, null, 4);
 
-
-
-
-
-
-	//	}).catch((err) => {
-	//	    console.error(err);
-	//	});
-
-		
-
-		
 	}
 
 	other_showUpdateNoButton(param, dataObj = {}) {

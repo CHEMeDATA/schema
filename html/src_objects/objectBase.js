@@ -164,9 +164,9 @@ export class ObjectBase {
 		throw new Error("_handleLoadDemoData() must be implemented by subclass");
 	}
 
-	_buildImportFunctionName(param) {
+	_buildFunctionName(param, subType) {
 		return (
-			"import" +
+			subType +
 			"_Editor" +
 			param.editor +
 			"_Version" +
@@ -176,25 +176,19 @@ export class ObjectBase {
 			"_ID" +
 			param.id
 		);
+	}
+
+	_buildImportFunctionName(param) {
+		return _buildFunctionName(param, "import");
 	}
 
 	_buildExportFunctionName(param) {
-		return (
-			"export" +
-			"_Editor" +
-			param.editor +
-			"_Version" +
-			param.version +
-			"_Source" +
-			param.source +
-			"_ID" +
-			param.id
-		);
+		return _buildFunctionName(param, "export");
 	}
 
 	_loadImportedData(param, input) {
-		const importFunctionName = this._buildImportFunctionName(
-			param.creatorParam
+		const importFunctionName = this._buildFunctionName(
+			param.creatorParam, "import"
 		);
 
 		if (typeof this[importFunctionName] !== "function") {
@@ -209,18 +203,26 @@ export class ObjectBase {
 	}
 
 	_saveExportedData(param) {
-		const exportFunctionName = this._buildExportFunctionName(
-			param.creatorParam
+		const exportFunctionName = this._buildFunctionName(
+			param.creatorParam, "export"
+		);
+		const bridgeFunctionName = this._buildFunctionName(
+			param.creatorParam, "bridge"
 		);
 
-		if (typeof this[exportFunctionName] !== "function") {
-			throw new Error(
-				`Export function ${exportFunctionName} does not exist on ${this.name}`
-			);
+		if (typeof this[exportFunctionName] === "function") {
+			const exportedData = this[exportFunctionName](param);
+			if (this.verbose > 1) console.log("exported data from objectBase", exportedData);
+			return exportedData;
 		}
-		const exportedData = this[exportFunctionName](param);
-		if (this.verbose > 1) console.log("exported data from objectBase", exportedData);
-
-		return exportedData;
+		if (typeof this[bridgeFunctionName] === "function") {
+			const exportedData = this[bridgeFunctionName](param);
+			if (this.verbose > 1) console.log("bridged data from objectBase", exportedData);
+			return exportedData;
+		}
+		
+		throw new Error(
+				`Export function ${exportFunctionName} and ${bridgeFunctionName} do not exist on ${this.name}`
+		);
 	}
 }

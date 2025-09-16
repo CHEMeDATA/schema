@@ -42,6 +42,7 @@ fs.mkdirSync(classHandlerDir, { recursive: true });
 
 fs.mkdirSync(instanceDir, { recursive: true });
 
+console.log("Create Schema and instances");
 createSchemaAndInstances() 
 createSpinSystemSchema()
 
