@@ -1,5 +1,4 @@
 
-const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/" // ${urlLocalOrGithub}
 
 export async function fetchSchemas(jsonData) {
     let schemaObjects = {};

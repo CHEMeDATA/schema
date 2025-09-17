@@ -782,9 +782,9 @@ nmrSpectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
 	if (linkUrl.length > 1000) {
 		localStorage.clear();
-	    const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
-	    localStorage.setItem(storageKey, JSON.stringify(targetData));
-	    const linkUrlShort = `html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
+		const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
+		localStorage.setItem(storageKey, JSON.stringify(targetData));
+		const linkUrlShort = `html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[ -~]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");
