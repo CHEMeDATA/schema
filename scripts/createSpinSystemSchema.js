@@ -7,8 +7,6 @@ import {
 	setFieldTrue,
 } from "../src/createSchemaSomeInstances.js";
 
-import { derivationsFile } from "./config.js";
-
 export function createSpinSystemSchema() {
 	console.log(
 		"\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n"

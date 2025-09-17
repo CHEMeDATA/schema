@@ -52,6 +52,7 @@ function createHandlerForFile(fileName) {
 	fs.writeFileSync(handlerPathOut, content, { flag: "w" });
 
 	// 4a. Conditionally append the supplemental file (e.g., supObj1.js)
+	// manually generated
 	const supFileName = `sup${shortName}.js`;
 	const supFilePath = path.join(classHandlerSupFiles, supFileName);
 

@@ -59,6 +59,8 @@ fs.mkdirSync(classHandlerDir, { recursive: true });
 fs.rmSync(src_objects, { recursive: true, force: true });
 fs.mkdirSync(src_objects, { recursive: true });
 
+
+// Here will read "sup" and "supplement" files
 const schemaList = mainGeneration();
 generateIndexPage(schemaList);
 runElevators();
@@ -68,6 +70,7 @@ mainMakeForm();
 
 console.log("****************************** 1");
 
+// for suppl_
 insertSupplementForViewersClasses();
 
 console.log("****************************** 2");
