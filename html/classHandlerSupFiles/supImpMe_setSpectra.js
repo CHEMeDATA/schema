@@ -21,7 +21,7 @@ setSpectra_DataExport(targetObjType, dataObj = {}) {
 					htmlID: "setSpectra",
 					label: "NMR file (.json)",
 					defaultFileName: "output.spectrum",
-					show: true,
+					show: true
 				},
 {
 					objDataField: {"passedList":["field2"]},
@@ -29,7 +29,7 @@ setSpectra_DataExport(targetObjType, dataObj = {}) {
 					htmlID: "setSpectra",
 					label: "source not implemented (.txt)",
 					defaultFileName: "output.source",
-					show: true,
+					show: true
 				}
 			],
 		};

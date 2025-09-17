@@ -21,7 +21,7 @@ nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
 					htmlID: "nmrSpectrumObject",
 					label: "NMR file (.json)",
 					defaultFileName: "output.spectrum",
-					show: true,
+					show: true
 				},
 {
 					objDataField: {"passedList":["field2"]},
@@ -29,7 +29,7 @@ nmrSpectrumObject_DataExport(targetObjType, dataObj = {}) {
 					htmlID: "nmrSpectrumObject",
 					label: "source not implemented (.txt)",
 					defaultFileName: "output.source",
-					show: true,
+					show: true
 				}
 			],
 		};

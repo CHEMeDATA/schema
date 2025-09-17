@@ -15,7 +15,7 @@ export function generateSupplementFileImporter(config) {
 		jsLibraryGet,
 		fileNameAsSavedHere
 	} = config;
-	console.log("******************* ");
+	console.log("******************* >>> Importer");
 	console.log("object", object);
 	console.log("type", type);
 	console.log("jsLibrary", jsLibrary);
@@ -38,20 +38,20 @@ export function generateSupplementFileImporter(config) {
 
 	// main file
 	const fileName = `supplement${className}.js`;
-	const creatorParamStringified = JSON.stringify(creatorParam);
-	
-
-	// Generate arrayOfItems content from fieldsToAdd
-	const arrayOfItems = fieldsToAdd
-		.map((field) => {
+	//const creatorParamStringified = JSON.stringify(creatorParam);
 			/*
 			{
 			 "dataPropertyName": "jsonSpectrum",
 			 "label": "NMR file (.json)",
 			 "type": "file",
 			 "validationFileString1000": "https://mestrelab.com/json-schemas/mnova/2023-07/01/nmr/spec"
-		   }
-		   */
+			}
+			*/
+
+	// Generate arrayOfItems content from fieldsToAdd
+	const arrayOfItems = fieldsToAdd
+		.map((field) => {
+			
 			if (field.type == "file") {
 				return `{
 					type: "file",

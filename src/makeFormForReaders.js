@@ -6,7 +6,6 @@ import { generateSupplementFileExporter } from "./generateSupplementFileExporter
 import { generateSupplementFileImporter } from "./generateSupplementFileImporter.js";
 import { generateSupplementFileViewer } from "./generateSupplementFileViewer.js";
 
-const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/html/" // ${urlLocalOrGithub}
 /**
  * Generates a supplement file for the given className and config.
  * @param {string} className - The class name for the function and file.

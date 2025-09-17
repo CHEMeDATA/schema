@@ -78,7 +78,7 @@ export function validateJSON(data, schemas, resultList) {
             if (validate(obj)) {
                 const objName = schemaName.match(/([^/]+)\.json$/)[1];
                 const urlSafeData = encodeURIComponent(JSON.stringify(obj));
-                const linkToSchemaBase = `${urlLocalOrGithub}html/`;
+                const linkToSchemaBase = `html/`;
 
                 const linkToSchemaPages = linkToSchemaBase + objName + ".html";
                 if (path == "Root") {
