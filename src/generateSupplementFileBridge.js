@@ -92,8 +92,6 @@ export function generateSupplementFileBridge(config) {
 					baseType: "${field.baseType}",
 					comment: "${field.label}",
 					defaultValue: "${field.defaultValue}",
-					randomFrom: ${field.randomFrom},
-					randomTo: ${field.randomTo},
 					show: true
 				}`;
 				} else {

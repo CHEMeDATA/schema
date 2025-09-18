@@ -60,7 +60,17 @@ export function generateSupplementFileImporter(config) {
 					show: true
 				}`;
 			} else {
-				return `{
+				if (field.baseType === "string") {
+					return `{
+					type: "baseType",
+					htmlID: "${field.dataPropertyName}",
+					baseType: "${field.baseType}",
+					comment: "${field.label}",
+					defaultValue: "${field.defaultValue}",
+					show: true
+				}`;
+				} else {
+					return `{
 					type: "baseType",
 					htmlID: "${field.dataPropertyName}",
 					baseType: "${field.baseType}",
@@ -70,6 +80,7 @@ export function generateSupplementFileImporter(config) {
 					randomTo: ${field.randomTo},
 					show: true
 				}`;
+				}	
 			}
 		})
 		.join(",\n");
