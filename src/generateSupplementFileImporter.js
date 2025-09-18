@@ -154,11 +154,11 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[\x20-\x7E]+$/.test(linkUrl));
-	if (linkUrl.length > 1000) {
+	if (linkUrl.length > 10000) {
 		localStorage.clear();
 		const storageKey = \`data_\${Date.now()}_\${Math.floor(Math.random() * 1e6)}\`;
 		localStorage.setItem(storageKey, JSON.stringify(targetData));
-		const linkUrlShort = \`${urlLocalOrGithub}html/\${encodeURIComponent(targetObjType)}.html#storageKey=\${storageKey}\`;
+		const linkUrlShort = \`\${encodeURIComponent(targetObjType)}.html#storageKey=\${storageKey}\`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[\x20-\x7E]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");

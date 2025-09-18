@@ -742,11 +742,11 @@ jGraphObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
-	if (linkUrl.length > 1000) {
+	if (linkUrl.length > 10000) {
 		localStorage.clear();
 		const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
 		localStorage.setItem(storageKey, JSON.stringify(targetData));
-		const linkUrlShort = `html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
+		const linkUrlShort = `${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[ -~]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");

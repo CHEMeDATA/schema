@@ -45,17 +45,20 @@ NMRspectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 
 	// Handle fields dynamically
+
+	var newFields = {};
+
 	
 	const jsonSpectrum = this.#getValOrDefault(dataObj, "jsonSpectrum");
-	if (jsonSpectrum !== undefined) sourceObj["jsonSpectrum"] = jsonSpectrum;
+	if (jsonSpectrum !== undefined) newFields["jsonSpectrum"] = jsonSpectrum;
 	
 
 	const origin = this.#getValOrDefault(dataObj, "origin");
-	if (origin !== undefined) sourceObj["origin"] = origin;
+	if (origin !== undefined) newFields["origin"] = origin;
 	
 
 	const frequency = this.#getValOrDefault(dataObj, "frequency");
-	if (frequency !== undefined) sourceObj["frequency"] = frequency;
+	if (frequency !== undefined) newFields["frequency"] = frequency;
 	
 	
 	// optional escape 
@@ -72,41 +75,40 @@ NMRspectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 	
 	const creatorParam = dataObj.creatorParam; 
 
-	const theNMRspinSystemModel_CSA = new NMRspinSystemModel_CSA([], sourceObj);
+	const theNMRspinSystemModel_CSA = new NMRspinSystemModel_CSA([], this.obj);
 	console.log("7777")
-	console.log("7777 creatorParam", creatorParam)
 
-//	const targetData = {content :theNMRspinSystemModel_CSA.data};
 
 	
- const newFields = {frequencyDummyWiredREPLACE: 500.0};
 	const param = {
 		//dataObj : dataObj,
 		//objDataField: dataObj.item.objDataField,
 		creatorParam : creatorParam,
-		creatorParam2 : {"editor":"djeanner","version":"1","source":"solidStateNMRCSA","id":"none"},
-		object: nmrSpectrumObject, // NMRspectrumObject
+		object: "nmrSpectrumObject", // NMRspectrumObject
 		//objectObj: dataObj.objectObj,
         newFields
 		};
-	const targetData = theNMRspinSystemModel_CSA._saveExportedData(param);
-//bridge_Editordjeanner_Version1_Source    NMRspinSystemModel_CSA    _IDnone   // before
-//export_Editordjeanner_Version1_Source    solidStateNMRCSA          _IDnone   // now
-  bridge_Editordjeanner_Version1_Source    NMRspinSystemModel_CSA    _IDnone
+	const retData = theNMRspinSystemModel_CSA._saveExportedData(param);
+	const targetData = {
+		"$schema" :`https://chemedata.github.io/schema/v1/schema/nmrSpectrumObject.json`,
+		...retData
+	};
 
-	const encodedContent1 = JSON.stringify(targetData);
-	const linkUrl = `${targetData}.html#data=${encodedContent1}`;
+	const targetContent = {content : targetData};
+
+	const encodedContent1 = JSON.stringify(targetContent);
+	const linkUrl = `nmrSpectrumObject.html#data=${encodedContent1}`;
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(`mergeOutput${dataObj.uniqueHTMLcode}`).textContent = JSON.stringify(targetData, null, 2);
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
-	if (linkUrl.length > 1000) {
+	if (linkUrl.length > 10000) {
 		localStorage.clear();
 		const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
-		localStorage.setItem(storageKey, JSON.stringify(targetData));
-		const linkUrlShort = `html/${encodeURIComponent(targetObjType)}.html#storageKey=${storageKey}`;
+		localStorage.setItem(storageKey, encodedContent1);
+		const linkUrlShort = `${encodeURIComponent("nmrSpectrumObject")}.html#storageKey=${storageKey}`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[ -~]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");

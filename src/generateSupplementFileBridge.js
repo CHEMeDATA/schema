@@ -119,7 +119,7 @@ export function generateSupplementFileBridge(config) {
 		.map((field) => {
 			return `
 	const ${field.dataPropertyName} = this.#getValOrDefault(dataObj, "${field.dataPropertyName}");
-	if (${field.dataPropertyName} !== undefined) sourceObj["${field.dataPropertyName}"] = ${field.dataPropertyName};
+	if (${field.dataPropertyName} !== undefined) newFields["${field.dataPropertyName}"] = ${field.dataPropertyName};
 	`;
 		})
 		.join("\n");
@@ -168,9 +168,7 @@ ${objectTarget}_DataEnrichment(targetObjType, dataObj = {}) {
 
 	const the${object} = new ${object}([], this.obj);
 	console.log("7777")
-	console.log("7777 creatorParam", creatorParam)
 
-//	const targetData = {content :the${object}.data};
 
 	
 	const param = {
@@ -181,23 +179,27 @@ ${objectTarget}_DataEnrichment(targetObjType, dataObj = {}) {
 		//objectObj: dataObj.objectObj,
         newFields
 		};
-	var targetData = the${object}._saveExportedData(param);
-	targetData["$schema"] = \`https://chemedata.github.io/schema/v1/schema/\${toto}.json\`;
+	const retData = the${object}._saveExportedData(param);
+	const targetData = {
+		"$schema" :\`https://chemedata.github.io/schema/v1/schema/${objectSchemaTarget}.json\`,
+		...retData
+	};
+
 	const targetContent = {content : targetData};
 
 	const encodedContent1 = JSON.stringify(targetContent);
-	const linkUrl = \`${urlLocalOrGithub}\${targetData}.html#data=\${encodedContent1}\`;
+	const linkUrl = \`${objectSchemaTarget}.html#data=\${encodedContent1}\`;
 
 	//This dumps the json in the cell / may be too long
 	//document.getElementById(\`mergeOutput\${dataObj.uniqueHTMLcode}\`).textContent = JSON.stringify(targetData, null, 2);
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[\x20-\x7E]+$/.test(linkUrl));
-	if (linkUrl.length > 1000) {
+	if (linkUrl.length > 10000) {
 		localStorage.clear();
 		const storageKey = \`data_\${Date.now()}_\${Math.floor(Math.random() * 1e6)}\`;
-		localStorage.setItem(storageKey, JSON.stringify(targetData));
-		const linkUrlShort = \`${urlLocalOrGithub}html/\${encodeURIComponent(targetObjType)}.html#storageKey=\${storageKey}\`;
+		localStorage.setItem(storageKey, encodedContent1);
+		const linkUrlShort = \`\${encodeURIComponent("${objectSchemaTarget}")}.html#storageKey=\${storageKey}\`;
 		console.log("localStorage linkUrlShort.length",linkUrlShort.length)
 		console.log("Valid localStorage URL?", /^[\x20-\x7E]+$/.test(linkUrlShort));
 		window.open(linkUrlShort, "_blank");
