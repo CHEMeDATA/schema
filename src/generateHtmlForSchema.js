@@ -307,10 +307,15 @@ export function generateIndexPage(schemaList, fileName = "index.html") {
 	});
 
 	indexContent += `            </ul>
-        <a href="./index.html">On-line list</a>
-        
+
+	    <div>
+	        <a href="./index.html" title="If running on local server">List</a>
+	    </div>
+	    <div>
+	        <a href="https://chemedata.github.io/schema/html/index.html">On-line list</a>
+	    </div>      
         </body>
-        </html>
+    </html>
     `;
 
 	fs.writeFileSync(path.join(htmlDir, fileName), indexContent, "utf8");
