@@ -75,7 +75,7 @@ insertSupplementForViewersClasses();
 
 console.log("****************************** 2");
 
-insertSupplementForFormInObjectClasses("supImpAA_", "supImpBB_"); 
+insertSupplementForFormInObjectClasses("supImpBB_", "supImpAA_"); 
 insertSupplementForFormInObjectClasses("supplement", "supImpZZ_");
 insertSupplementForFormInObjectClasses("supImpMe_", "supImpIn_");
 

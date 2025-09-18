@@ -5,6 +5,7 @@ import { all_toolsFile } from "../scripts/config.js";
 import { generateSupplementFileExporter } from "./generateSupplementFileExporter.js";
 import { generateSupplementFileImporter } from "./generateSupplementFileImporter.js";
 import { generateSupplementFileViewer } from "./generateSupplementFileViewer.js";
+import { generateSupplementFileBridge } from "./generateSupplementFileBridge.js";
 
 /**
  * Generates a supplement file for the given className and config.
@@ -34,20 +35,13 @@ export function mainMakeForm() {
 	// Load derivations
 	const data = JSON.parse(fs.readFileSync(all_toolsFile, "utf8"));
 
-	const result = [];
+	//const result = [];
 
 	data.list.forEach((item) => {
 		item.listObject.forEach((innerItem) => {
-			if (innerItem.type === "bridge44") {
+			if (innerItem.type === "bridge") {
 				/*
-	//		"objectSchemaSource": "NMRspinSystemModel_CSA",
-	//		"object": "NMRspinSystemModel_CSA",
-	//		"objectSchemaTarget": "nmrSpectrumObject",
-	//		"objectTarget": "NMRspectrumObject",
-	//		"type": "bridge",
-	//		"title": "Simulation powder-pattern spectrum from diagonal CSA",
-	//		"sourceVersion": 1,
-	//		"targetVersion": 1,
+	
 			
 			"formFields" :[
 				{
@@ -60,15 +54,24 @@ export function mainMakeForm() {
 					"dataPropertyName": "origin",
 					"label": "origin",
 					"defaultValue": "[Insert here the source of the data]",
-					"type": "string"
+					"baseType": "string"
 				},	
 				{
 					"dataPropertyName": "frequency",
 					"label": "Larmor frequency",
 					"defaultValue": 500.0,
-					"type": "double"
+					"baseType": "double"
 				}
 			]
+
+			//		"objectSchemaSource": "NMRspinSystemModel_CSA",
+	//		"object": "NMRspinSystemModel_CSA",
+	//		"objectSchemaTarget": "nmrSpectrumObject",
+	//		"objectTarget": "NMRspectrumObject",
+	//		"type": "bridge",
+	//		"title": "Simulation powder-pattern spectrum from diagonal CSA",
+	//		"sourceVersion": 1,
+	//		"targetVersion": 1,
 		}
 	],
 	
@@ -86,7 +89,7 @@ export function mainMakeForm() {
 					//objectObj: innerItem.objectObj,
 					type: innerItem.type,// OK
 					title: innerItem.title, // OK
-					fieldsToAdd: innerItem.requiredInput, // diff
+					fieldsToAdd: innerItem.formFields, // diff
 					jsLibraryGet: innerItem.jsLibraryGet,  // OK
 					sourceVersion: innerItem.sourceVersion,  // OK
 					targetVersion: innerItem.targetVersion,  // OK
@@ -103,17 +106,17 @@ export function mainMakeForm() {
 	    			const { repository, fileName } = lib;
 					const url = `https://raw.githubusercontent.com/${repository}/main/${fileName}`;
 					const output = path.join(`${target}/${path.basename(fileName)}`);
-					console.log(`===✅ makeFormForWriter : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
+					console.log(`===✅ makeFormForBridge : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
 				 	downloadFile(url, output).catch(console.error);			
 				}
 
 				const url = `https://raw.githubusercontent.com/chemedata/nmr-objects/main/dist/${innerItem.object}.js`;
 				const outputDEL = path.join(`./html/src_objects/${innerItem.object}.js`);
 				const output = path.join("html", "src_objects", `${innerItem.object}.js`);
-				console.log(`<<<✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
+				console.log(`<<<✅ makeFormForBridge : Getting (from nmr-objects) ${innerItem.object}.js`)
 				downloadFile(url, output).catch(console.error);
-				generateSupplementFileImporter(input);
-				result.push(input);
+				generateSupplementFileBridge(input);
+				//result.push(input);
 			}		
 			if (innerItem.type === "import") {
 				// extract info from extraMethodsStatements.json files
@@ -136,7 +139,7 @@ export function mainMakeForm() {
 	    			const { repository, fileName } = lib;
 					const url = `https://raw.githubusercontent.com/${repository}/main/${fileName}`;
 					const output = path.join(`${target}/${path.basename(fileName)}`);
-					console.log(`===✅ makeFormForWriter : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
+					console.log(`===✅ makeFormForImport : getting ${path.basename(fileName)} in ${target} (from ${repository})`);
 				 	downloadFile(url, output).catch(console.error);			
 				}
 
@@ -146,7 +149,7 @@ export function mainMakeForm() {
 				console.log(`<<<✅ makeFormForReader : Getting (from nmr-objects) ${innerItem.object}.js`)
 				downloadFile(url, output).catch(console.error);
 				generateSupplementFileImporter(input);
-				result.push(input);
+				//result.push(input);
 			}		
 
 			if (innerItem.type === "export") {
