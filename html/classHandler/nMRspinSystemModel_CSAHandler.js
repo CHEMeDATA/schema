@@ -676,8 +676,6 @@ NMRspectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 					baseType: "string",
 					comment: "origin",
 					defaultValue: "Insert here the source of the data",
-					randomFrom: undefined,
-					randomTo: undefined,
 					show: true
 				},
 {
@@ -755,7 +753,7 @@ NMRspectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 
 	console.log("linkUrl.length",linkUrl.length)
 	console.log("Valid URL?", /^[ -~]+$/.test(linkUrl));
-	if (linkUrl.length > 1000) {
+	if (linkUrl.length > 10000) {
 		localStorage.clear();
 		const storageKey = `data_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
 		localStorage.setItem(storageKey, encodedContent1);

@@ -25,8 +25,6 @@ NMRspectrumObject_DataEnrichment(targetObjType, dataObj = {}) {
 					baseType: "string",
 					comment: "origin",
 					defaultValue: "Insert here the source of the data",
-					randomFrom: undefined,
-					randomTo: undefined,
 					show: true
 				},
 {
