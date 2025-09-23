@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SVG Diagram Framework</title>
+<style>
+  svg { border: 1px solid #ccc; width: 800px; height: 500px; }
+  .tooltip {
+    position: absolute;
+    background: yellow;
+    border: 1px solid black;
+    padding: 2px 5px;
+    display: none;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+<svg id="diagram"></svg>
+<div id="tooltip" class="tooltip"></div>
+<button id="saveBtn">Save Positions</button>
+
+<script>
+// ===== BASE CLASSES =====
+class DiagramElement {
+  constructor(svg, id) {
+    this.svg = svg;
+    this.id = id;
+    this.group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    this.group.setAttribute("id", id);
+  }
+}
+
+
+class DiagramObject extends DiagramElement {
+  constructor(svg, id, x, y) {
+    super(svg, id);
+    this.x = x;
+    this.y = y;
+  }
+  getCoordinates() {
+    return { id: this.id, x: this.x, y: this.y };
+  }
+}
+
+class DiagramConnector extends DiagramElement {
+  constructor(svg, id, fromObj, toObj) {
+    super(svg, id);
+    this.fromObj = fromObj;
+    this.toObj = toObj;
+  }
+  update() {
+    // implemented in subclass
+  }
+}
+
+// ===== DERIVED CLASSES =====
+class Box extends DiagramObject {
+  constructor(svg, id, x, y, w, h, color) {
+    super(svg, id, x, y);
+    this.w = w;
+    this.h = h;
+
+
+this.shape = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+this.shape.setAttribute("fill", color);
+this.shape.setAttribute("stroke", "black");      // outline color
+this.shape.setAttribute("stroke-width", "2");    // outline thickness
+this.group.appendChild(this.shape);
+
+this.updateShape();
+this.shape.setAttribute("fill", color);
+this.group.appendChild(this.shape);
+
+ 
+  }
+
+updateShape() {
+  const cut = 10; // 10 pixels cut
+  const x = this.x;
+  const y = this.y;
+  const w = this.w;
+  const h = this.h;
+
+  // define points for polygon with top-left corner cut
+  const points = [
+    `${x + cut},${y}`,   // top-left cut
+    `${x + w},${y}`,     // top-right
+    `${x + w},${y + h}`, // bottom-right
+    `${x},${y + h}`,     // bottom-left
+    `${x},${y + cut}`    // left side, after cut
+  ].join(" ");
+
+  this.shape.setAttribute("points", points);
+}
+
+  move(dx, dy) {
+    this.x += dx;
+    this.y += dy;
+this.updateShape();
+  }
+
+  center() {
+    return { cx: this.x + this.w/2, cy: this.y + this.h/2 };
+  }
+  enableDragging(diagram) {
+  let isDragging = false;
+  let lastX, lastY;
+
+ this.shape.addEventListener("mousedown", (e) => {
+  if (diagram.mode === "move") {
+    isDragging = true;
+    lastX = e.clientX;
+    lastY = e.clientY;
+
+    // bring this box to the front of the objects layer
+    this.svg.getElementById("objects").appendChild(this.group);
+  } else if (diagram.mode === "view") {
+    console.log("Clicked box:", this.id);
+    alert("Box: " + this.id);  // or use a nicer tooltip later
+  }
+});
+
+
+  window.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    let dx = e.clientX - lastX;
+let dy = e.clientY - lastY;
+
+// apply move
+this.move(dx, dy);
+
+// if shift is pressed, snap to grid
+if (e.shiftKey) {
+  const step = 10; // grid step in pixels
+  this.x = Math.round(this.x / step) * step;
+  this.y = Math.round(this.y / step) * step;
+  this.shape.setAttribute("x", this.x);
+  this.shape.setAttribute("y", this.y);
+}
+
+lastX = e.clientX;
+lastY = e.clientY;
+
+// update connectors
+diagram.updateAll();
+
+  });
+
+  window.addEventListener("mouseup", () => {
+    isDragging = false;
+  });
+}
+
+}
+
+class LineConnector extends DiagramConnector {
+ constructor(svg, id, fromObj, toObj) {
+  super(svg, id, fromObj, toObj);
+
+  // Detect dark mode
+  const isDark = true;//window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+  // Line
+  this.line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+  this.line.setAttribute("stroke", isDark ? "#ccc" : "black");
+  this.line.setAttribute("stroke-width", "2");
+
+  // Mid-circle
+  this.midCircle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+  this.midCircle.setAttribute("r", 5);
+  this.midCircle.setAttribute("fill", isDark ? "#ff6666" : "red");
+
+  this.group.appendChild(this.line);
+  this.group.appendChild(this.midCircle);
+
+  this.update();
+}
+
+
+  update() {
+    let c1 = this.fromObj.center();
+    let c2 = this.toObj.center();
+
+    this.line.setAttribute("x1", c1.cx);
+    this.line.setAttribute("y1", c1.cy);
+    this.line.setAttribute("x2", c2.cx);
+    this.line.setAttribute("y2", c2.cy);
+
+    let mx = (c1.cx + c2.cx) / 2;
+    let my = (c1.cy + c2.cy) / 2;
+    this.midCircle.setAttribute("cx", mx);
+    this.midCircle.setAttribute("cy", my);
+  }
+}
+
+// ===== DIAGRAM MANAGER =====
+class Diagram {
+  constructor(svg) {
+    this.svg = svg;
+
+    this.connectorLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    this.connectorLayer.setAttribute("id", "connectors");
+    this.svg.appendChild(this.connectorLayer);
+
+    this.objectLayer = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    this.objectLayer.setAttribute("id", "objects");
+    this.svg.appendChild(this.objectLayer);
+
+    this.objects = [];
+    this.connectors = [];
+
+    this.mode = "move"; // default mode
+
+    // Toggle mode on double click background
+    this.svg.addEventListener("dblclick", (e) => {
+      if (e.target === this.svg) {   // only if not clicking a box
+        this.mode = this.mode === "move" ? "view" : "move";
+        console.log("Mode switched to:", this.mode);
+      }
+    });
+  }
+
+
+addObject(obj) {
+  this.objectLayer.appendChild(obj.group);
+  this.objects.push(obj);
+
+  if (typeof obj.enableDragging === "function") {
+    obj.enableDragging(this);
+  }
+
+  return obj;
+}
+
+
+  addConnector(conn) {
+    this.connectorLayer.appendChild(conn.group);
+    this.connectors.push(conn);
+    return conn;
+  }
+
+  updateAll() {
+    for (let conn of this.connectors) {
+      conn.update();
+    }
+  }
+
+  getState() {
+    return {
+      objects: this.objects.map(o => o.getCoordinates())
+    };
+  }
+}
+
+// ===== DEMO USAGE =====
+let svg = document.getElementById("diagram");
+let diagram = new Diagram(svg);
+const diagramData = 
+{
+  "objects": [
+    {
+      "id": "box1",
+      "x": 100,
+      "y": 100,
+      "w": 100,
+      "h": 50,
+      "color": "lightblue"
+    },
+    {
+      "id": "box2",
+      "x": 402,
+      "y": 199,
+      "w": 120,
+      "h": 70,
+      "color": "red"
+    },
+    {
+      "id": "box3",
+      "x": 273,
+      "y": 95,
+      "w": 120,
+      "h": 70,
+      "color": "lightgreen"
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn1",
+      "from": "box1",
+      "to": "box2"
+    },
+    {
+      "id": "conn2",
+      "from": "box2",
+      "to": "box3"
+    },
+    {
+      "id": "conn3",
+      "from": "box1",
+      "to": "box3"
+    }
+  ]
+}
+// Map to store objects by id
+const objMap = {};
+
+// Create boxes
+for (let o of diagramData.objects) {
+  const box = diagram.addObject(new Box(svg, o.id, o.x, o.y, o.w, o.h, o.color));
+  objMap[o.id] = box;  // store for connector reference
+}
+
+// Create connectors
+for (let c of diagramData.connectors) {
+  diagram.addConnector(new LineConnector(svg, c.id, objMap[c.from], objMap[c.to]));
+}
+
+document.getElementById("saveBtn").addEventListener("click", async () => {
+  const saved = {
+    objects: diagram.objects.map(o => ({
+      id: o.id,
+      x: o.x,
+      y: o.y,
+      w: o.w,
+      h: o.h,
+      color: o.rect.getAttribute("fill")
+    })),
+    connectors: diagram.connectors.map(c => ({
+      id: c.id,
+      from: c.fromObj.id,
+      to: c.toObj.id
+    }))
+  };
+  
+  const jsonStr = JSON.stringify(saved, null, 2);
+
+  try {
+    await navigator.clipboard.writeText(jsonStr);
+    alert("Diagram JSON copied to clipboard!");
+  } catch (err) {
+    console.error("Failed to copy:", err);
+    alert("Failed to copy JSON. Open console for details.");
+  }
+});
+
+
+
+</script>
+</body>
+</html>
