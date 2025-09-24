@@ -43,7 +43,7 @@
 				{
 					"id": "box1",
 					"x": 20,
-					"y": 310,
+					"y": 20,
 					"w": 200,
 					"h": 50,
 					"color": "lightgray",
@@ -102,7 +102,7 @@
 		// Map of objects for connector references
 		const objMap = {};
 		for (let o of diagramData.objects) {
-			const box = diagram.addObject(new Box(svg, o.id, o.x, o.y, o.w, o.h, o.color, o.cutColor, o.showEye, o.showArrowDown, o.showArrowUp, o.showArrowRight));
+			const box = diagram.addObject(new Box(svg, o.id, o.x, o.y, o.w, o.h, o.color, o.cutColor, o.showEye, o.showArrowDown, o.showArrowUp, o.showArrowRight, diagram));
 			objMap[o.id] = box;
 		}
 		for (let c of diagramData.connectors) {

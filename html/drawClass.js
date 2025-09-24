@@ -42,9 +42,11 @@ export class Box extends DiagramObject {
 		showEye = true,
 		showArrowDown = true,
 		showArrowUp = true,
-		showArrowRight = true
+		showArrowRight = true,
+		diagram = null
 	) {
 		super(svg, id, x, y);
+		this.diagram = diagram; // store reference
 		this.w = w;
 		this.h = h;
 		this.color = color;
@@ -156,6 +158,49 @@ export class Box extends DiagramObject {
 				this.showMenu(this.x + 2, this.y + 18, [
 					{ label: "Zoom", action: () => alert("Zoom clicked") },
 					{ label: "Info", action: () => alert("Info clicked") },
+					{
+						label: "Add Boc",
+						action: () => {
+							if (this.diagram) {
+								const newId = `box${this.diagram.objects.length + 1}`;
+								const newBox = new Box(
+									this.diagram.svg,
+									newId,
+									this.x + 250,
+									this.y + 0,
+									this.w,
+									this.h,
+									"#ddd",
+									null,
+									true,
+									true,
+									true,
+									true,
+									this.diagram
+								);
+								this.diagram.addObject(newBox);
+
+								newBox.setMode(this.mode);
+								this.diagram.objectLayer.appendChild(newBox.group); // moves it to top
+								this.diagram.updateAll(); // redraw connectors if needed
+
+								// Create connector from current box to new box
+								const connId = `conn${this.diagram.connectors.length + 1}`;
+								const connector = new LineConnector(
+									this.diagram.svg,
+									connId,
+									this,
+									newBox
+								);
+								this.diagram.addConnector(connector);
+
+								// Ensure it’s visible and redraw connectors
+								this.diagram.objectLayer.appendChild(newBox.group);
+								this.diagram.updateAll();
+								console.log("Added new box with connector");
+							}
+						},
+					},
 				]);
 			});
 			this.group.addEventListener("click", this.menuHandler);
@@ -176,6 +221,32 @@ export class Box extends DiagramObject {
 		if (mode !== "view") {
 			let oldMenu = document.getElementById("contextMenu");
 			if (oldMenu) oldMenu.remove();
+		}
+	}
+
+	getSidePoint(targetX, targetY) {
+		const cx = this.x + this.w / 2;
+		const cy = this.y + this.h / 2;
+
+		const dx = targetX - cx;
+		const dy = targetY - cy;
+		console.log(dx, dy);
+
+		// Decide horizontal vs vertical connection
+		if (Math.abs(dx) > Math.abs(dy)) {
+			// Connect from left or right side
+			if (dx > 0) {
+				return { x: cx + this.w / 2, y: cy }; // right side
+			} else {
+				return { x: cx - this.w / 2, y: cy }; // left side
+			}
+		} else {
+			// Connect from top or bottom side
+			if (dy > 0) {
+				return { x: cx, y: cy + this.h / 2 }; // bottom
+			} else {
+				return { x: cx, y: cy - this.h / 2 }; // top
+			}
 		}
 	}
 
@@ -365,8 +436,8 @@ export class Box extends DiagramObject {
 			// Shift grid snap SHIFT KEY
 			if (e.shiftKey) {
 				const step = 20;
-				this.x = Math.round((this.x - this.w / 2 )/ step) * step + this.w / 2;
-				this.y = Math.round((this.y - this.h / 2 )/ step) * step + this.h / 2;
+				this.x = Math.round((this.x - this.w / 2) / step) * step + this.w / 2;
+				this.y = Math.round((this.y - this.h / 2) / step) * step + this.h / 2;
 				this.updateShape();
 			}
 
@@ -401,24 +472,61 @@ export class LineConnector extends DiagramConnector {
 		this.midCircle.setAttribute("r", 5);
 		this.midCircle.setAttribute("fill", isDark ? "#ff6666" : "red");
 
+		this.side1 = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"circle"
+		);
+		this.side1.setAttribute("r", 5);
+		this.side1.setAttribute("fill", isDark ? "#66ff66" : "green");
+
+		this.side2 = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"circle"
+		);
+		this.side2.setAttribute("r", 5);
+		this.side2.setAttribute("fill", isDark ? "#6666ff" : "blue");
 		this.group.appendChild(this.line);
+		this.group.appendChild(this.side1);
+		this.group.appendChild(this.side2);
 		this.group.appendChild(this.midCircle);
 
 		this.update();
 	}
 
 	update() {
-		const c1 = this.fromObj.center();
-		const c2 = this.toObj.center();
-		this.line.setAttribute("x1", c1.cx);
-		this.line.setAttribute("y1", c1.cy);
-		this.line.setAttribute("x2", c2.cx);
-		this.line.setAttribute("y2", c2.cy);
+		// Find side points instead of centers
+		const fromCenter = this.toObj.center();
+		const toCenter = this.fromObj.center();
 
-		const mx = (c1.cx + c2.cx) / 2;
-		const my = (c1.cy + c2.cy) / 2;
+		const p1 = this.fromObj.getSidePoint(fromCenter.cx, fromCenter.cy);
+		const p2 = this.toObj.getSidePoint(toCenter.cx, toCenter.cy);
+
+		this.line.setAttribute("x1", p1.x);
+		this.line.setAttribute("y1", p1.y);
+		this.line.setAttribute("x2", p2.x);
+		this.line.setAttribute("y2", p2.y);
+
+		// Midpoint for red circle
+		const mx = (p1.x + p2.x) / 2;
+		const my = (p1.y + p2.y) / 2;
+
 		this.midCircle.setAttribute("cx", mx);
 		this.midCircle.setAttribute("cy", my);
+
+		{
+			// Midpoint for red circle
+			const mx = p1.x / 1;
+			const my = p1.y / 1;
+			this.side1.setAttribute("cx", mx);
+			this.side1.setAttribute("cy", my);
+		}
+		{
+			// Midpoint for red circle
+			const mx = p2.x / 1;
+			const my = p2.y / 1;
+			this.side2.setAttribute("cx", mx);
+			this.side2.setAttribute("cy", my);
+		}
 	}
 }
 
