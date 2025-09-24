@@ -224,28 +224,37 @@ export class Box extends DiagramObject {
 		}
 	}
 
-	getSidePoint(targetX, targetY) {
+	getSidePoint(targetX, targetY, targetW, targetH) {
 		const cx = this.x + this.w / 2;
 		const cy = this.y + this.h / 2;
 
 		const dx = targetX - cx;
 		const dy = targetY - cy;
-		console.log(dx, dy);
 
+		console.log(dx, dy);
+		const factor = 2;
 		// Decide horizontal vs vertical connection
-		if (Math.abs(dx) > Math.abs(dy)) {
+		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
+		const deltaY = Math.abs(dy)- targetH / 2 - this.h / 2;
+		if ( deltaX > deltaY) {
+			var deltay = (dy) * (this.w / Math.abs( factor * dx));
+			if (deltay > this.h / 2) deltay = this.h / 2;
+			if (deltay < -this.h / 2) deltay = -this.h / 2;
 			// Connect from left or right side
 			if (dx > 0) {
-				return { x: cx + this.w / 2, y: cy }; // right side
+				return { x: cx + this.w / 2, y: cy + deltay}; // right side
 			} else {
-				return { x: cx - this.w / 2, y: cy }; // left side
+				return { x: cx - this.w / 2, y: cy + deltay}; // left side
 			}
 		} else {
+			var deltax = (dx) * (this.h / Math.abs( factor * dy));
+			if (deltax > this.w / 2) deltax = this.w / 2;
+			if (deltax < -this.w / 2) deltax = -this.w / 2;
 			// Connect from top or bottom side
 			if (dy > 0) {
-				return { x: cx, y: cy + this.h / 2 }; // bottom
+				return { x: cx + deltax, y: cy + this.h / 2 }; // bottom
 			} else {
-				return { x: cx, y: cy - this.h / 2 }; // top
+				return { x: cx + deltax, y: cy - this.h / 2 }; // top
 			}
 		}
 	}
@@ -498,8 +507,8 @@ export class LineConnector extends DiagramConnector {
 		const fromCenter = this.toObj.center();
 		const toCenter = this.fromObj.center();
 
-		const p1 = this.fromObj.getSidePoint(fromCenter.cx, fromCenter.cy);
-		const p2 = this.toObj.getSidePoint(toCenter.cx, toCenter.cy);
+		const p1 = this.fromObj.getSidePoint(fromCenter.cx, fromCenter.cy, this.toObj.w, this.toObj.h);
+		const p2 = this.toObj.getSidePoint(toCenter.cx, toCenter.cy, this.fromObj.w, this.fromObj.h);
 
 		this.line.setAttribute("x1", p1.x);
 		this.line.setAttribute("y1", p1.y);
