@@ -362,11 +362,11 @@ export class Box extends DiagramObject {
 			let dy = e.clientY - lastY;
 			this.move(dx, dy);
 
-			// Shift grid snap
+			// Shift grid snap SHIFT KEY
 			if (e.shiftKey) {
-				const step = 10;
-				this.x = Math.round(this.x / step) * step;
-				this.y = Math.round(this.y / step) * step;
+				const step = 20;
+				this.x = Math.round((this.x - this.w / 2 )/ step) * step + this.w / 2;
+				this.y = Math.round((this.y - this.h / 2 )/ step) * step + this.h / 2;
 				this.updateShape();
 			}
 
