@@ -53,6 +53,7 @@ export class Box extends DiagramObject {
 		this.showArrowDown = showArrowDown;
 		this.showArrowUp = showArrowUp;
 		this.showArrowRight = showArrowRight;
+		this.anyIcon = showEye || showArrowDown || showArrowUp || showArrowRight;
 		// Polygon shape
 		this.shape = document.createElementNS(
 			"http://www.w3.org/2000/svg",
@@ -138,24 +139,44 @@ export class Box extends DiagramObject {
 		}
 
 		this.updateShape();
+		if (this.anyIcon) {
+			this.group.setAttribute("cursor", "pointer");
+			// tooltip
+			const title = document.createElementNS(
+				"http://www.w3.org/2000/svg",
+				"title"
+			);
+			title.textContent = "Add object ...";
+			this.group.appendChild(title);
 
-		this.group.setAttribute("cursor", "pointer");
-		// tooltip
-		const title = document.createElementNS(
-			"http://www.w3.org/2000/svg",
-			"title"
-		);
-		title.textContent = "Add object ...";
-		this.group.appendChild(title);
+			// click menu
+			this.group.addEventListener("click", (e) => {
+				if (!this.menuEnabled) return; // skip menu if not in view
+				e.stopPropagation();
+				this.showMenu(this.x + 2, this.y + 18, [
+					{ label: "Zoom", action: () => alert("Zoom clicked") },
+					{ label: "Info", action: () => alert("Info clicked") },
+				]);
+			});
+			this.group.addEventListener("click", this.menuHandler);
+		}
+	}
 
-		// click menu
-		this.group.addEventListener("click", (e) => {
-			e.stopPropagation();
-			this.showMenu(this.x + 2, this.y + 18, [
-				{ label: "Zoom", action: () => alert("Zoom clicked") },
-				{ label: "Info", action: () => alert("Info clicked") },
-			]);
-		});
+	setMode(mode) {
+		this.mode = mode;
+
+		// tooltip: only in view mode
+		if (this.title)
+			this.title.textContent = mode === "view" ? "Add object ..." : "";
+
+		// only enable click menu in view mode
+		this.menuEnabled = mode === "view";
+
+		// remove any open menu if leaving view
+		if (mode !== "view") {
+			let oldMenu = document.getElementById("contextMenu");
+			if (oldMenu) oldMenu.remove();
+		}
 	}
 
 	showMenu(x, y, items) {
@@ -329,7 +350,7 @@ export class Box extends DiagramObject {
 				lastY = e.clientY;
 				diagram.objectLayer.appendChild(this.group);
 			} else if (diagram.mode === "view") {
-				alert("Box: " + this.id);
+				//alert("Box: " + this.id);
 			}
 		});
 
@@ -432,6 +453,10 @@ export class Diagram {
 			if (e.target === this.svg) {
 				this.mode = this.mode === "move" ? "view" : "move";
 				console.log("Mode switched to:", this.mode);
+				// tell all boxes about the mode change
+				for (let box of this.objects) {
+					box.setMode(this.mode);
+				}
 			}
 		});
 	}

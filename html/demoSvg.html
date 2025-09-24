@@ -1,152 +1,211 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<title>SVG Diagram Framework</title>
-<style>
-  body { font-family: sans-serif; margin: 20px; }
-  svg { border: 1px solid #ccc; width: 800px; height: 500px; display: block; margin-bottom: 10px; }
-  button { margin-right: 10px; padding: 5px 10px; }
-</style>
+	<meta charset="UTF-8">
+	<title>SVG Diagram Framework</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			margin: 20px;
+		}
+
+		svg {
+			border: 1px solid #ccc;
+			width: 800px;
+			height: 500px;
+			display: block;
+			margin-bottom: 10px;
+		}
+
+		button {
+			margin-right: 10px;
+			padding: 5px 10px;
+		}
+	</style>
 </head>
+
 <body>
 
-<svg id="diagram"></svg>
-<button id="saveBtn">Save Positions</button>
-<button id="toggleDarkBtn">Toggle Dark/Light Mode</button>
+	<svg id="diagram"></svg>
+	<button id="saveBtn">Save Positions</button>
+	<button id="toggleDarkBtn">Toggle Dark/Light Mode</button>
+	<button id="exportSvgBtn">Export SVG</button>
+	<script type="module">
+		import { Diagram, Box, LineConnector } from './drawClass.js';
 
-<script type="module">
-  import { Diagram, Box, LineConnector } from './drawClass.js';
+		const svg = document.getElementById("diagram");
+		const diagram = new Diagram(svg);
 
-  const svg = document.getElementById("diagram");
-  const diagram = new Diagram(svg);
+		// Demo JSON data
+		const diagramData = {
+			"objects": [
+				{
+					"id": "box1",
+					"x": 20,
+					"y": 310,
+					"w": 200,
+					"h": 50,
+					"color": "lightgray",
+					"showEye": false,
+					"showArrowDown": false,
+					"showArrowUp": false,
+					"showArrowRight": false,
+					"cutColor": "red"
+				},
+				{
+					"id": "box2",
+					"x": 284,
+					"y": 251,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": true,
+					"cutColor": "green"
+				},
+				{
+					"id": "box3",
+					"x": 210,
+					"y": 320,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": false,
+					"cutColor": "purple"
+				}
+			],
+			"connectors": [
+				{
+					"id": "conn1",
+					"from": "box1",
+					"to": "box2"
+				},
+				{
+					"id": "conn2",
+					"from": "box2",
+					"to": "box3"
+				},
+				{
+					"id": "conn3",
+					"from": "box1",
+					"to": "box3"
+				}
+			]
+		};
 
-  // Demo JSON data
-  const diagramData = {
-  "objects": [
-    {
-      "id": "box1",
-      "x": 20,
-      "y": 310,
-      "w": 200,
-      "h": 50,
-      "color": "lightblue",
-      "cutColor": "red"
-    },
-    {
-      "id": "box2",
-      "x": 1,
-      "y": 300,
-      "w": 120,
-      "h": 70,
-      "color": "orange",
-      "cutColor": "green"
-    },
-    {
-      "id": "box3",
-      "x": 210,
-      "y": 120,
-      "w": 120,
-      "h": 70,
-      "color": "lightgreen",
-      "cutColor": "purple"
-    }
-  ],
-  "connectors": [
-    {
-      "id": "conn1",
-      "from": "box1",
-      "to": "box2"
-    },
-    {
-      "id": "conn2",
-      "from": "box2",
-      "to": "box3"
-    },
-    {
-      "id": "conn3",
-      "from": "box1",
-      "to": "box3"
-    }
-  ]
-};
+		// Map of objects for connector references
+		const objMap = {};
+		for (let o of diagramData.objects) {
+			const box = diagram.addObject(new Box(svg, o.id, o.x, o.y, o.w, o.h, o.color, o.cutColor, o.showEye, o.showArrowDown, o.showArrowUp, o.showArrowRight));
+			objMap[o.id] = box;
+		}
+		for (let c of diagramData.connectors) {
+			diagram.addConnector(new LineConnector(svg, c.id, objMap[c.from], objMap[c.to]));
+		}
 
-  // Map of objects for connector references
-  const objMap = {};
-  for (let o of diagramData.objects) {
-	const box = diagram.addObject(new Box(svg, o.id, o.x, o.y, o.w, o.h, o.color, o.cutColor));
-    objMap[o.id] = box;
-  }
-  for (let c of diagramData.connectors) {
-    diagram.addConnector(new LineConnector(svg, c.id, objMap[c.from], objMap[c.to]));
-  }
+		// ===== SAVE TO CLIPBOARD =====
+		document.getElementById("saveBtn").addEventListener("click", async () => {
+			const saved = {
+				objects: diagram.objects.map(o => ({
+					id: o.id,
+					x: o.x,
+					y: o.y,
+					w: o.w,
+					h: o.h,
+					color: o.shape.getAttribute("fill"),
+					showEye: o.showEye || null,  // save the cut line color
+					showArrowDown: o.showArrowDown || null,  // save the cut line color
+					showArrowUp: o.showArrowUp || null,  // save the cut line color
+					showArrowRight: o.showArrowRight || null,  // save the cut line color
+					cutColor: o.cutColor || null   // save the cut line color
+				})),
+				connectors: diagram.connectors.map(c => ({
+					id: c.id,
+					from: c.fromObj.id,
+					to: c.toObj.id
+				}))
+			};
 
-  // ===== SAVE TO CLIPBOARD =====
-  document.getElementById("saveBtn").addEventListener("click", async () => {
-	const saved = {
-  objects: diagram.objects.map(o => ({
-    id: o.id,
-    x: o.x,
-    y: o.y,
-    w: o.w,
-    h: o.h,
-    color: o.shape.getAttribute("fill"),
-    cutColor: o.cutColor || null   // save the cut line color
-  })),
-  connectors: diagram.connectors.map(c => ({
-    id: c.id,
-    from: c.fromObj.id,
-    to: c.toObj.id
-  }))
-};
+			const jsonStr = JSON.stringify(saved, null, 2);
+			try {
+				await navigator.clipboard.writeText(jsonStr);
+				alert("Diagram JSON copied to clipboard!");
+			} catch (err) {
+				console.error(err);
+				alert("Failed to copy JSON.");
+			}
+		});
 
-    const jsonStr = JSON.stringify(saved, null, 2);
-    try {
-      await navigator.clipboard.writeText(jsonStr);
-      alert("Diagram JSON copied to clipboard!");
-    } catch(err) {
-      console.error(err);
-      alert("Failed to copy JSON.");
-    }
-  });
+		// ===== DARK MODE =====
+		let manualDarkMode = null; // null = follow system, true/false = forced mode
 
-  // ===== DARK MODE =====
-  let manualDarkMode = null; // null = follow system, true/false = forced mode
+		const applyDarkMode = (isDark) => {
+			diagram.svg.style.background = isDark ? "#1e1e1e" : "#fff";
 
-  const applyDarkMode = (isDark) => {
-    diagram.svg.style.background = isDark ? "#1e1e1e" : "#fff";
+			for (let box of diagram.objects) {
+				box.shape.setAttribute("stroke", isDark ? "white" : "black");
 
-    for (let box of diagram.objects) {
-  box.shape.setAttribute("stroke", isDark ? "white" : "black");
+				if (box.cutLine) {
+					// Only override stroke if cutColor is not set
+					if (!box.cutColor) {
+						box.cutLine.setAttribute("stroke", isDark ? "white" : "black");
+					}
+				}
+			}
+		};
 
-  if (box.cutLine) {
-    // Only override stroke if cutColor is not set
-    if (!box.cutColor) {
-      box.cutLine.setAttribute("stroke", isDark ? "white" : "black");
-    }
-  }
-}
-  };
+		const toggleDarkMode = () => {
+			if (manualDarkMode === null) {
+				manualDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+			}
+			manualDarkMode = !manualDarkMode;
+			applyDarkMode(manualDarkMode);
+		};
 
-  const toggleDarkMode = () => {
-    if (manualDarkMode === null) {
-      manualDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    }
-    manualDarkMode = !manualDarkMode;
-    applyDarkMode(manualDarkMode);
-  };
+		document.getElementById("toggleDarkBtn").addEventListener("click", toggleDarkMode);
 
-  document.getElementById("toggleDarkBtn").addEventListener("click", toggleDarkMode);
+		// Listen for system preference changes if manual mode is not set
+		const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		darkQuery.addEventListener("change", () => {
+			if (manualDarkMode === null) applyDarkMode(darkQuery.matches);
+		});
 
-  // Listen for system preference changes if manual mode is not set
-  const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  darkQuery.addEventListener("change", () => {
-    if (manualDarkMode === null) applyDarkMode(darkQuery.matches);
-  });
+		// Apply initial mode
+		applyDarkMode(darkQuery.matches);
 
-  // Apply initial mode
-  applyDarkMode(darkQuery.matches);
-</script>
+		// ===== EXPORT SVG FILE =====
+		document.getElementById("exportSvgBtn").addEventListener("click", () => {
+			const serializer = new XMLSerializer();
+			let svgStr = serializer.serializeToString(svg);
+
+			// ensure proper SVG namespace
+			if (!svgStr.match(/^<svg[^>]+xmlns="http:\/\/www\.w3\.org\/2000\/svg"/)) {
+				svgStr = svgStr.replace(/^<svg/, '<svg xmlns="http://www.w3.org/2000/svg"');
+			}
+
+			// add XML header for compatibility
+			const fullSvg = '<?xml version="1.0" standalone="no"?>\n' + svgStr;
+
+			// create downloadable blob
+			const blob = new Blob([fullSvg], { type: "image/svg+xml;charset=utf-8" });
+			const url = URL.createObjectURL(blob);
+
+			// trigger download
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "diagram.svg";
+			a.click();
+			URL.revokeObjectURL(url);
+		});
+
+	</script>
 
 </body>
+
 </html>
