@@ -1,7 +1,7 @@
 // scripts/makeElevators.js
 import fs from "fs";
 import path from "path";
-import { classHandlerSupFiles, derivationsFile } from "../scripts/config.js";
+import { classHandlerSupFiles } from "../scripts/config.js";
 const urlLocalOrGithub = ""; // "https://chemedata.github.io/schema/html/" // ${urlLocalOrGithub}
 
 // ES module __dirname equivalent
@@ -83,7 +83,7 @@ ${className}_DataEnrichment(targetObjType, dataObj = {}) {
 }
 
 // Main function
-export async function runElevators() {
+export async function runElevators(derivationsFile) {
     console.log(`--------- runElevators ---------`)
 	try {
 		const raw = fs.readFileSync(derivationsFile, "utf8");

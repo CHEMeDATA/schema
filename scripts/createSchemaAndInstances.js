@@ -6,7 +6,6 @@ import {
 	createInstance,
 } from "../src/createSchemaSomeInstances.js";
 
-import { derivationsFile } from "./config.js";
 
 export function createSchemaAndInstances() {
 	// Example usage createNewTypeSchema
@@ -24,11 +23,6 @@ type: "baseType",
 
 	console.log("\n****** Create the schema for the objects in v1/schema\n");
 	console.log("\n****** Create the schema for the objects in v1/schema\n");
-
-	// this list the list of derived classes
-	if (fs.existsSync(derivationsFile)) {
-		fs.unlinkSync(derivationsFile); // delete
-	}
 
 	createNewTypeSchema("obj1", [
 		{ name: "name", required: true, array: false, type: "string" },

@@ -10,6 +10,7 @@ export class ObjectBase {
 				this._loadImportedData(param, input);
 			} else {
 				this.data = input;
+				const version = 1;
 			}
 		}
 	}

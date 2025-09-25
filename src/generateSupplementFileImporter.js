@@ -10,7 +10,7 @@ export function generateSupplementFileImporter(config) {
 		type,
 		jsLibrary,
 		creatorParam,
-		fieldsToAdd,
+		requiredInput,
 		repository,
 		jsLibraryGet,
 		fileNameAsSavedHere
@@ -20,7 +20,6 @@ export function generateSupplementFileImporter(config) {
 	console.log("type", type);
 	console.log("jsLibrary", jsLibrary);
 	console.log("creatorParam", creatorParam);
-	//console.log("fieldsToAdd", fieldsToAdd);
 	console.log("repository", repository);
 	console.log("jsLibraryGet", jsLibraryGet);
 	// included objects
@@ -48,8 +47,8 @@ export function generateSupplementFileImporter(config) {
 			}
 			*/
 
-	// Generate arrayOfItems content from fieldsToAdd
-	const arrayOfItems = fieldsToAdd
+	// Generate arrayOfItems content from requiredInput
+	const arrayOfItems = requiredInput
 		.map((field) => {
 			
 			if (field.type == "file") {
@@ -86,7 +85,7 @@ export function generateSupplementFileImporter(config) {
 		.join(",\n");
 
 	// Generate field handling loop
-	const fieldLoop = fieldsToAdd
+	const fieldLoop = requiredInput
 		.map((field) => {
 			return `
 	const ${field.dataPropertyName} = this.#getValOrDefault(dataObj, "${field.dataPropertyName}");

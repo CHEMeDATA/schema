@@ -7,7 +7,7 @@ import {
 	setFieldTrue,
 } from "../src/createSchemaSomeInstances.js";
 
-export function createSpinSystemSchema() {
+export function createSpinSystemSchema(also_Range_and_Match_schema = false) {
 	console.log(
 		"\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n"
 	);
@@ -210,7 +210,7 @@ const spins = [
 ];
 */
 
-	const also_Range_and_Match_schema = false;
+	 
 	if (also_Range_and_Match_schema) {
 		deriveSchema("atomicPropertySpin", "atomicPropertySpinPredRange", [
 			{

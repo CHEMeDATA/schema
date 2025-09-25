@@ -16,7 +16,10 @@ import {
 	schemaResolved,
 	src_objects,
 	instanceLDDir,
+	derivationsFile,
+	all_toolsFile
 } from "./config.js";
+
 
 import { insertSupplementForFormInObjectClasses } from "../src/insertSupplementForFormInObjectClasses.js";
 import { insertSupplementForViewersClasses } from "../src/insertSupplementForViewersClasses.js";
@@ -34,6 +37,7 @@ import {
 	processSchemaObject,
 } from "../src/makeLinkedDataInstances.js";
 
+
 fs.rmSync(schemaDir, { recursive: true, force: true });
 fs.mkdirSync(schemaDir, { recursive: true });
 
@@ -42,9 +46,15 @@ fs.mkdirSync(classHandlerDir, { recursive: true });
 
 fs.mkdirSync(instanceDir, { recursive: true });
 
+// create schema
 console.log("Create Schema and instances");
+	// this list the list of derived classes
+	if (fs.existsSync(derivationsFile)) {
+		fs.unlinkSync(derivationsFile); // delete
+	}
 createSchemaAndInstances() 
-createSpinSystemSchema()
+const also_Range_and_Match_schema = false;
+createSpinSystemSchema(also_Range_and_Match_schema);
 
 console.log(
 	"****** In v1/schemaResolved, write a copy of each schema but removed all 'allOf' and explicit '$refs' except if recursive"
@@ -53,6 +63,8 @@ fs.rmSync(schemaResolved, { recursive: true, force: true });
 fs.mkdirSync(schemaResolved, { recursive: true });
 processSchemasResolution();
 
+
+// create classHandler for schema's home pages
 fs.mkdirSync(htmlDir, { recursive: true });
 fs.mkdirSync(classHandlerDir, { recursive: true });
 
@@ -61,17 +73,17 @@ fs.mkdirSync(src_objects, { recursive: true });
 
 
 // Here will read "sup" and "supplement" files
-const schemaList = mainGeneration();
-generateIndexPage(schemaList);
-runElevators();
+const schemaList = mainGeneration(); // read from v1/schema
+generateIndexPage(schemaList); // only generates the index page of schema home pages
+runElevators(derivationsFile); // reads derivationsFile file 
 
 console.log("****************************** 0");
-mainMakeForm();
+mainMakeForm(all_toolsFile);
 
 console.log("****************************** 1");
 
 // for suppl_
-insertSupplementForViewersClasses();
+insertSupplementForViewersClasses(); // insert sup files into handler
 
 console.log("****************************** 2");
 

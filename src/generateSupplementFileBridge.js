@@ -12,7 +12,6 @@ export function generateSupplementFileBridge(config) {
 		formFields,
 		type,
 		title,
-		fieldsToAdd,
 		jsLibraryGet,
 		sourceVersion,
 		targetVersion,
@@ -31,7 +30,7 @@ export function generateSupplementFileBridge(config) {
 					//objectObj: innerItem.objectObj,
 					type: innerItem.type,// OK
 					title: innerItem.title, // OK
-					fieldsToAdd: innerItem.requiredInput, // diff
+					formFields: innerItem.requiredInput, // diff
 					jsLibraryGet: innerItem.jsLibraryGet,  // OK
 					sourceVersion: innerItem.sourceVersion,  // OK
 					targetVersion: innerItem.targetVersion,  // OK
@@ -74,7 +73,7 @@ export function generateSupplementFileBridge(config) {
 			}
 			*/
 
-	// Generate arrayOfItems content from fieldsToAdd
+	// Generate arrayOfItems content from formFields
 	const arrayOfItems = formFields
 		.map((field) => {		
 			if (field.type == "file") {
@@ -112,8 +111,8 @@ export function generateSupplementFileBridge(config) {
 		.join(",\n");
 
 	// Generate field handling loop
-	console.log("fieldsToAdd",fieldsToAdd)
-	const fieldLoop = fieldsToAdd
+	console.log("formFields",formFields)
+	const fieldLoop = formFields
 		.map((field) => {
 			return `
 	const ${field.dataPropertyName} = this.#getValOrDefault(dataObj, "${field.dataPropertyName}");

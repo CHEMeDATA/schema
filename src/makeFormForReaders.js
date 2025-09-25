@@ -1,19 +1,13 @@
 import fs from "fs";
 import path from "path";
-import { all_toolsFile } from "../scripts/config.js";
 
 import { generateSupplementFileExporter } from "./generateSupplementFileExporter.js";
 import { generateSupplementFileImporter } from "./generateSupplementFileImporter.js";
 import { generateSupplementFileViewer } from "./generateSupplementFileViewer.js";
 import { generateSupplementFileBridge } from "./generateSupplementFileBridge.js";
 
-/**
- * Generates a supplement file for the given className and config.
- * @param {string} className - The class name for the function and file.
- * @param {Object} config - Configuration object containing base, derived, and fieldsToAdd.
- */
 
-// ES module fetch wrapper
+
 async function downloadFile(url, output) {
     // ✅ Skip if file already exists
     if (fs.existsSync(output)) {
@@ -31,7 +25,7 @@ async function downloadFile(url, output) {
     console.log(`...async File saved to ${output}`);
 }
 
-export function mainMakeForm() {
+export function mainMakeForm(all_toolsFile) {
 	// Load derivations
 	const data = JSON.parse(fs.readFileSync(all_toolsFile, "utf8"));
 
@@ -89,7 +83,6 @@ export function mainMakeForm() {
 					//objectObj: innerItem.objectObj,
 					type: innerItem.type,// OK
 					title: innerItem.title, // OK
-					fieldsToAdd: innerItem.formFields, // diff
 					jsLibraryGet: innerItem.jsLibraryGet,  // OK
 					sourceVersion: innerItem.sourceVersion,  // OK
 					targetVersion: innerItem.targetVersion,  // OK
@@ -125,7 +118,7 @@ export function mainMakeForm() {
 					object: innerItem.object,
 					objectObj: innerItem.objectObj,
 					type: innerItem.type,
-					fieldsToAdd: innerItem.requiredInput, // diff
+					requiredInput: innerItem.requiredInput, // diff
 					jsLibraryGet: innerItem.jsLibraryGet,
 					// item
 					jsLibrary: item.jsLibrary,
