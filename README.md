@@ -10,6 +10,9 @@ This project has received funding from the European Union’s Horizon 2020 resea
 
  [index](https://chemedata.github.io/schema/html/index.html)
 
+ [demo Objets](https://chemedata.github.io/schema/html/demoSvg.html)
+
+
 Main schema builder repository.
 
 run:
