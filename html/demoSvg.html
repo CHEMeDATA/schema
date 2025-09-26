@@ -32,124 +32,207 @@
 	<button id="toggleDarkBtn">Toggle Dark/Light Mode</button>
 	<button id="exportSvgBtn">Export SVG</button>
 	<script type="module">
-		import { Diagram, Box, LineConnector } from './drawClass.js';
+		import { Diagram, Box, Box2, LineConnector } from './drawClass.js';
 
 		const svg = document.getElementById("diagram");
 		const diagram = new Diagram(svg);
 
 		// Demo JSON data
 		const diagramData = {
-			"objects": [
-				{
-					"x": 18,
-					"y": 19,
-					"w": 200,
-					"h": 50,
-					"color": "lightgray",
-					"showEye": null,
-					"showArrowDown": null,
-					"showArrowUp": null,
-					"showArrowRight": null,
-					"cutColor": "red",
-					"id": "box1"
-				},
-				{
-					"x": 230,
-					"y": 257,
-					"w": 120,
-					"h": 70,
-					"color": "lightgray",
-					"showEye": true,
-					"showArrowDown": true,
-					"showArrowUp": true,
-					"showArrowRight": true,
-					"cutColor": "green",
-					"id": "box2"
-				},
-				{
-					"objectName": "obj1",
-					"x": 153,
-					"y": 367,
-					"w": 120,
-					"h": 70,
-					"color": "lightgray",
-					"showEye": true,
-					"showArrowDown": true,
-					"showArrowUp": true,
-					"showArrowRight": null,
-					"cutColor": "purple",
-					"id": "box3"
-				},
-				{
-					"objectName": "obj2",
-					"x": 238,
-					"y": 126,
-					"w": 120,
-					"h": 70,
-					"color": "lightgray",
-					"showEye": true,
-					"showArrowDown": true,
-					"showArrowUp": true,
-					"showArrowRight": null,
-					"cutColor": "purple",
-					"id": "box3"
-				},
-				{
-					"objectName": "box1",
-					"x": 383,
-					"y": 227,
-					"w": 120,
-					"h": 70,
-					"color": "lightgray",
-					"showEye": true,
-					"showArrowDown": true,
-					"showArrowUp": true,
-					"showArrowRight": null,
-					"cutColor": "purple",
-					"id": "box3"
-				},
-				{
-					"objectName": "box2",
-					"x": 410,
-					"y": 120,
-					"w": 120,
-					"h": 70,
-					"color": "lightgray",
-					"showEye": true,
-					"showArrowDown": true,
-					"showArrowUp": true,
-					"showArrowRight": null,
-					"cutColor": "purple",
-					"id": "box3"
-				}
-			],
-			"connectors": [
-				{
-					"id": "conn1",
-					"from": "box1",
-					"to": "box2"
-				},
-				{
-					"id": "conn2",
-					"from": "box2",
-					"to": "box3"
-				},
-				{
-					"id": "conn3",
-					"from": "box1",
-					"to": "box3"
-				}
-			]
-		};
+  "objects": [
+    {
+      "x": 18,
+      "y": 19,
+      "w": 200,
+      "h": 50,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "type": "Box",
+      "id": "box1"
+    },
+    {
+      "x": 220,
+      "y": 255,
+      "w": 120,
+      "h": 70,
+      "color": "lightgray",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": true,
+      "cutColor": "green",
+      "type": "Box",
+      "id": "box2"
+    },
+    {
+      "objectName": "obj1",
+      "x": 50,
+      "y": 199,
+      "w": 120,
+      "h": 70,
+      "color": "lightgray",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": null,
+      "cutColor": "purple",
+      "type": "Box",
+      "id": "box3"
+    },
+    {
+      "objectName": "obj2",
+      "x": 217,
+      "y": 115,
+      "w": 120,
+      "h": 70,
+      "color": "lightgray",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": null,
+      "cutColor": "purple",
+      "type": "Box",
+      "id": "box4"
+    },
+    {
+      "objectName": "box1",
+      "x": 185,
+      "y": 355,
+      "w": 120,
+      "h": 70,
+      "color": "lightgray",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": null,
+      "cutColor": "purple",
+      "type": "Box",
+      "id": "box3"
+    },
+    {
+      "objectName": "box2",
+      "x": 400,
+      "y": 115,
+      "w": 120,
+      "h": 70,
+      "color": "lightgray",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": null,
+      "cutColor": "purple",
+      "type": "Box",
+      "id": "box5"
+    },
+    {
+      "x": 633,
+      "y": 227,
+      "w": 120,
+      "h": 70,
+      "color": "#ddd",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": true,
+      "objectName": "box1",
+      "cutColor": null,
+      "type": "Box",
+      "id": "box7"
+    },
+    {
+      "x": 378,
+      "y": 355,
+      "w": 120,
+      "h": 70,
+      "color": "#ddd",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": true,
+      "objectName": "child of box1",
+      "cutColor": null,
+      "type": "Box2",
+      "id": "box8"
+    },
+    {
+      "x": 650,
+      "y": 115,
+      "w": 120,
+      "h": 70,
+      "color": "#ddd",
+      "showEye": true,
+      "showArrowDown": true,
+      "showArrowUp": true,
+      "showArrowRight": true,
+      "objectName": "child of box2",
+      "id": "box9",
+      "cutColor": null,
+      "type": "Box2"
+    }
+  ],
+  "connectors": [
+    {
+      "id": "conn1",
+      "from": "box1",
+      "to": "box2",
+      "type": "LineConnector"
+    },
+    {
+      "id": "conn2",
+      "from": "box2",
+      "to": "box3",
+      "type": "LineConnector"
+    },
+    {
+      "id": "conn3",
+      "from": "box1",
+      "to": "box3",
+      "type": "LineConnector"
+    },
+    {
+      "id": "conn4",
+      "from": "box3",
+      "to": "box7",
+      "type": "LineConnector"
+    },
+    {
+      "id": "conn5",
+      "from": "box3",
+      "to": "box8",
+      "type": "LineConnector"
+    },
+    {
+      "id": "conn6",
+      "from": "box5",
+      "to": "box9",
+      "type": "LineConnector"
+    }
+  ]
+};
 		const objMap = {};
 		for (let o of diagramData.objects) {
-			const box = diagram.addObject(
-				new Box({
-					svg: svg,
-					diagram: diagram,
-					...o, // spread all fields from the data object
-				}));
-			objMap[o.id] = box;
+			
+			if (o.type === "Box2") {
+				const box = diagram.addObject(
+					new Box2({
+						svg: svg,
+						diagram: diagram,
+						...o, // spread all fields from the data object
+					}));
+				objMap[o.id] = box;
+			} else {
+const box = diagram.addObject(
+					new Box({
+						svg: svg,
+						diagram: diagram,
+						...o, // spread all fields from the data object
+					}));
+				objMap[o.id] = box;
+			}
 		}
 
 		// Then, create connectors
@@ -185,13 +268,15 @@
 						showArrowDown: o.showArrowDown || null,
 						showArrowUp: o.showArrowUp || null,
 						showArrowRight: o.showArrowRight || null,
-						cutColor: o.cutColor || null
+						cutColor: o.cutColor || null,
+						type: o.type || null
 					};
 				}),
 				connectors: diagram.connectors.map(c => ({
 					id: c.id,
 					from: c.fromObj.id,
-					to: c.toObj.id
+					to: c.toObj.id,
+					type: c.type || null
 				}))
 			};
 

@@ -1,6 +1,4 @@
-/* The provided JavaScript code defines classes for creating diagram elements like boxes, connectors,
-and a diagram manager with functionality for interaction and visualization. */
-// ===== BASE CLASSES =====
+
 // ===== BASE CLASSES =====
 export class DiagramElement {
 	constructor({ svg, id }) {
@@ -37,6 +35,7 @@ export class Box extends DiagramObject {
 	constructor(params) {
 		super(params); // expects { svg, id, x, y }
 		// assign all other params to this
+		this.type = "Box"; /// SAME AS CLASS NAME
 		Object.assign(this, params);
 
 		// Derived / default values
@@ -395,7 +394,6 @@ export class Box extends DiagramObject {
 		const dx = targetX - cx;
 		const dy = targetY - cy;
 
-		console.log(dx, dy);
 		const factor = 2;
 		// Decide horizontal vs vertical connection
 		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
@@ -512,6 +510,8 @@ export class Box2 extends DiagramObject {
 	constructor(params) {
 		super(params); // expects { svg, id, x, y }
 		// assign all other params to this
+		this.type = "Box2"; /// SAME AS CLASS NAME
+
 		Object.assign(this, params);
 
 		// Polygon shape
@@ -639,7 +639,6 @@ export class Box2 extends DiagramObject {
 		const dx = targetX - cx;
 		const dy = targetY - cy;
 
-		console.log(dx, dy);
 		const factor = 2;
 		// Decide horizontal vs vertical connection
 		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
@@ -722,6 +721,8 @@ export class Box2 extends DiagramObject {
 export class LineConnector extends DiagramConnector {
 	constructor(params) {
 		super(params);
+		this.type = "LineConnector"; /// SAME AS CLASS NAME
+
 		const { id, svg, fromObj, toObj, ...rest } = params;
 		console.log("rest", rest);
 		console.log("params", params);
