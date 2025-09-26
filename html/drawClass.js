@@ -14,8 +14,8 @@ export class DiagramElement {
 export class DiagramObject extends DiagramElement {
 	constructor(param) {
 		super({ svg: param.svg, id: param.id });
-
-		this.param = param;
+		const { id, svg, ...rest } = param;
+		this.param = rest;
 	}
 	getCoordinates() {
 		return { id: this.id, x: this.param.x, y: this.param.y };
@@ -286,7 +286,7 @@ export class Box extends DiagramObject {
 					label: "Add Box",
 					action: () => {
 						if (!this.diagram) return;
-						const newBox = new Box({
+						const newBox = new Box2({
 							svg: this.diagram.svg,
 							id: `box${this.diagram.objects.length + 1}`,
 							x: this.param.x + 250,
@@ -299,6 +299,7 @@ export class Box extends DiagramObject {
 							showArrowUp: true,
 							showArrowRight: true,
 							diagram: this.diagram,
+							objectName: "child of " + this.objectName,
 						});
 						this.diagram.addObject(newBox);
 
@@ -319,7 +320,7 @@ export class Box extends DiagramObject {
 	}
 
 	initIcon() {
-		const svgFile = `${this.id}.svg`;
+		const svgFile = `${this.objectName}.svg`;
 		this.iconSizeWidth = 75;
 		this.iconSizeHeight = 25;
 		fetch(svgFile, { method: "HEAD" }).then((resp) => {
@@ -507,18 +508,299 @@ export class Box extends DiagramObject {
 		});
 	}
 }
+export class Box2 extends DiagramObject {
+	constructor(params) {
+		super(params); // expects { svg, id, x, y }
+		// assign all other params to this
+		Object.assign(this, params);
 
+		// Polygon shape
+		this.shape = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"polygon"
+		);
+		this.shape.setAttribute("fill", this.color);
+		this.shape.setAttribute("stroke-width", "2");
+
+		const isDark =
+			window.matchMedia &&
+			window.matchMedia("(prefers-color-scheme: dark)").matches;
+		this.shape.setAttribute("stroke", isDark ? "white" : "black");
+		this.group.appendChild(this.shape);
+
+		// SVG Icon (if file exists)
+		this.initIcon();
+
+		// Text label
+		this.initLabel();
+
+		this.updateShape();
+	}
+
+	updateShape() {
+		const cut = 10;
+		const x = this.x,
+			y = this.y,
+			w = this.w,
+			h = this.h;
+
+		// polygon points
+		const points = [
+			`${x},${y}`,
+			`${x + w},${y}`,
+			`${x + w},${y + h}`,
+			`${x},${y + h}`,
+			`${x},${y}`,
+		].join(" ");
+		this.shape.setAttribute("points", points);
+
+		if (this.icon) {
+			this.icon.setAttribute("x", x + (w - this.iconSizeWidth) / 2);
+			this.icon.setAttribute("y", y + 20);
+		}
+		if (this.label) {
+			this.label.setAttribute("x", x + w / 2);
+			this.label.setAttribute("y", y + h - this.sideMargins);
+		}
+	}
+	initLabel() {
+		this.sideMargins = 5;
+		var text = "NMRspectru  : " + String(this.id);
+		if (this.param.objectName) {
+			text = this.param.objectName;
+		}
+		const charCount = text.length || 1;
+		const fontSizeTest =
+			Math.floor(1.7 * (this.param.w - 2 * this.sideMargins)) / charCount;
+		const maxSize = 16;
+		const fontSize = fontSizeTest > maxSize ? maxSize : fontSizeTest;
+		this.label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		this.label.setAttribute("x", this.param.x + this.param.w / 2);
+		this.label.setAttribute(
+			"y",
+			this.param.y + this.param.h - this.sideMargins
+		);
+		this.label.setAttribute("dominant-baseline", "baseline");
+		this.label.setAttribute("text-anchor", "middle");
+		this.label.setAttribute("font-size", fontSize);
+		this.label.setAttribute("font-family", "monospace");
+		this.label.textContent = text;
+		this.group.appendChild(this.label);
+	}
+
+	initIcon() {
+		const svgFile = `${this.objectName}.svg`;
+		this.iconSizeWidth = 75;
+		this.iconSizeHeight = 25;
+		fetch(svgFile, { method: "HEAD" }).then((resp) => {
+			if (resp.ok) {
+				this.icon = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"image"
+				);
+				this.icon.setAttributeNS(
+					"http://www.w3.org/1999/xlink",
+					"href",
+					svgFile
+				);
+				this.icon.setAttribute(
+					"x",
+					+this.x + (this.w - this.iconSizeWidth) / 2
+				);
+				this.icon.setAttribute("y", this.y + 20);
+				this.icon.setAttribute("width", String(this.iconSizeWidth));
+				this.icon.setAttribute("height", String(this.iconSizeHeight));
+				this.group.appendChild(this.icon);
+			}
+		});
+	}
+
+	setMode(mode) {
+		this.mode = mode;
+
+		// tooltip: only in view mode
+		if (this.title)
+			this.title.textContent = mode === "view" ? "Add object ..." : "";
+
+		// only enable click menu in view mode
+		this.menuEnabled = mode === "view";
+
+		// remove any open menu if leaving view
+		if (mode !== "view") {
+			let oldMenu = document.getElementById("contextMenu");
+			if (oldMenu) oldMenu.remove();
+		}
+	}
+
+	getSidePoint(targetX, targetY, targetW, targetH) {
+		const cx = this.x + this.w / 2;
+		const cy = this.y + this.h / 2;
+
+		const dx = targetX - cx;
+		const dy = targetY - cy;
+
+		console.log(dx, dy);
+		const factor = 2;
+		// Decide horizontal vs vertical connection
+		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
+		const deltaY = Math.abs(dy) - targetH / 2 - this.h / 2;
+		if (deltaX > deltaY) {
+			var deltay = dy * (this.w / Math.abs(factor * dx));
+			if (deltay > this.h / 2) deltay = this.h / 2;
+			if (deltay < -this.h / 2) deltay = -this.h / 2;
+			// Connect from left or right side
+			if (dx > 0) {
+				return { x: cx + this.w / 2, y: cy + deltay }; // right side
+			} else {
+				return { x: cx - this.w / 2, y: cy + deltay }; // left side
+			}
+		} else {
+			var deltax = dx * (this.h / Math.abs(factor * dy));
+			if (deltax > this.w / 2) deltax = this.w / 2;
+			if (deltax < -this.w / 2) deltax = -this.w / 2;
+			// Connect from top or bottom side
+			if (dy > 0) {
+				return { x: cx + deltax, y: cy + this.h / 2 }; // bottom
+			} else {
+				return { x: cx + deltax, y: cy - this.h / 2 }; // top
+			}
+		}
+	}
+
+	move(dx, dy) {
+		this.x += dx;
+		this.y += dy;
+		this.updateShape();
+	}
+
+	center() {
+		return { cx: this.x + this.w / 2, cy: this.y + this.h / 2 };
+	}
+
+	enableDragging(diagram) {
+		let isDragging = false;
+		let lastX, lastY;
+
+		this.shape.addEventListener("mousedown", (e) => {
+			if (diagram.mode === "move") {
+				isDragging = true;
+				lastX = e.clientX;
+				lastY = e.clientY;
+				diagram.objectLayer.appendChild(this.group);
+			} else if (diagram.mode === "view") {
+				//alert("Box: " + this.id);
+			}
+		});
+
+		window.addEventListener("mousemove", (e) => {
+			if (!isDragging) return;
+			if (diagram.mode !== "move") return;
+
+			let dx = e.clientX - lastX;
+			let dy = e.clientY - lastY;
+			this.move(dx, dy);
+
+			// Shift grid snap SHIFT KEY
+			if (e.shiftKey) {
+				const step = 20;
+				this.x = Math.round((this.x - this.w / 2) / step) * step + this.w / 2;
+				this.y = Math.round((this.y - this.h / 2) / step) * step + this.h / 2;
+				this.updateShape();
+			}
+
+			lastX = e.clientX;
+			lastY = e.clientY;
+
+			diagram.updateAll();
+		});
+
+		window.addEventListener("mouseup", () => {
+			isDragging = false;
+		});
+	}
+}
 export class LineConnector extends DiagramConnector {
 	constructor(params) {
 		super(params);
-		Object.assign(this, params);
-
+		const { id, svg, fromObj, toObj, ...rest } = params;
+		console.log("rest", rest);
+		console.log("params", params);
+		this.param = rest;
 		const isDark =
 			window.matchMedia &&
 			window.matchMedia("(prefers-color-scheme: dark)").matches;
 
 		this.line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-		this.line.setAttribute("stroke", isDark ? "#ccc" : "black");
+		const defaultColor = isDark ? "#ccc" : "black";
+		const color = this.param.lineColor ? this.param.lineColor : defaultColor;
+
+		if (this.param.arrowTo) {
+			const defs =
+				this.svg.querySelector("defs") ||
+				document.createElementNS("http://www.w3.org/2000/svg", "defs");
+			if (!this.svg.querySelector("defs")) this.svg.appendChild(defs);
+
+			if (!defs.querySelector("#arrowEnd")) {
+				const markerEnd = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"marker"
+				);
+				markerEnd.setAttribute("id", "arrowEnd");
+				markerEnd.setAttribute("markerWidth", "10");
+				markerEnd.setAttribute("markerHeight", "7");
+				markerEnd.setAttribute("refX", "10");
+				markerEnd.setAttribute("refY", "3.5");
+				markerEnd.setAttribute("orient", "auto");
+				markerEnd.setAttribute("markerUnits", "strokeWidth");
+
+				const path = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"path"
+				);
+				path.setAttribute("d", "M0,0 L0,7 L10,3.5 z");
+				path.setAttribute("fill", color);
+
+				markerEnd.appendChild(path);
+				defs.appendChild(markerEnd);
+			}
+
+			this.line.setAttribute("marker-end", "url(#arrowEnd)");
+		}
+
+		if (this.param.arrowFrom) {
+			const defs =
+				this.svg.querySelector("defs") ||
+				document.createElementNS("http://www.w3.org/2000/svg", "defs");
+			if (!this.svg.querySelector("defs")) this.svg.appendChild(defs);
+
+			if (!defs.querySelector("#arrowStart")) {
+				const markerStart = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"marker"
+				);
+				markerStart.setAttribute("id", "arrowStart");
+				markerStart.setAttribute("markerWidth", "10");
+				markerStart.setAttribute("markerHeight", "7");
+				markerStart.setAttribute("refX", "0");
+				markerStart.setAttribute("refY", "3.5");
+				markerStart.setAttribute("orient", "auto");
+				markerStart.setAttribute("markerUnits", "strokeWidth");
+
+				const path = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"path"
+				);
+				path.setAttribute("d", "M10,0 L10,7 L0,3.5 z");
+				path.setAttribute("fill", color);
+
+				markerStart.appendChild(path);
+				defs.appendChild(markerStart);
+			}
+
+			this.line.setAttribute("marker-start", "url(#arrowStart)");
+		}
+
+		this.line.setAttribute("stroke", color);
 		this.line.setAttribute("stroke-width", "2");
 
 		this.midCircle = document.createElementNS(

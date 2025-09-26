@@ -41,22 +41,21 @@
 		const diagramData = {
 			"objects": [
 				{
-					"id": "box1",
-					"x": 20,
-					"y": 20,
+					"x": 18,
+					"y": 19,
 					"w": 200,
 					"h": 50,
 					"color": "lightgray",
-					"showEye": false,
-					"showArrowDown": false,
-					"showArrowUp": false,
-					"showArrowRight": false,
-					"cutColor": "red"
+					"showEye": null,
+					"showArrowDown": null,
+					"showArrowUp": null,
+					"showArrowRight": null,
+					"cutColor": "red",
+					"id": "box1"
 				},
 				{
-					"id": "box2",
-					"x": 284,
-					"y": 251,
+					"x": 230,
+					"y": 257,
 					"w": 120,
 					"h": 70,
 					"color": "lightgray",
@@ -64,21 +63,64 @@
 					"showArrowDown": true,
 					"showArrowUp": true,
 					"showArrowRight": true,
-					"cutColor": "green"
+					"cutColor": "green",
+					"id": "box2"
 				},
 				{
-					"id": "box3",
-					"objectName": "ddddbox3",
-					"x": 210,
-					"y": 320,
-					"w": 620,
+					"objectName": "obj1",
+					"x": 153,
+					"y": 367,
+					"w": 120,
 					"h": 70,
 					"color": "lightgray",
 					"showEye": true,
 					"showArrowDown": true,
 					"showArrowUp": true,
-					"showArrowRight": false,
-					"cutColor": "purple"
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"id": "box3"
+				},
+				{
+					"objectName": "obj2",
+					"x": 238,
+					"y": 126,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"id": "box3"
+				},
+				{
+					"objectName": "box1",
+					"x": 383,
+					"y": 227,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"id": "box3"
+				},
+				{
+					"objectName": "box2",
+					"x": 410,
+					"y": 120,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"id": "box3"
 				}
 			],
 			"connectors": [
@@ -112,12 +154,14 @@
 
 		// Then, create connectors
 		for (let c of diagramData.connectors) {
+			const { id, from, to, ...rest } = c;
 			diagram.addConnector(
 				new LineConnector({
 					svg: svg,
 					id: c.id,
 					fromObj: objMap[c.from],
-					toObj: objMap[c.to]
+					toObj: objMap[c.to],
+					...rest
 				})
 			);
 		}
@@ -126,20 +170,24 @@
 		// ===== SAVE TO CLIPBOARD =====
 		document.getElementById("saveBtn").addEventListener("click", async () => {
 			const saved = {
-				objects: diagram.objects.map(o => ({
-					...o.param,
-					id: o.id,
-					x: o.x,
-					y: o.y,
-					w: o.w,
-					h: o.h,
-					color: o.shape.getAttribute("fill"),
-					showEye: o.showEye || null,  // save the cut line color
-					showArrowDown: o.showArrowDown || null,  // save the cut line color
-					showArrowUp: o.showArrowUp || null,  // save the cut line color
-					showArrowRight: o.showArrowRight || null,  // save the cut line color
-					cutColor: o.cutColor || null   // save the cut line color
-				})),
+				objects: diagram.objects.map(o => {
+					// destructure o.param safely, skip cyclic references
+					const { diagram, svg, ...rest } = o.param || {};
+					return {
+						...rest,
+						id: o.id,
+						x: o.x,
+						y: o.y,
+						w: o.w,
+						h: o.h,
+						color: o.shape.getAttribute("fill"),
+						showEye: o.showEye || null,
+						showArrowDown: o.showArrowDown || null,
+						showArrowUp: o.showArrowUp || null,
+						showArrowRight: o.showArrowRight || null,
+						cutColor: o.cutColor || null
+					};
+				}),
 				connectors: diagram.connectors.map(c => ({
 					id: c.id,
 					from: c.fromObj.id,
@@ -148,6 +196,7 @@
 			};
 
 			const jsonStr = JSON.stringify(saved, null, 2);
+
 			try {
 				await navigator.clipboard.writeText(jsonStr);
 				alert("Diagram JSON copied to clipboard!");
