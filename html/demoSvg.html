@@ -68,6 +68,7 @@
 				},
 				{
 					"id": "box3",
+					"objectName": "ddddbox3",
 					"x": 210,
 					"y": 320,
 					"w": 620,
@@ -103,20 +104,9 @@
 			const box = diagram.addObject(
 				new Box({
 					svg: svg,
-					id: o.id,
-					x: o.x,
-					y: o.y,
-					w: o.w,
-					h: o.h,
-					color: o.color,
-					cutColor: o.cutColor,
-					showEye: o.showEye,
-					showArrowDown: o.showArrowDown,
-					showArrowUp: o.showArrowUp,
-					showArrowRight: o.showArrowRight,
-					diagram: diagram
-				})
-			);
+					diagram: diagram,
+					...o, // spread all fields from the data object
+				}));
 			objMap[o.id] = box;
 		}
 
@@ -137,6 +127,7 @@
 		document.getElementById("saveBtn").addEventListener("click", async () => {
 			const saved = {
 				objects: diagram.objects.map(o => ({
+					...o.param,
 					id: o.id,
 					x: o.x,
 					y: o.y,

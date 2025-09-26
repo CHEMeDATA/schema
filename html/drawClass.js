@@ -126,7 +126,6 @@ export class Box extends DiagramObject {
 		this.initLabel();
 
 		this.updateShape();
-
 	}
 
 	updateShape() {
@@ -247,13 +246,12 @@ export class Box extends DiagramObject {
 		}
 
 		if (this.icon) {
-			this.icon.setAttribute("x", x + (w  - this.iconSizeWidth)/ 2);
+			this.icon.setAttribute("x", x + (w - this.iconSizeWidth) / 2);
 			this.icon.setAttribute("y", y + 20);
 		}
 		if (this.label) {
-
-this.label.setAttribute("x", x + w / 2);
-		this.label.setAttribute("y", y + h - this.sideMargins);
+			this.label.setAttribute("x", x + w / 2);
+			this.label.setAttribute("y", y + h - this.sideMargins);
 		}
 	}
 
@@ -335,7 +333,10 @@ this.label.setAttribute("x", x + w / 2);
 					"href",
 					svgFile
 				);
-				this.icon.setAttribute("x", + this.x + (this.w - this.iconSizeWidth)/ 2);
+				this.icon.setAttribute(
+					"x",
+					+this.x + (this.w - this.iconSizeWidth) / 2
+				);
 				this.icon.setAttribute("y", this.y + 20);
 				this.icon.setAttribute("width", String(this.iconSizeWidth));
 				this.icon.setAttribute("height", String(this.iconSizeHeight));
@@ -346,14 +347,21 @@ this.label.setAttribute("x", x + w / 2);
 
 	initLabel() {
 		this.sideMargins = 5;
-		const text = "NMRspectru mUZZiill0";
+		var text = "NMRspectru  : " + String(this.id);
+		if (this.param.objectName) {
+			text = this.param.objectName;
+		}
 		const charCount = text.length || 1;
-		const fontSizeTest = Math.floor(1.7 * (this.param.w - 2 * this.sideMargins)) / charCount;
+		const fontSizeTest =
+			Math.floor(1.7 * (this.param.w - 2 * this.sideMargins)) / charCount;
 		const maxSize = 16;
 		const fontSize = fontSizeTest > maxSize ? maxSize : fontSizeTest;
 		this.label = document.createElementNS("http://www.w3.org/2000/svg", "text");
 		this.label.setAttribute("x", this.param.x + this.param.w / 2);
-		this.label.setAttribute("y", this.param.y + this.param.h - this.sideMargins);
+		this.label.setAttribute(
+			"y",
+			this.param.y + this.param.h - this.sideMargins
+		);
 		this.label.setAttribute("dominant-baseline", "baseline");
 		this.label.setAttribute("text-anchor", "middle");
 		this.label.setAttribute("font-size", fontSize);
@@ -446,7 +454,6 @@ this.label.setAttribute("x", x + w / 2);
 		// close on click elsewhere
 		document.addEventListener("click", () => menu.remove(), { once: true });
 	}
-
 
 	move(dx, dy) {
 		this.x += dx;
