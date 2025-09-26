@@ -39,183 +39,188 @@
 
 		// Demo JSON data
 		const diagramData = {
-  "objects": [
-    {
-      "x": 18,
-      "y": 19,
-      "w": 200,
-      "h": 50,
-      "color": "lightgray",
-      "showEye": null,
-      "showArrowDown": null,
-      "showArrowUp": null,
-      "showArrowRight": null,
-      "cutColor": "red",
-      "type": "Box",
-      "id": "box1"
-    },
-    {
-      "x": 220,
-      "y": 255,
-      "w": 120,
-      "h": 70,
-      "color": "lightgray",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": true,
-      "cutColor": "green",
-      "type": "Box",
-      "id": "box2"
-    },
-    {
-      "objectName": "obj1",
-      "x": 50,
-      "y": 199,
-      "w": 120,
-      "h": 70,
-      "color": "lightgray",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": null,
-      "cutColor": "purple",
-      "type": "Box",
-      "id": "box3"
-    },
-    {
-      "objectName": "obj2",
-      "x": 217,
-      "y": 115,
-      "w": 120,
-      "h": 70,
-      "color": "lightgray",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": null,
-      "cutColor": "purple",
-      "type": "Box",
-      "id": "box4"
-    },
-    {
-      "objectName": "box1",
-      "x": 185,
-      "y": 355,
-      "w": 120,
-      "h": 70,
-      "color": "lightgray",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": null,
-      "cutColor": "purple",
-      "type": "Box",
-      "id": "box3"
-    },
-    {
-      "objectName": "box2",
-      "x": 400,
-      "y": 115,
-      "w": 120,
-      "h": 70,
-      "color": "lightgray",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": null,
-      "cutColor": "purple",
-      "type": "Box",
-      "id": "box5"
-    },
-    {
-      "x": 633,
-      "y": 227,
-      "w": 120,
-      "h": 70,
-      "color": "#ddd",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": true,
-      "objectName": "box1",
-      "cutColor": null,
-      "type": "Box",
-      "id": "box7"
-    },
-    {
-      "x": 378,
-      "y": 355,
-      "w": 120,
-      "h": 70,
-      "color": "#ddd",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": true,
-      "objectName": "child of box1",
-      "cutColor": null,
-      "type": "Box2",
-      "id": "box8"
-    },
-    {
-      "x": 650,
-      "y": 115,
-      "w": 120,
-      "h": 70,
-      "color": "#ddd",
-      "showEye": true,
-      "showArrowDown": true,
-      "showArrowUp": true,
-      "showArrowRight": true,
-      "objectName": "child of box2",
-      "id": "box9",
-      "cutColor": null,
-      "type": "Box2"
-    }
-  ],
-  "connectors": [
-    {
-      "id": "conn1",
-      "from": "box1",
-      "to": "box2",
-      "type": "LineConnector"
-    },
-    {
-      "id": "conn2",
-      "from": "box2",
-      "to": "box3",
-      "type": "LineConnector"
-    },
-    {
-      "id": "conn3",
-      "from": "box1",
-      "to": "box3",
-      "type": "LineConnector"
-    },
-    {
-      "id": "conn4",
-      "from": "box3",
-      "to": "box7",
-      "type": "LineConnector"
-    },
-    {
-      "id": "conn5",
-      "from": "box3",
-      "to": "box8",
-      "type": "LineConnector"
-    },
-    {
-      "id": "conn6",
-      "from": "box5",
-      "to": "box9",
-      "type": "LineConnector"
-    }
-  ]
-};
+			"objects": [
+				{
+					"x": 18,
+					"y": 19,
+					"w": 200,
+					"h": 50,
+					"color": "lightgray",
+					"showEye": null,
+					"showArrowDown": null,
+					"showArrowUp": null,
+					"showArrowRight": null,
+					"cutColor": "red",
+					"arrowFrom": true,
+					"id": "box1",
+					"type": "Box"
+				},
+				{
+					"x": 220,
+					"y": 255,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": true,
+					"cutColor": "green",
+					"arrowTo": true,
+					"id": "box2",
+					"type": "Box"
+				},
+				{
+					"objectName": "obj1",
+					"x": 50,
+					"y": 199,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"arrowTo": true,
+					"id": "box3",
+					"type": "Box"
+				},
+				{
+					"objectName": "obj2",
+					"x": 217,
+					"y": 115,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"id": "box4",
+					"type": "Box"
+				},
+				{
+					"objectName": "box1",
+					"x": 185,
+					"y": 355,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"id": "box3",
+					"type": "Box"
+				},
+				{
+					"objectName": "box2",
+					"x": 400,
+					"y": 115,
+					"w": 120,
+					"h": 70,
+					"color": "lightgray",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": null,
+					"cutColor": "purple",
+					"id": "box5",
+					"type": "Box"
+				},
+				{
+					"x": 633,
+					"y": 227,
+					"w": 120,
+					"h": 70,
+					"color": "#ddd",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": true,
+					"objectName": "box1",
+					"cutColor": null,
+					"id": "box7",
+					"type": "Box"
+				},
+				{
+					"x": 378,
+					"y": 355,
+					"w": 120,
+					"h": 70,
+					"color": "#ddd",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": true,
+					"objectName": "child of box1",
+					"cutColor": null,
+					"id": "box8",
+					"type": "Box2"
+				},
+				{
+					"x": 650,
+					"y": 115,
+					"w": 120,
+					"h": 70,
+					"color": "#ddd",
+					"showEye": true,
+					"showArrowDown": true,
+					"showArrowUp": true,
+					"showArrowRight": true,
+					"objectName": "child of box2",
+					"cutColor": null,
+					"id": "box9",
+					"type": "Box2"
+				}
+			],
+			"connectors": [
+				{
+					"id": "conn1",
+					"from": "box1",
+					"to": "box2",
+					"type": "LineConnector"
+				},
+				{
+					"id": "conn2",
+					"from": "box2",
+					"to": "box3",
+					"type": "LineConnector"
+				},
+				{
+					"id": "conn3",
+					"from": "box1",
+					"to": "box3",
+					"type": "LineConnector"
+				},
+				{
+					"arrowTo": true,
+					"id": "conn4",
+					"from": "box3",
+					"to": "box7",
+					"type": "LineConnector"
+				},
+				{
+					"id": "conn5",
+					"from": "box3",
+					"to": "box8",
+					"type": "LineConnector"
+				},
+				{
+					"arrowFrom": true,
+					"id": "conn6",
+					"from": "box5",
+					"to": "box9",
+					"type": "LineConnector"
+				}
+			]
+		};
 		const objMap = {};
 		for (let o of diagramData.objects) {
-			
+
 			if (o.type === "Box2") {
 				const box = diagram.addObject(
 					new Box2({
@@ -225,7 +230,7 @@
 					}));
 				objMap[o.id] = box;
 			} else {
-const box = diagram.addObject(
+				const box = diagram.addObject(
 					new Box({
 						svg: svg,
 						diagram: diagram,
@@ -255,7 +260,7 @@ const box = diagram.addObject(
 			const saved = {
 				objects: diagram.objects.map(o => {
 					// destructure o.param safely, skip cyclic references
-					const { diagram, svg, ...rest } = o.param || {};
+					const { diagram, svg, type, ...rest } = o.param || {};
 					return {
 						...rest,
 						id: o.id,
@@ -272,12 +277,16 @@ const box = diagram.addObject(
 						type: o.type || null
 					};
 				}),
-				connectors: diagram.connectors.map(c => ({
-					id: c.id,
-					from: c.fromObj.id,
-					to: c.toObj.id,
-					type: c.type || null
-				}))
+				connectors: diagram.connectors.map(c => {
+					const { diagram, id, fromObj, toObj, type, ...rest } = c.param || {};
+					return {
+						...rest,
+						id: c.id,
+						from: c.fromObj.id,
+						to: c.toObj.id,
+						type: c.type || null
+					};
+				})
 			};
 
 			const jsonStr = JSON.stringify(saved, null, 2);

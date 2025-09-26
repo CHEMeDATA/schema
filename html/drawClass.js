@@ -1,4 +1,3 @@
-
 // ===== BASE CLASSES =====
 export class DiagramElement {
 	constructor({ svg, id }) {
@@ -73,17 +72,17 @@ export class Box extends DiagramObject {
 		this.group.appendChild(this.cutLine);
 
 		// Eye + pupil
-		this.eye = document.createElementNS(
-			"http://www.w3.org/2000/svg",
-			"ellipse"
-		);
-		this.eye.setAttribute("rx", 7.5);
-		this.eye.setAttribute("ry", 4);
-		this.eye.setAttribute("fill", "white");
-		this.eye.setAttribute("stroke", "black");
-		this.group.appendChild(this.eye);
-
 		if (this.showEye) {
+			this.eye = document.createElementNS(
+				"http://www.w3.org/2000/svg",
+				"ellipse"
+			);
+			this.eye.setAttribute("rx", 7.5);
+			this.eye.setAttribute("ry", 4);
+			this.eye.setAttribute("fill", "white");
+			this.eye.setAttribute("stroke", "black");
+			this.group.appendChild(this.eye);
+
 			this.pupil = document.createElementNS(
 				"http://www.w3.org/2000/svg",
 				"circle"
@@ -321,18 +320,13 @@ export class Box extends DiagramObject {
 	initIcon() {
 		const svgFile = `${this.objectName}.svg`;
 		this.iconSizeWidth = 75;
-		this.iconSizeHeight = 25;
-		fetch(svgFile, { method: "HEAD" }).then((resp) => {
-			if (resp.ok) {
-				this.icon = document.createElementNS(
-					"http://www.w3.org/2000/svg",
-					"image"
-				);
-				this.icon.setAttributeNS(
-					"http://www.w3.org/1999/xlink",
-					"href",
-					svgFile
-				);
+		this.iconSizeHeight = 26;
+		fetch(svgFile)
+			.then((resp) => resp.text())
+			.then((svgText) => {
+				const parser = new DOMParser();
+				const svgDoc = parser.parseFromString(svgText, "image/svg+xml");
+				this.icon = svgDoc.documentElement;
 				this.icon.setAttribute(
 					"x",
 					+this.x + (this.w - this.iconSizeWidth) / 2
@@ -341,8 +335,7 @@ export class Box extends DiagramObject {
 				this.icon.setAttribute("width", String(this.iconSizeWidth));
 				this.icon.setAttribute("height", String(this.iconSizeHeight));
 				this.group.appendChild(this.icon);
-			}
-		});
+			});
 	}
 
 	initLabel() {
