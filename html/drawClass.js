@@ -1,6 +1,9 @@
+/* The provided JavaScript code defines classes for creating diagram elements like boxes, connectors,
+and a diagram manager with functionality for interaction and visualization. */
+// ===== BASE CLASSES =====
 // ===== BASE CLASSES =====
 export class DiagramElement {
-	constructor(svg, id) {
+	constructor({ svg, id }) {
 		this.svg = svg;
 		this.id = id;
 		this.group = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -9,60 +12,49 @@ export class DiagramElement {
 }
 
 export class DiagramObject extends DiagramElement {
-	constructor(svg, id, x, y) {
-		super(svg, id);
-		this.x = x;
-		this.y = y;
+	constructor(param) {
+		super({ svg: param.svg, id: param.id });
+
+		this.param = param;
 	}
 	getCoordinates() {
-		return { id: this.id, x: this.x, y: this.y };
+		return { id: this.id, x: this.param.x, y: this.param.y };
 	}
 }
 
 export class DiagramConnector extends DiagramElement {
-	constructor(svg, id, fromObj, toObj) {
-		super(svg, id);
-		this.fromObj = fromObj;
-		this.toObj = toObj;
+	constructor(param) {
+		super({ svg: param.svg, id: param.id });
+		this.fromObj = param.fromObj;
+		this.toObj = param.toObj;
 	}
 	update() {}
 }
 
 // ===== DERIVED CLASSES =====
+
 export class Box extends DiagramObject {
-	constructor(
-		svg,
-		id,
-		x,
-		y,
-		w,
-		h,
-		color,
-		cutColor = null,
-		showEye = true,
-		showArrowDown = true,
-		showArrowUp = true,
-		showArrowRight = true,
-		diagram = null
-	) {
-		super(svg, id, x, y);
-		this.diagram = diagram; // store reference
-		this.w = w;
-		this.h = h;
-		this.color = color;
-		this.cutColor = cutColor;
-		this.showEye = showEye;
-		this.showArrowDown = showArrowDown;
-		this.showArrowUp = showArrowUp;
-		this.showArrowRight = showArrowRight;
-		this.anyIcon = showEye || showArrowDown || showArrowUp || showArrowRight;
+	constructor(params) {
+		super(params); // expects { svg, id, x, y }
+		// assign all other params to this
+		Object.assign(this, params);
+
+		// Derived / default values
+		this.cutColor = this.cutColor || null;
+		this.anyIcon =
+			this.showEye ||
+			this.showArrowDown ||
+			this.showArrowUp ||
+			this.showArrowRight;
+
 		// Polygon shape
 		this.shape = document.createElementNS(
 			"http://www.w3.org/2000/svg",
 			"polygon"
 		);
-		this.shape.setAttribute("fill", color);
+		this.shape.setAttribute("fill", this.color);
 		this.shape.setAttribute("stroke-width", "2");
+
 		const isDark =
 			window.matchMedia &&
 			window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -70,29 +62,28 @@ export class Box extends DiagramObject {
 		this.group.appendChild(this.shape);
 
 		// Cut line
-
 		this.cutLine = document.createElementNS(
 			"http://www.w3.org/2000/svg",
 			"line"
 		);
-		console.log(cutColor);
 		this.cutLine.setAttribute(
 			"stroke",
-			cutColor || (isDark ? "white" : "black")
+			this.cutColor || (isDark ? "white" : "black")
 		);
 		this.cutLine.setAttribute("stroke-width", "4");
 		this.group.appendChild(this.cutLine);
 
-		// Eye (ellipse + pupil)
+		// Eye + pupil
 		this.eye = document.createElementNS(
 			"http://www.w3.org/2000/svg",
 			"ellipse"
 		);
-		this.eye.setAttribute("rx", 15 / 2); // 15 pt wide
-		this.eye.setAttribute("ry", 8 / 2); // 8 pt tall
+		this.eye.setAttribute("rx", 7.5);
+		this.eye.setAttribute("ry", 4);
 		this.eye.setAttribute("fill", "white");
 		this.eye.setAttribute("stroke", "black");
 		this.group.appendChild(this.eye);
+
 		if (this.showEye) {
 			this.pupil = document.createElementNS(
 				"http://www.w3.org/2000/svg",
@@ -103,238 +94,39 @@ export class Box extends DiagramObject {
 			this.group.appendChild(this.pupil);
 		}
 
-		const fillArr = "white";
-		const strokrArr = "black";
-		const strokeWidth = "1";
+		// Arrows
+		const fillArr = "white",
+			strokrArr = "black",
+			strokeWidth = "1";
 
-		if (this.showArrowDown) {
-			this.arrowDown = document.createElementNS(
-				"http://www.w3.org/2000/svg",
-				"polygon"
+		if (this.showArrowDown)
+			this.arrowDown = this.createArrow(
+				fillArr,
+				strokrArr,
+				strokeWidth,
+				"down"
 			);
-			this.arrowDown.setAttribute("fill", fillArr);
-			this.arrowDown.setAttribute("stroke", strokrArr);
-			this.arrowDown.setAttribute("stroke-width", strokeWidth);
-			this.group.appendChild(this.arrowDown);
-		}
+		if (this.showArrowUp)
+			this.arrowUp = this.createArrow(fillArr, strokrArr, strokeWidth, "up");
+		if (this.showArrowRight)
+			this.arrowRight = this.createArrow(
+				fillArr,
+				strokrArr,
+				strokeWidth,
+				"right"
+			);
 
-		if (this.showArrowUp) {
-			this.arrowUp = document.createElementNS(
-				"http://www.w3.org/2000/svg",
-				"polygon"
-			);
-			this.arrowUp.setAttribute("fill", fillArr);
-			this.arrowUp.setAttribute("stroke", strokrArr);
-			this.arrowUp.setAttribute("stroke-width", strokeWidth);
-			this.group.appendChild(this.arrowUp);
-		}
+		// Menu if needed
+		if (this.anyIcon) this.initMenu();
 
-		if (this.showArrowRight) {
-			this.arrowRight = document.createElementNS(
-				"http://www.w3.org/2000/svg",
-				"polygon"
-			);
-			this.arrowRight.setAttribute("fill", fillArr);
-			this.arrowRight.setAttribute("stroke", strokrArr);
-			this.arrowRight.setAttribute("stroke-width", strokeWidth);
-			this.group.appendChild(this.arrowRight);
-		}
+		// SVG Icon (if file exists)
+		this.initIcon();
+
+		// Text label
+		this.initLabel();
 
 		this.updateShape();
-		if (this.anyIcon) {
-			this.group.setAttribute("cursor", "pointer");
-			// tooltip
-			const title = document.createElementNS(
-				"http://www.w3.org/2000/svg",
-				"title"
-			);
-			title.textContent = "Add object ...";
-			this.group.appendChild(title);
 
-			// click menu
-			this.group.addEventListener("click", (e) => {
-				if (!this.menuEnabled) return; // skip menu if not in view
-				e.stopPropagation();
-				this.showMenu(this.x + 2, this.y + 18, [
-					{ label: "Zoom", action: () => alert("Zoom clicked") },
-					{ label: "Info", action: () => alert("Info clicked") },
-					{
-						label: "Add Boc",
-						action: () => {
-							if (this.diagram) {
-								const newId = `box${this.diagram.objects.length + 1}`;
-								const newBox = new Box(
-									this.diagram.svg,
-									newId,
-									this.x + 250,
-									this.y + 0,
-									this.w,
-									this.h,
-									"#ddd",
-									null,
-									true,
-									true,
-									true,
-									true,
-									this.diagram
-								);
-								this.diagram.addObject(newBox);
-
-								newBox.setMode(this.mode);
-								this.diagram.objectLayer.appendChild(newBox.group); // moves it to top
-								this.diagram.updateAll(); // redraw connectors if needed
-
-								// Create connector from current box to new box
-								const connId = `conn${this.diagram.connectors.length + 1}`;
-								const connector = new LineConnector(
-									this.diagram.svg,
-									connId,
-									this,
-									newBox
-								);
-								this.diagram.addConnector(connector);
-
-								// Ensure it’s visible and redraw connectors
-								this.diagram.objectLayer.appendChild(newBox.group);
-								this.diagram.updateAll();
-								console.log("Added new box with connector");
-							}
-						},
-					},
-				]);
-			});
-			this.group.addEventListener("click", this.menuHandler);
-		}
-
-		// inside Box constructor (after this.group is created)
-		const svgFile = `${this.id}.svg`;
-		const iconSizeWidth = 75;
-		const iconSizeHeight = 75;
-		fetch(svgFile, { method: "HEAD" }) // only check existence, not download full file
-			.then((resp) => {
-				if (resp.ok) {
-					this.icon = document.createElementNS(
-						"http://www.w3.org/2000/svg",
-						"image"
-					);
-					this.icon.setAttributeNS(
-						"http://www.w3.org/1999/xlink",
-						"href",
-						svgFile
-					);
-					this.icon.setAttribute("x", this.x + (this.w - iconSizeWidth) / 2);
-					this.icon.setAttribute("y", this.y + (this.h - iconSizeHeight) / 2);
-					this.icon.setAttribute("width", String(iconSizeWidth));
-					this.icon.setAttribute("height", String(iconSizeHeight));
-					this.group.appendChild(this.icon);
-				} else {
-					console.log(`No SVG found for ${this.id}`);
-				}
-			})
-			.catch((err) => {
-				console.log(`Error checking ${svgFile}:`, err);
-			});
-const sideMargins = 5;
-this.label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-this.label.setAttribute("x", this.x + this.w / 2);
-this.label.setAttribute("y", this.y + this.h - sideMargins); // from bottom
-this.label.setAttribute("dominant-baseline", "baseline");
-this.label.setAttribute("text-anchor", "middle");
-this.group.appendChild(this.label);
-
-const text = "NMRspectru mUZZiill0";
-const charCount = text.length || 1;
-const fontSize = (1.7 * (this.w - 2 * sideMargins) / charCount);
-
-this.label.textContent = text; // ✅ set text content
-this.label.setAttribute("font-size", fontSize);
-this.label.setAttribute("font-family", "monospace");
-
-	}
-
-	setMode(mode) {
-		this.mode = mode;
-
-		// tooltip: only in view mode
-		if (this.title)
-			this.title.textContent = mode === "view" ? "Add object ..." : "";
-
-		// only enable click menu in view mode
-		this.menuEnabled = mode === "view";
-
-		// remove any open menu if leaving view
-		if (mode !== "view") {
-			let oldMenu = document.getElementById("contextMenu");
-			if (oldMenu) oldMenu.remove();
-		}
-	}
-
-	getSidePoint(targetX, targetY, targetW, targetH) {
-		const cx = this.x + this.w / 2;
-		const cy = this.y + this.h / 2;
-
-		const dx = targetX - cx;
-		const dy = targetY - cy;
-
-		console.log(dx, dy);
-		const factor = 2;
-		// Decide horizontal vs vertical connection
-		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
-		const deltaY = Math.abs(dy) - targetH / 2 - this.h / 2;
-		if (deltaX > deltaY) {
-			var deltay = dy * (this.w / Math.abs(factor * dx));
-			if (deltay > this.h / 2) deltay = this.h / 2;
-			if (deltay < -this.h / 2) deltay = -this.h / 2;
-			// Connect from left or right side
-			if (dx > 0) {
-				return { x: cx + this.w / 2, y: cy + deltay }; // right side
-			} else {
-				return { x: cx - this.w / 2, y: cy + deltay }; // left side
-			}
-		} else {
-			var deltax = dx * (this.h / Math.abs(factor * dy));
-			if (deltax > this.w / 2) deltax = this.w / 2;
-			if (deltax < -this.w / 2) deltax = -this.w / 2;
-			// Connect from top or bottom side
-			if (dy > 0) {
-				return { x: cx + deltax, y: cy + this.h / 2 }; // bottom
-			} else {
-				return { x: cx + deltax, y: cy - this.h / 2 }; // top
-			}
-		}
-	}
-
-	showMenu(x, y, items) {
-		// remove any old menu
-		let old = document.getElementById("contextMenu");
-		if (old) old.remove();
-
-		const menu = document.createElement("div");
-		menu.id = "contextMenu";
-		menu.style.position = "absolute";
-		menu.style.left = this.svg.getBoundingClientRect().left + x + "px";
-		menu.style.top = this.svg.getBoundingClientRect().top + y + "px";
-		menu.style.background = "white";
-		menu.style.border = "1px solid #ccc";
-		menu.style.padding = "5px";
-		menu.style.zIndex = 1000;
-
-		for (let item of items) {
-			const btn = document.createElement("div");
-			btn.textContent = item.label;
-			btn.style.padding = "2px 8px";
-			btn.style.cursor = "pointer";
-			btn.addEventListener("click", () => {
-				item.action();
-				menu.remove();
-			});
-			menu.appendChild(btn);
-		}
-
-		document.body.appendChild(menu);
-
-		// close on click elsewhere
-		document.addEventListener("click", () => menu.remove(), { once: true });
 	}
 
 	updateShape() {
@@ -455,10 +247,207 @@ this.label.setAttribute("font-family", "monospace");
 		}
 
 		if (this.icon) {
-			this.icon.setAttribute("x", this.x + 5);
-			this.icon.setAttribute("y", this.y + 20);
+			this.icon.setAttribute("x", x + (w  - this.iconSizeWidth)/ 2);
+			this.icon.setAttribute("y", y + 20);
+		}
+		if (this.label) {
+
+this.label.setAttribute("x", x + w / 2);
+		this.label.setAttribute("y", y + h - this.sideMargins);
 		}
 	}
+
+	createArrow(fill, stroke, width, type) {
+		const arrow = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"polygon"
+		);
+		arrow.setAttribute("fill", fill);
+		arrow.setAttribute("stroke", stroke);
+		arrow.setAttribute("stroke-width", width);
+		this.group.appendChild(arrow);
+		return arrow;
+	}
+
+	initMenu() {
+		this.group.setAttribute("cursor", "pointer");
+		const title = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"title"
+		);
+		title.textContent = "Add object ...";
+		this.group.appendChild(title);
+
+		this.group.addEventListener("click", (e) => {
+			if (!this.menuEnabled) return;
+			e.stopPropagation();
+			this.showMenu(this.param.x + 2, this.param.y + 18, [
+				{ label: "Zoom", action: () => alert("Zoom clicked") },
+				{ label: "Info", action: () => alert("Info clicked") },
+				{
+					label: "Add Box",
+					action: () => {
+						if (!this.diagram) return;
+						const newBox = new Box({
+							svg: this.diagram.svg,
+							id: `box${this.diagram.objects.length + 1}`,
+							x: this.param.x + 250,
+							y: this.param.y,
+							w: this.param.w,
+							h: this.param.h,
+							color: "#ddd",
+							showEye: true,
+							showArrowDown: true,
+							showArrowUp: true,
+							showArrowRight: true,
+							diagram: this.diagram,
+						});
+						this.diagram.addObject(newBox);
+
+						// Connector
+						const connector = new LineConnector({
+							svg: this.diagram.svg,
+							id: `conn${this.diagram.connectors.length + 1}`,
+							fromObj: this,
+							toObj: newBox,
+						});
+						this.diagram.addConnector(connector);
+
+						this.diagram.updateAll();
+					},
+				},
+			]);
+		});
+	}
+
+	initIcon() {
+		const svgFile = `${this.id}.svg`;
+		this.iconSizeWidth = 75;
+		this.iconSizeHeight = 25;
+		fetch(svgFile, { method: "HEAD" }).then((resp) => {
+			if (resp.ok) {
+				this.icon = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"image"
+				);
+				this.icon.setAttributeNS(
+					"http://www.w3.org/1999/xlink",
+					"href",
+					svgFile
+				);
+				this.icon.setAttribute("x", + this.x + (this.w - this.iconSizeWidth)/ 2);
+				this.icon.setAttribute("y", this.y + 20);
+				this.icon.setAttribute("width", String(this.iconSizeWidth));
+				this.icon.setAttribute("height", String(this.iconSizeHeight));
+				this.group.appendChild(this.icon);
+			}
+		});
+	}
+
+	initLabel() {
+		this.sideMargins = 5;
+		const text = "NMRspectru mUZZiill0";
+		const charCount = text.length || 1;
+		const fontSizeTest = Math.floor(1.7 * (this.param.w - 2 * this.sideMargins)) / charCount;
+		const maxSize = 16;
+		const fontSize = fontSizeTest > maxSize ? maxSize : fontSizeTest;
+		this.label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+		this.label.setAttribute("x", this.param.x + this.param.w / 2);
+		this.label.setAttribute("y", this.param.y + this.param.h - this.sideMargins);
+		this.label.setAttribute("dominant-baseline", "baseline");
+		this.label.setAttribute("text-anchor", "middle");
+		this.label.setAttribute("font-size", fontSize);
+		this.label.setAttribute("font-family", "monospace");
+		this.label.textContent = text;
+		this.group.appendChild(this.label);
+	}
+
+	setMode(mode) {
+		this.mode = mode;
+
+		// tooltip: only in view mode
+		if (this.title)
+			this.title.textContent = mode === "view" ? "Add object ..." : "";
+
+		// only enable click menu in view mode
+		this.menuEnabled = mode === "view";
+
+		// remove any open menu if leaving view
+		if (mode !== "view") {
+			let oldMenu = document.getElementById("contextMenu");
+			if (oldMenu) oldMenu.remove();
+		}
+	}
+
+	getSidePoint(targetX, targetY, targetW, targetH) {
+		const cx = this.x + this.w / 2;
+		const cy = this.y + this.h / 2;
+
+		const dx = targetX - cx;
+		const dy = targetY - cy;
+
+		console.log(dx, dy);
+		const factor = 2;
+		// Decide horizontal vs vertical connection
+		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
+		const deltaY = Math.abs(dy) - targetH / 2 - this.h / 2;
+		if (deltaX > deltaY) {
+			var deltay = dy * (this.w / Math.abs(factor * dx));
+			if (deltay > this.h / 2) deltay = this.h / 2;
+			if (deltay < -this.h / 2) deltay = -this.h / 2;
+			// Connect from left or right side
+			if (dx > 0) {
+				return { x: cx + this.w / 2, y: cy + deltay }; // right side
+			} else {
+				return { x: cx - this.w / 2, y: cy + deltay }; // left side
+			}
+		} else {
+			var deltax = dx * (this.h / Math.abs(factor * dy));
+			if (deltax > this.w / 2) deltax = this.w / 2;
+			if (deltax < -this.w / 2) deltax = -this.w / 2;
+			// Connect from top or bottom side
+			if (dy > 0) {
+				return { x: cx + deltax, y: cy + this.h / 2 }; // bottom
+			} else {
+				return { x: cx + deltax, y: cy - this.h / 2 }; // top
+			}
+		}
+	}
+
+	showMenu(x, y, items) {
+		// remove any old menu
+		let old = document.getElementById("contextMenu");
+		if (old) old.remove();
+
+		const menu = document.createElement("div");
+		menu.id = "contextMenu";
+		menu.style.position = "absolute";
+		menu.style.left = this.svg.getBoundingClientRect().left + x + "px";
+		menu.style.top = this.svg.getBoundingClientRect().top + y + "px";
+		menu.style.background = "white";
+		menu.style.border = "1px solid #ccc";
+		menu.style.padding = "5px";
+		menu.style.zIndex = 1000;
+
+		for (let item of items) {
+			const btn = document.createElement("div");
+			btn.textContent = item.label;
+			btn.style.padding = "2px 8px";
+			btn.style.cursor = "pointer";
+			btn.addEventListener("click", () => {
+				item.action();
+				menu.remove();
+			});
+			menu.appendChild(btn);
+		}
+
+		document.body.appendChild(menu);
+
+		// close on click elsewhere
+		document.addEventListener("click", () => menu.remove(), { once: true });
+	}
+
+
 	move(dx, dy) {
 		this.x += dx;
 		this.y += dy;
@@ -513,8 +502,9 @@ this.label.setAttribute("font-family", "monospace");
 }
 
 export class LineConnector extends DiagramConnector {
-	constructor(svg, id, fromObj, toObj) {
-		super(svg, id, fromObj, toObj);
+	constructor(params) {
+		super(params);
+		Object.assign(this, params);
 
 		const isDark =
 			window.matchMedia &&
@@ -544,6 +534,7 @@ export class LineConnector extends DiagramConnector {
 		);
 		this.side2.setAttribute("r", 5);
 		this.side2.setAttribute("fill", isDark ? "#6666ff" : "blue");
+
 		this.group.appendChild(this.line);
 		this.group.appendChild(this.side1);
 		this.group.appendChild(this.side2);

@@ -70,7 +70,7 @@
 					"id": "box3",
 					"x": 210,
 					"y": 320,
-					"w": 120,
+					"w": 620,
 					"h": 70,
 					"color": "lightgray",
 					"showEye": true,
@@ -98,16 +98,40 @@
 				}
 			]
 		};
-
-		// Map of objects for connector references
 		const objMap = {};
 		for (let o of diagramData.objects) {
-			const box = diagram.addObject(new Box(svg, o.id, o.x, o.y, o.w, o.h, o.color, o.cutColor, o.showEye, o.showArrowDown, o.showArrowUp, o.showArrowRight, diagram));
+			const box = diagram.addObject(
+				new Box({
+					svg: svg,
+					id: o.id,
+					x: o.x,
+					y: o.y,
+					w: o.w,
+					h: o.h,
+					color: o.color,
+					cutColor: o.cutColor,
+					showEye: o.showEye,
+					showArrowDown: o.showArrowDown,
+					showArrowUp: o.showArrowUp,
+					showArrowRight: o.showArrowRight,
+					diagram: diagram
+				})
+			);
 			objMap[o.id] = box;
 		}
+
+		// Then, create connectors
 		for (let c of diagramData.connectors) {
-			diagram.addConnector(new LineConnector(svg, c.id, objMap[c.from], objMap[c.to]));
+			diagram.addConnector(
+				new LineConnector({
+					svg: svg,
+					id: c.id,
+					fromObj: objMap[c.from],
+					toObj: objMap[c.to]
+				})
+			);
 		}
+
 
 		// ===== SAVE TO CLIPBOARD =====
 		document.getElementById("saveBtn").addEventListener("click", async () => {
