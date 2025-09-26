@@ -205,6 +205,51 @@ export class Box extends DiagramObject {
 			});
 			this.group.addEventListener("click", this.menuHandler);
 		}
+
+		// inside Box constructor (after this.group is created)
+		const svgFile = `${this.id}.svg`;
+		const iconSizeWidth = 75;
+		const iconSizeHeight = 75;
+		fetch(svgFile, { method: "HEAD" }) // only check existence, not download full file
+			.then((resp) => {
+				if (resp.ok) {
+					this.icon = document.createElementNS(
+						"http://www.w3.org/2000/svg",
+						"image"
+					);
+					this.icon.setAttributeNS(
+						"http://www.w3.org/1999/xlink",
+						"href",
+						svgFile
+					);
+					this.icon.setAttribute("x", this.x + (this.w - iconSizeWidth) / 2);
+					this.icon.setAttribute("y", this.y + (this.h - iconSizeHeight) / 2);
+					this.icon.setAttribute("width", String(iconSizeWidth));
+					this.icon.setAttribute("height", String(iconSizeHeight));
+					this.group.appendChild(this.icon);
+				} else {
+					console.log(`No SVG found for ${this.id}`);
+				}
+			})
+			.catch((err) => {
+				console.log(`Error checking ${svgFile}:`, err);
+			});
+const sideMargins = 5;
+this.label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+this.label.setAttribute("x", this.x + this.w / 2);
+this.label.setAttribute("y", this.y + this.h - sideMargins); // from bottom
+this.label.setAttribute("dominant-baseline", "baseline");
+this.label.setAttribute("text-anchor", "middle");
+this.group.appendChild(this.label);
+
+const text = "NMRspectru mUZZiill0";
+const charCount = text.length || 1;
+const fontSize = (1.7 * (this.w - 2 * sideMargins) / charCount);
+
+this.label.textContent = text; // ✅ set text content
+this.label.setAttribute("font-size", fontSize);
+this.label.setAttribute("font-family", "monospace");
+
 	}
 
 	setMode(mode) {
@@ -235,19 +280,19 @@ export class Box extends DiagramObject {
 		const factor = 2;
 		// Decide horizontal vs vertical connection
 		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
-		const deltaY = Math.abs(dy)- targetH / 2 - this.h / 2;
-		if ( deltaX > deltaY) {
-			var deltay = (dy) * (this.w / Math.abs( factor * dx));
+		const deltaY = Math.abs(dy) - targetH / 2 - this.h / 2;
+		if (deltaX > deltaY) {
+			var deltay = dy * (this.w / Math.abs(factor * dx));
 			if (deltay > this.h / 2) deltay = this.h / 2;
 			if (deltay < -this.h / 2) deltay = -this.h / 2;
 			// Connect from left or right side
 			if (dx > 0) {
-				return { x: cx + this.w / 2, y: cy + deltay}; // right side
+				return { x: cx + this.w / 2, y: cy + deltay }; // right side
 			} else {
-				return { x: cx - this.w / 2, y: cy + deltay}; // left side
+				return { x: cx - this.w / 2, y: cy + deltay }; // left side
 			}
 		} else {
-			var deltax = (dx) * (this.h / Math.abs( factor * dy));
+			var deltax = dx * (this.h / Math.abs(factor * dy));
 			if (deltax > this.w / 2) deltax = this.w / 2;
 			if (deltax < -this.w / 2) deltax = -this.w / 2;
 			// Connect from top or bottom side
@@ -408,6 +453,11 @@ export class Box extends DiagramObject {
 				`${p1} ${p2} ${p3} ${p4} ${p5} ${p6} ${p7}`
 			);
 		}
+
+		if (this.icon) {
+			this.icon.setAttribute("x", this.x + 5);
+			this.icon.setAttribute("y", this.y + 20);
+		}
 	}
 	move(dx, dy) {
 		this.x += dx;
@@ -507,8 +557,18 @@ export class LineConnector extends DiagramConnector {
 		const fromCenter = this.toObj.center();
 		const toCenter = this.fromObj.center();
 
-		const p1 = this.fromObj.getSidePoint(fromCenter.cx, fromCenter.cy, this.toObj.w, this.toObj.h);
-		const p2 = this.toObj.getSidePoint(toCenter.cx, toCenter.cy, this.fromObj.w, this.fromObj.h);
+		const p1 = this.fromObj.getSidePoint(
+			fromCenter.cx,
+			fromCenter.cy,
+			this.toObj.w,
+			this.toObj.h
+		);
+		const p2 = this.toObj.getSidePoint(
+			toCenter.cx,
+			toCenter.cy,
+			this.fromObj.w,
+			this.fromObj.h
+		);
 
 		this.line.setAttribute("x1", p1.x);
 		this.line.setAttribute("y1", p1.y);
