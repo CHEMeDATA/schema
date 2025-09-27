@@ -318,7 +318,7 @@ export class Box extends DiagramObject {
 	}
 
 	initIcon() {
-		const svgFile = `${this.objectName}.svg`;
+		const svgFile = `../images/${this.objectName}.svg`;
 		this.iconSizeWidth = 75;
 		this.iconSizeHeight = 26;
 		fetch(svgFile)
@@ -340,7 +340,7 @@ export class Box extends DiagramObject {
 
 	initLabel() {
 		this.sideMargins = 5;
-		var text = "NMRspectru  : " + String(this.id);
+		var text = "NovalueUse_" + String(this.id);
 		if (this.param.objectName) {
 			text = this.param.objectName;
 		}

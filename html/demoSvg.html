@@ -33,12 +33,14 @@
 	<button id="exportSvgBtn">Export SVG</button>
 	<script type="module">
 		import { Diagram, Box, Box2, LineConnector } from './drawClass.js';
+		import { loadDiagramData } from './diagramDataLoader.js';
 
 		const svg = document.getElementById("diagram");
 		const diagram = new Diagram(svg);
 
+		// demo JSON (only used if replaceWithObjects = false)
 		// Demo JSON data
-		const diagramData = {
+		const demoData = {
 			"objects": [
 				{
 					"x": 18,
@@ -218,42 +220,37 @@
 				}
 			]
 		};
-		const objMap = {};
-		for (let o of diagramData.objects) {
 
-			if (o.type === "Box2") {
+		const replaceWithObjects = false;
+
+		(async () => {
+			const diagramData = await loadDiagramData({
+				replaceWithObjects,
+				baseData: demoData
+			});
+
+			const objMap = {};
+			for (let o of diagramData.objects) {
 				const box = diagram.addObject(
-					new Box2({
-						svg: svg,
-						diagram: diagram,
-						...o, // spread all fields from the data object
-					}));
-				objMap[o.id] = box;
-			} else {
-				const box = diagram.addObject(
-					new Box({
-						svg: svg,
-						diagram: diagram,
-						...o, // spread all fields from the data object
-					}));
+					o.type === "Box2" ? new Box2({ svg, diagram, ...o })
+						: new Box({ svg, diagram, ...o })
+				);
 				objMap[o.id] = box;
 			}
-		}
 
-		// Then, create connectors
-		for (let c of diagramData.connectors) {
-			const { id, from, to, ...rest } = c;
-			diagram.addConnector(
-				new LineConnector({
-					svg: svg,
-					id: c.id,
-					fromObj: objMap[c.from],
-					toObj: objMap[c.to],
-					...rest
-				})
-			);
-		}
-
+			for (let c of diagramData.connectors) {
+				const { id, from, to, ...rest } = c;
+				diagram.addConnector(
+					new LineConnector({
+						svg: svg,
+						id: c.id,
+						fromObj: objMap[c.from],
+						toObj: objMap[c.to],
+						...rest
+					})
+				);
+			}
+		})();
 
 		// ===== SAVE TO CLIPBOARD =====
 		document.getElementById("saveBtn").addEventListener("click", async () => {
@@ -363,6 +360,7 @@
 		});
 
 	</script>
+
 
 </body>
 
