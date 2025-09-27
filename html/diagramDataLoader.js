@@ -1,58 +1,423 @@
 // diagramDataLoader.js
-export async function loadDiagramData({ replaceWithObjects, baseData }) {
-    if (!replaceWithObjects) {
-        // just return demo data passed from HTML
-        return baseData;
-    }
+async function loadJsonFile(path) {
+	try {
+		const response = await fetch(path);
+		if (!response.ok) throw new Error(`Failed to load ${path}`);
+		return await response.json();
+	} catch (err) {
+		console.warn(`Could not load ${path}:`, err.message);
+		return null;
+	}
+}
 
-    // fetch and generate objects
-    try {
-        const response = await fetch("../objectsList.json");
-        if (!response.ok) throw new Error("Failed to load objects.json");
-        const data = await response.json();
+export async function loadDiagramData(replaceWithObjects) {
+	const demoData = {
+		objects: [
+			{
+				x: 18,
+				y: 19,
+				w: 200,
+				h: 50,
+				color: "lightgray",
+				showEye: null,
+				showArrowDown: null,
+				showArrowUp: null,
+				showArrowRight: null,
+				cutColor: "red",
+				arrowFrom: true,
+				id: "box1",
+				type: "Box",
+			},
+			{
+				x: 220,
+				y: 255,
+				w: 120,
+				h: 70,
+				color: "lightgray",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: true,
+				cutColor: "green",
+				arrowTo: true,
+				id: "box2",
+				type: "Box",
+			},
+			{
+				objectName: "obj1",
+				x: 50,
+				y: 199,
+				w: 120,
+				h: 70,
+				color: "lightgray",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: null,
+				cutColor: "purple",
+				arrowTo: true,
+				id: "box3",
+				type: "Box",
+			},
+			{
+				objectName: "obj2",
+				x: 217,
+				y: 115,
+				w: 120,
+				h: 70,
+				color: "lightgray",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: null,
+				cutColor: "purple",
+				id: "box4",
+				type: "Box",
+			},
+			{
+				objectName: "box1",
+				x: 185,
+				y: 355,
+				w: 120,
+				h: 70,
+				color: "lightgray",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: null,
+				cutColor: "purple",
+				id: "box3",
+				type: "Box",
+			},
+			{
+				objectName: "box2",
+				x: 400,
+				y: 115,
+				w: 120,
+				h: 70,
+				color: "lightgray",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: null,
+				cutColor: "purple",
+				id: "box5",
+				type: "Box",
+			},
+			{
+				x: 633,
+				y: 227,
+				w: 120,
+				h: 70,
+				color: "#ddd",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: true,
+				objectName: "box1",
+				cutColor: null,
+				id: "box7",
+				type: "Box",
+			},
+			{
+				x: 378,
+				y: 355,
+				w: 120,
+				h: 70,
+				color: "#ddd",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: true,
+				objectName: "child of box1",
+				cutColor: null,
+				id: "box8",
+				type: "Box2",
+			},
+			{
+				x: 650,
+				y: 115,
+				w: 120,
+				h: 70,
+				color: "#ddd",
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
+				showArrowRight: true,
+				objectName: "child of box2",
+				cutColor: null,
+				id: "box9",
+				type: "Box2",
+			},
+		],
+		connectors: [
+			{
+				id: "conn1",
+				from: "box1",
+				to: "box2",
+				type: "LineConnector",
+			},
+			{
+				id: "conn2",
+				from: "box2",
+				to: "box3",
+				type: "LineConnector",
+			},
+			{
+				id: "conn3",
+				from: "box1",
+				to: "box3",
+				type: "LineConnector",
+			},
+			{
+				arrowTo: true,
+				id: "conn4",
+				from: "box3",
+				to: "box7",
+				type: "LineConnector",
+			},
+			{
+				id: "conn5",
+				from: "box3",
+				to: "box8",
+				type: "LineConnector",
+			},
+			{
+				arrowFrom: true,
+				id: "conn6",
+				from: "box5",
+				to: "box9",
+				type: "LineConnector",
+			},
+		],
+	};
+	if (!replaceWithObjects) {
+		return demoData;
+	}
 
-        if (!Array.isArray(data.objects)) {
-            throw new Error("Invalid file format: no objects array found");
-        }
+	const boxW = 120;
+	const boxH = 80;
+	const margin = 20;
+	const winW = window.innerWidth;
+	const winH = window.innerHeight;
+	const cols = Math.max(
+		1,
+		Math.floor((winW - margin - 2 * boxW) / (boxW + margin))
+	);
+	const rows = Math.max(1, Math.floor((winH - margin) / (boxH + margin)));
 
-        const boxW = 120;
-        const boxH = 70;
-        const margin = 30;
-        const winW = window.innerWidth;
-        const winH = window.innerHeight;
-        const cols = Math.max(1, Math.floor((winW - margin) / (boxW + margin)));
-        const rows = Math.max(1, Math.floor((winH - margin) / (boxH + margin)));
+	let objects = [];
+	let connectors = [];
+	var whereAreWe = 0;
+	const objData = await loadJsonFile("../objectsList.json");
+	if (objData && Array.isArray(objData.objects)) {
+		objData.objects.forEach((obj, index) => {
+			const col = whereAreWe % cols;
+			const row = Math.floor(whereAreWe / cols) % rows;
+			const x = margin + col * (boxW + margin);
+			const y = margin + row * (boxH + margin);
+			whereAreWe++;
+			const { name, ...otherFields } = obj;
+			objects.push({
+				x,
+				y,
+				w: boxW,
+				h: boxH,
+				color: "lightgray",
+				showEye: false,
+				showArrowDown: false,
+				showArrowUp: false,
+				showArrowRight: false,
+				cutColor: "red",
+				id: name,
+				type: "Box",
+				objectName: name,
+				otherFields,
+			});
+		});
+	}
 
-        const objects = data.objects.map((obj, index) => {
-            const col = index % cols;
-            const row = Math.floor(index / cols) % rows;
-            const x = margin + col * (boxW + margin);
-            const y = margin + row * (boxH + margin);
+	//
+	// 2️⃣ Load all_tools.json
+	//
+	/*"comment": "Generated by createListObjects.js in nmr-objects for schema",
+  "list": [
+    {
+      "listObject": [
+        {
+          "object": "NmrSpectrum",
+          "type": "viewer",
+          "repository": "CHEMeDATA/NMRspectrum-viewer",
+          "fileNameViewerUSELESSMAXBE_REDUNDANT": [
+            "src/nmrSpectrum.js"
+          ],
+          "jsLibraryView": [
+            {
+              "repository": "CHEMeDATA/viewers-base",
+              "fileName": "src/viewerBase.js"
+            },
+            {
+              "repository": "CHEMeDATA/NMRspectrum-viewer",
+              "fileName": "src/nmrSpectrum.js",
+              "include": "NmrSpectrum"
+            },
+            {
+              "repository": "CHEMeDATA/objects-base",
+              "fileName": "src/objectBase.js",
+              "include": "ObjectBase"
+            },
+            {
+              "repository": "CHEMeDATA/nmr-objects",
+              "fileName": "src/nmrSpectrumObject.js",
+              "include": 
+			  */
+	console.log("test1");
 
-            const { name, ...otherFields } = obj;
+	const toolsData = await loadJsonFile("../all_tools.json");
+	if (toolsData && Array.isArray(toolsData.list)) {
+		toolsData.list.forEach(objInnerList => {
 
-            return {
-                x, y,
-                w: boxW,
-                h: boxH,
-                color: "lightgray",
-                showEye: false,
-                showArrowDown: false,
-                showArrowUp: false,
-                showArrowRight: false,
-                cutColor: "red",
-                id: name,
-                type: "Box",
-                objectName: name,
-                otherFields
-            };
-        });
+// GET
+			/////$ creatorParam
+			/////$ creatorParam
+			/////$ creatorParam
+			/////$ creatorParam
+			/////$ creatorParam
+			/////$ creatorParam
+			/////$ creatorParam
+			if (objInnerList && Array.isArray(objInnerList.listObject)) {
+				objInnerList.listObject.forEach(obj => {
 
-        // keep connectors empty by default
-        return { objects, connectors: [] };
 
-    } catch (err) {
-        console.error("Error loading objects.json:", err);
-        return { objects: [], connectors: [] };
-    }
+				const { object, type, listObjectSchema,...otherFields } = obj;
+				
+				var listSources = [object]	;
+				const name = type;
+				if (type === "viewer") if (toolsData && Array.isArray(listObjectSchema)) {
+					listSources = listObjectSchema;
+				}
+
+				listSources.forEach(nameSource => {
+					var target = name + "_" + nameSource;	
+
+					const col = whereAreWe % cols;
+					const row = Math.floor(whereAreWe / cols) % rows;
+					const x = margin + col * (boxW + margin);
+					const y = margin + row * (boxH + margin);
+					whereAreWe++;
+
+					const boxType = type === "bridge" ? "Box": "Box2";
+					const obje = {
+						x,
+						y,
+						w: boxW,
+						h: boxH,
+						color: "lightgray",
+						showEye: false,
+						showArrowDown: false,
+						showArrowUp: false,
+						showArrowRight: false,
+						cutColor: "blue",
+						id: target,
+						type: boxType,
+						objectName: target,
+						otherFieldsObjectMAYDELETE: otherFields,
+					};
+					 objects.push(obje);
+/////////
+/////////
+///////// Check source exists.... if not make a dummy ?
+/////////
+///////// Give a name to export...
+/////////
+/////////
+/////////
+			const link = {
+				id: target,
+				from: nameSource,
+				to: target,
+				type: "LineConnector",
+				arrowFrom: false,
+				arrowTo: true,
+				otherFieldsCoonectorMAYDELETE: otherFields,
+			};
+			if (true) connectors.push(link);
+			//console.log("link type object ", link,type ,object);
+				}
+				);
+			}
+			);
+			}
+		});
+	}
+
+	//
+	// 3️⃣ Load derivations.json → likely connectors
+	//
+	/*
+ "_comment": "This file is automatically generated. Do not edit manually.",
+    "derivations": [
+        {
+            "base": "obj1",
+            "derived": "obj1size",
+            "fieldsToAdd": [
+                {
+                    "name": "size",
+                    "mandatory": true,
+                    "type": "float",
+                    "userRequest": "Enter a value in m (default 1.91m)",
+                    "defaultValue": 1.91,
+                    "randomFrom": 1.4,
+                    "randomTo": 2.1,
+                    "show": true
+                }
+            ]
+        },
+        {
+		*/
+	const derivData = await loadJsonFile("../derivations.json");
+	console.log("test2");
+	if (derivData && Array.isArray(derivData.derivations)) {
+		derivData.derivations.forEach((obj, index) => {
+			const col = whereAreWe % cols;
+			const row = Math.floor(whereAreWe / cols) % rows;
+			const x = margin + col * (boxW + margin);
+			const y = margin + row * (boxH + margin);
+			whereAreWe++;
+			const { base, derived, ...otherFields } = obj;
+			const name = derived;
+			const obje = {
+				x,
+				y,
+				w: boxW,
+				h: boxH,
+				color: "lightgray",
+				showEye: false,
+				showArrowDown: false,
+				showArrowUp: false,
+				showArrowRight: false,
+				cutColor: "green",
+				id: name,
+				type: "Box",
+				objectName: name,
+				otherFieldsObjectMAYDELETE: otherFields,
+			};
+			if (true) objects.push(obje);
+
+			const link = {
+				id: base + "_" + derived,
+				from: base,
+				to: derived,
+				type: "LineConnector",
+				arrowFrom: false,
+				arrowTo: true,
+				otherFieldsCoonectorMAYDELETE: otherFields,
+			};
+			connectors.push(link);
+			console.log("link", link);
+		});
+	}
+	console.log("test3");
+
+	return { objects, connectors };
 }

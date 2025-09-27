@@ -828,6 +828,28 @@ export class LineConnector extends DiagramConnector {
 
 	update() {
 		// Find side points instead of centers
+		if (!this.toObj) {
+			console.error(
+				"problem with one of the objects of the connector with id:<",
+				this.id,
+				"> this:",
+				this,
+				" in particular this.toObj:",
+				this.toObj
+			);
+			return;
+		}
+		if (!this.fromObj) {
+			console.error(
+				"problem with one of the objects of the connector with id:<",
+				this.id,
+				"> this:",
+				this,
+				" in particular this.fromObj:",
+				this.fromObj
+			);
+			return;
+		}
 		const fromCenter = this.toObj.center();
 		const toCenter = this.fromObj.center();
 
