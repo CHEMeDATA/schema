@@ -661,9 +661,9 @@ liquidSample_DataEnrichment(targetObjType, dataObj = {}) {
             htmlID: "tubeDiameter_mm",
             baseType: "float",
             comment: "Enter a value in mm",
-            defaultValue: 5.5,
-            randomFrom: 1,
-            randomTo: 10,
+            defaultValue: 5,
+            randomFrom: 5,
+            randomTo: 5,
             show: true
         }
             ],

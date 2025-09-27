@@ -17,7 +17,8 @@ import {
 	src_objects,
 	instanceLDDir,
 	derivationsFile,
-	all_toolsFile
+	all_toolsFile,
+	objectsFile
 } from "./config.js";
 
 
@@ -51,6 +52,10 @@ console.log("Create Schema and instances");
 	// this list the list of derived classes
 	if (fs.existsSync(derivationsFile)) {
 		fs.unlinkSync(derivationsFile); // delete
+	}
+	// this list the list of derived classes
+	if (fs.existsSync(objectsFile)) {
+		fs.unlinkSync(objectsFile); // delete
 	}
 createSchemaAndInstances() 
 const also_Range_and_Match_schema = false;

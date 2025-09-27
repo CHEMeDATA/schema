@@ -6,7 +6,6 @@ import {
 	createInstance,
 } from "../src/createSchemaSomeInstances.js";
 
-
 export function createSchemaAndInstances() {
 	// Example usage createNewTypeSchema
 	// for type float and double will be replaced with numbers in schema
@@ -24,14 +23,48 @@ type: "baseType",
 	console.log("\n****** Create the schema for the objects in v1/schema\n");
 	console.log("\n****** Create the schema for the objects in v1/schema\n");
 
+	// required : name, required, array, type and ref (for objects) are used for the schema
+	// optional : "userRequest", "defaultValue", "randomFrom", "randomTo", (only for float, double and int) "show" may be used for forms to create instances in file objects.json
+
 	createNewTypeSchema("obj1", [
-		{ name: "name", required: true, array: false, type: "string" },
-		{ name: "age", required: false, array: false, type: "integer" },
+		{
+			name: "name",
+			required: true,
+			array: false,
+			type: "string",
+			userRequest: "Enter the name (first of last or both)",
+			defaultValue: "Alice",
+			show: true,
+		},
+		{
+			name: "age",
+			required: false,
+			array: false,
+			type: "integer",
+			userRequest: "Enter the age in years",
+			defaultValue: 49,
+			randomFrom: 1,
+			randomTo: 99,
+			show: true,
+		},
 	]);
 
 	createNewTypeSchema("obj2", [
-		{ name: "name", required: true, array: false, type: "string" },
-		{ name: "age", required: true, array: false, type: "integer" },
+		{ name: "name", required: true, array: false, type: "string",
+			userRequest: "Enter the name (first of last or both)",
+			defaultValue: "John",
+			show: true,},
+		{
+			name: "age",
+			required: true,
+			array: false,
+			type: "integer",
+			userRequest: "Enter the age in years",
+			defaultValue: 49,
+			randomFrom: 1,
+			randomTo: 99,
+			show: true,
+		},
 	]);
 
 	deriveSchema("obj1", "obj1size", [
@@ -87,9 +120,9 @@ type: "baseType",
 			mandatory: true,
 			type: "float",
 			userRequest: "Enter a value in mm",
-			defaultValue: 5.5,
-			randomFrom: 1,
-			randomTo: 10,
+			defaultValue: 5,
+			randomFrom: 5,
+			randomTo: 5,
 			show: true,
 		},
 	]);
@@ -147,7 +180,7 @@ type: "baseType",
 		],
 		firstPoint: 8.0,
 		lastPoint: -1.0,
-		frequency: 400.0
+		frequency: 400.0,
 	});
 
 	createInstance(
