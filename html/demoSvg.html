@@ -94,9 +94,10 @@
 					};
 				}),
 				connectors: diagram.connectors.map(c => {
-					const { diagram, id, fromObj, toObj, type, otherFieldConnectorMAYDELETE, ...rest } = c.param || {};
+					const { diagram, id, fromObj, toObj, type, typeTool, otherFieldConnectorMAYDELETE, ...rest } = c.param || {};
 					return {
 						...rest,
+						typeTool: typeTool,
 						id: c.id,
 						from: c.fromObj.id,
 						to: c.toObj.id,

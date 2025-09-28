@@ -339,9 +339,9 @@ export async function loadDiagramData(replaceWithObjects) {
 				w: 120,
 				h: 80,
 				color: "lightgray",
-				showEye: null,
-				showArrowDown: null,
-				showArrowUp: null,
+				showEye: true,
+				showArrowDown: true,
+				showArrowUp: true,
 				showArrowRight: null,
 				cutColor: "red",
 				objectName: "nmrSpectrumObject",
@@ -354,9 +354,9 @@ export async function loadDiagramData(replaceWithObjects) {
 				w: 120,
 				h: 80,
 				color: "lightgray",
-				showEye: null,
+				showEye: true,
 				showArrowDown: null,
-				showArrowUp: null,
+				showArrowUp: true,
 				showArrowRight: null,
 				cutColor: "red",
 				objectName: "setSpectra",
@@ -369,8 +369,8 @@ export async function loadDiagramData(replaceWithObjects) {
 				w: 120,
 				h: 80,
 				color: "lightgray",
-				showEye: null,
-				showArrowDown: null,
+				showEye: true,
+				showArrowDown: true,
 				showArrowUp: null,
 				showArrowRight: null,
 				cutColor: "red",
@@ -504,10 +504,10 @@ export async function loadDiagramData(replaceWithObjects) {
 				w: 120,
 				h: 80,
 				color: "lightgray",
-				showEye: null,
+				showEye: true,
 				showArrowDown: null,
 				showArrowUp: null,
-				showArrowRight: null,
+				showArrowRight: true,
 				cutColor: "red",
 				objectName: "NMRspinSystemModel_CSA",
 				id: "NMRspinSystemModel_CSA",
@@ -649,21 +649,6 @@ export async function loadDiagramData(replaceWithObjects) {
 				type: "Box2",
 			},
 			{
-				x: 182,
-				y: 565,
-				w: 120,
-				h: 80,
-				color: "lightgray",
-				showEye: null,
-				showArrowDown: null,
-				showArrowUp: null,
-				showArrowRight: null,
-				cutColor: "blue",
-				objectName: "bridge_NMRspinSystemModel_CSA",
-				id: "bridge_NMRspinSystemModel_CSA",
-				type: "Box",
-			},
-			{
 				x: 240,
 				y: 20,
 				w: 120,
@@ -713,6 +698,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "viewer",
 				id: "viewer_nmrSpectrumObject",
 				from: "nmrSpectrumObject",
 				to: "viewer_nmrSpectrumObject",
@@ -721,6 +707,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "viewer",
 				id: "viewer_setSpectra",
 				from: "setSpectra",
 				to: "viewer_setSpectra",
@@ -729,6 +716,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "viewer",
 				id: "viewer_jGraphObject",
 				from: "jGraphObject",
 				to: "viewer_jGraphObject",
@@ -737,6 +725,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "export",
 				id: "export_setSpectra",
 				from: "setSpectra",
 				to: "export_setSpectra",
@@ -745,6 +734,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "export",
 				id: "export_nmrSpectrumObject",
 				from: "nmrSpectrumObject",
 				to: "export_nmrSpectrumObject",
@@ -753,6 +743,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "import",
 				id: "import_nmrSpectrumObject",
 				from: "nmrSpectrumObject",
 				to: "import_nmrSpectrumObject",
@@ -761,6 +752,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "import",
 				id: "import_jGraphObject",
 				from: "jGraphObject",
 				to: "import_jGraphObject",
@@ -769,6 +761,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "viewer",
 				id: "viewer_NMRspinSystemModel_CSA",
 				from: "NMRspinSystemModel_CSA",
 				to: "viewer_NMRspinSystemModel_CSA",
@@ -777,14 +770,16 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
-				id: "bridge_NMRspinSystemModel_CSA",
+				typeTool: "bridge",
+				id: "nmrSpectrumObject",
 				from: "NMRspinSystemModel_CSA",
-				to: "bridge_NMRspinSystemModel_CSA",
+				to: "nmrSpectrumObject",
 				type: "LineConnector",
 			},
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "derivation",
 				id: "obj1_obj1size",
 				from: "obj1",
 				to: "obj1size",
@@ -793,6 +788,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "derivation",
 				id: "sample_liquidSample",
 				from: "sample",
 				to: "liquidSample",
@@ -801,6 +797,7 @@ export async function loadDiagramData(replaceWithObjects) {
 			{
 				arrowFrom: false,
 				arrowTo: true,
+				typeTool: "derivation",
 				id: "liquidSample_NMRliquidSample",
 				from: "liquidSample",
 				to: "NMRliquidSample",
@@ -922,8 +919,7 @@ export async function loadDiagramData(replaceWithObjects) {
 						indexBox++;
 
 						if (type === "bridge") {
-							const target = obj.objectSchemaTarget;
-
+							target = obj.objectSchemaTarget;
 							const targetObjAlreadIn = objects.find((o) => o.id === target);
 							if (!targetObjAlreadIn) {
 								console.warn(
@@ -1088,16 +1084,17 @@ export async function loadDiagramData(replaceWithObjects) {
 			};
 			objects.push(obje);
 
-			createIfNotExisting(
-				base,
-				objects,
-				"lightGreen",
-				otherFields,
-				boxW,
-				boxH,
-				x,
-				y
-			);
+			if (false)
+				createIfNotExisting(
+					base,
+					objects,
+					"lightGreen",
+					otherFields,
+					boxW,
+					boxH,
+					x,
+					y
+				);
 
 			const link = {
 				id: base + "_" + derived,
