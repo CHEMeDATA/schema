@@ -76,7 +76,7 @@
 			const saved = {
 				objects: diagram.objects.map(o => {
 					// destructure o.param safely, skip cyclic references
-					const { diagram, svg, type, ...rest } = o.param || {};
+					const { diagram, svg, type, otherFieldObjectMAYDELETE, ...rest } = o.param || {};
 					return {
 						...rest,
 						id: o.id,
@@ -94,7 +94,7 @@
 					};
 				}),
 				connectors: diagram.connectors.map(c => {
-					const { diagram, id, fromObj, toObj, type, ...rest } = c.param || {};
+					const { diagram, id, fromObj, toObj, type, otherFieldConnectorMAYDELETE, ...rest } = c.param || {};
 					return {
 						...rest,
 						id: c.id,

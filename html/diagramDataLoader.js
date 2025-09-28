@@ -10,7 +10,38 @@ async function loadJsonFile(path) {
 	}
 }
 
+function getCoordinatesFromSavedOrIndex(
+	InputId,
+	savePositionData,
+	indexBox,
+	boxW,
+	boxH,
+	margin
+) {
+	const obj = savePositionData.objects.find((o) => o.id === InputId);
+	if (obj) {
+		return { x: obj.x, y: obj.y };
+	}
+	const winW = window.innerWidth;
+	const winH = window.innerHeight;
+	const cols = Math.max(
+		1,
+		Math.floor((winW - margin - 2 * boxW) / (boxW + margin))
+	);
+	const rows = Math.max(1, Math.floor((winH - margin) / (boxH + margin)));
+
+	const col = indexBox % cols;
+	const row = Math.floor(indexBox / cols) % rows;
+	const x = margin + col * (boxW + margin);
+	const y = margin + row * (boxH + margin);
+	return { x, y };
+}
+
 export async function loadDiagramData(replaceWithObjects) {
+	const boxW = 120;
+	const boxH = 80;
+	const margin = 20;
+
 	const demoData = {
 		objects: [
 			{
@@ -191,33 +222,580 @@ export async function loadDiagramData(replaceWithObjects) {
 			},
 		],
 	};
+	const savePositionData = {
+  "objects": [
+    {
+      "x": 71,
+      "y": 12,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "obj1",
+      "id": "obj1",
+      "type": "Box"
+    },
+    {
+      "x": 616,
+      "y": -10,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "obj2",
+      "id": "obj2",
+      "type": "Box"
+    },
+    {
+      "x": 602,
+      "y": 4,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "groupObject1",
+      "id": "groupObject1",
+      "type": "Box"
+    },
+    {
+      "x": 403,
+      "y": 3,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "sample",
+      "id": "sample",
+      "type": "Box"
+    },
+    {
+      "x": 580,
+      "y": 20,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "pairObj1",
+      "id": "pairObj1",
+      "type": "Box"
+    },
+    {
+      "x": 20,
+      "y": 180,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "nmrSpectrumObject",
+      "id": "nmrSpectrumObject",
+      "type": "Box"
+    },
+    {
+      "x": 180,
+      "y": 700,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "setSpectra",
+      "id": "setSpectra",
+      "type": "Box"
+    },
+    {
+      "x": 625,
+      "y": 623,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "jGraphObject",
+      "id": "jGraphObject",
+      "type": "Box"
+    },
+    {
+      "x": 337,
+      "y": 122,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "intPair",
+      "id": "intPair",
+      "type": "Box"
+    },
+    {
+      "x": 321,
+      "y": 143,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "tensor",
+      "id": "tensor",
+      "type": "Box"
+    },
+    {
+      "x": 360,
+      "y": 103,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "diagTensor",
+      "id": "diagTensor",
+      "type": "Box"
+    },
+    {
+      "x": 611,
+      "y": 355,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "atomicPropertySpin",
+      "id": "atomicPropertySpin",
+      "type": "Box"
+    },
+    {
+      "x": 474,
+      "y": 424,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "atomicPropertySpin_CSA",
+      "id": "atomicPropertySpin_CSA",
+      "type": "Box"
+    },
+    {
+      "x": 443,
+      "y": 219,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "atomicPropertySpin_Liquid",
+      "id": "atomicPropertySpin_Liquid",
+      "type": "Box"
+    },
+    {
+      "x": 592,
+      "y": 221,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "atomicPropertySpinInteraction",
+      "id": "atomicPropertySpinInteraction",
+      "type": "Box"
+    },
+    {
+      "x": 453,
+      "y": 315,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "NMRspinSystemModel",
+      "id": "NMRspinSystemModel",
+      "type": "Box"
+    },
+    {
+      "x": 186,
+      "y": 404,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "NMRspinSystemModel_CSA",
+      "id": "NMRspinSystemModel_CSA",
+      "type": "Box"
+    },
+    {
+      "x": 323,
+      "y": 313,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "red",
+      "objectName": "liquidStatesNMRproperties",
+      "id": "liquidStatesNMRproperties",
+      "type": "Box"
+    },
+    {
+      "x": 170,
+      "y": 239,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "viewer_nmrSpectrumObject",
+      "id": "viewer_nmrSpectrumObject",
+      "type": "Box2"
+    },
+    {
+      "x": 340,
+      "y": 620,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "viewer_setSpectra",
+      "id": "viewer_setSpectra",
+      "type": "Box2"
+    },
+    {
+      "x": 470,
+      "y": 519,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "viewer_jGraphObject",
+      "id": "viewer_jGraphObject",
+      "type": "Box2"
+    },
+    {
+      "x": 20,
+      "y": 620,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "export_setSpectra",
+      "id": "export_setSpectra",
+      "type": "Box2"
+    },
+    {
+      "x": 20,
+      "y": 280,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "export_nmrSpectrumObject",
+      "id": "export_nmrSpectrumObject",
+      "type": "Box2"
+    },
+    {
+      "x": 171,
+      "y": 105,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "import_nmrSpectrumObject",
+      "id": "import_nmrSpectrumObject",
+      "type": "Box2"
+    },
+    {
+      "x": 655,
+      "y": 488,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "import_jGraphObject",
+      "id": "import_jGraphObject",
+      "type": "Box2"
+    },
+    {
+      "x": 27,
+      "y": 467,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "viewer_NMRspinSystemModel_CSA",
+      "id": "viewer_NMRspinSystemModel_CSA",
+      "type": "Box2"
+    },
+    {
+      "x": 185,
+      "y": 534,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "blue",
+      "objectName": "bridge_NMRspinSystemModel_CSA",
+      "id": "bridge_NMRspinSystemModel_CSA",
+      "type": "Box"
+    },
+    {
+      "x": 236,
+      "y": 12,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "green",
+      "objectName": "obj1size",
+      "id": "obj1size",
+      "type": "Box"
+    },
+    {
+      "x": 546,
+      "y": 117,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "green",
+      "objectName": "liquidSample",
+      "id": "liquidSample",
+      "type": "Box"
+    },
+    {
+      "x": 689,
+      "y": 117,
+      "w": 120,
+      "h": 80,
+      "color": "lightgray",
+      "showEye": null,
+      "showArrowDown": null,
+      "showArrowUp": null,
+      "showArrowRight": null,
+      "cutColor": "green",
+      "objectName": "NMRliquidSample",
+      "id": "NMRliquidSample",
+      "type": "Box"
+    }
+  ],
+  "connectors": [
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "viewer_nmrSpectrumObject",
+      "from": "nmrSpectrumObject",
+      "to": "viewer_nmrSpectrumObject",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "viewer_setSpectra",
+      "from": "setSpectra",
+      "to": "viewer_setSpectra",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "viewer_jGraphObject",
+      "from": "jGraphObject",
+      "to": "viewer_jGraphObject",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "export_setSpectra",
+      "from": "setSpectra",
+      "to": "export_setSpectra",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "export_nmrSpectrumObject",
+      "from": "nmrSpectrumObject",
+      "to": "export_nmrSpectrumObject",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "import_nmrSpectrumObject",
+      "from": "nmrSpectrumObject",
+      "to": "import_nmrSpectrumObject",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "import_jGraphObject",
+      "from": "jGraphObject",
+      "to": "import_jGraphObject",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "viewer_NMRspinSystemModel_CSA",
+      "from": "NMRspinSystemModel_CSA",
+      "to": "viewer_NMRspinSystemModel_CSA",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "bridge_NMRspinSystemModel_CSA",
+      "from": "NMRspinSystemModel_CSA",
+      "to": "bridge_NMRspinSystemModel_CSA",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "obj1_obj1size",
+      "from": "obj1",
+      "to": "obj1size",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "sample_liquidSample",
+      "from": "sample",
+      "to": "liquidSample",
+      "type": "LineConnector"
+    },
+    {
+      "arrowFrom": false,
+      "arrowTo": true,
+      "id": "liquidSample_NMRliquidSample",
+      "from": "liquidSample",
+      "to": "NMRliquidSample",
+      "type": "LineConnector"
+    }
+  ]
+};
 	if (!replaceWithObjects) {
 		return demoData;
 	}
 
-	const boxW = 120;
-	const boxH = 80;
-	const margin = 20;
-	const winW = window.innerWidth;
-	const winH = window.innerHeight;
-	const cols = Math.max(
-		1,
-		Math.floor((winW - margin - 2 * boxW) / (boxW + margin))
-	);
-	const rows = Math.max(1, Math.floor((winH - margin) / (boxH + margin)));
-
 	let objects = [];
 	let connectors = [];
-	var whereAreWe = 0;
+	var indexBox = 0;
 	const objData = await loadJsonFile("../objectsList.json");
 	if (objData && Array.isArray(objData.objects)) {
-		objData.objects.forEach((obj, index) => {
-			const col = whereAreWe % cols;
-			const row = Math.floor(whereAreWe / cols) % rows;
-			const x = margin + col * (boxW + margin);
-			const y = margin + row * (boxH + margin);
-			whereAreWe++;
+		objData.objects.forEach((obj) => {
 			const { name, ...otherFields } = obj;
+			const id = name;
+			const { x, y } = getCoordinatesFromSavedOrIndex(
+				id,
+				savePositionData,
+				indexBox,
+				boxW,
+				boxH,
+				margin
+			);
+
+			indexBox++;
 			objects.push({
 				x,
 				y,
@@ -229,10 +807,10 @@ export async function loadDiagramData(replaceWithObjects) {
 				showArrowUp: false,
 				showArrowRight: false,
 				cutColor: "red",
-				id: name,
+				id: id,
 				type: "Box",
 				objectName: name,
-				otherFields,
+				otherFieldObjectMAYDELETE: otherFields,
 			});
 		});
 	}
@@ -275,9 +853,8 @@ export async function loadDiagramData(replaceWithObjects) {
 
 	const toolsData = await loadJsonFile("../all_tools.json");
 	if (toolsData && Array.isArray(toolsData.list)) {
-		toolsData.list.forEach(objInnerList => {
-
-// GET
+		toolsData.list.forEach((objInnerList) => {
+			// GET
 			/////$ creatorParam
 			/////$ creatorParam
 			/////$ creatorParam
@@ -286,67 +863,74 @@ export async function loadDiagramData(replaceWithObjects) {
 			/////$ creatorParam
 			/////$ creatorParam
 			if (objInnerList && Array.isArray(objInnerList.listObject)) {
-				objInnerList.listObject.forEach(obj => {
+				objInnerList.listObject.forEach((obj) => {
+					const { object, type, listObjectSchema, ...otherFields } = obj;
 
+					var listSources = [object];
+					const name = type;
+					if (type === "viewer")
+						if (toolsData && Array.isArray(listObjectSchema)) {
+							listSources = listObjectSchema;
+						}
 
-				const { object, type, listObjectSchema,...otherFields } = obj;
-				
-				var listSources = [object]	;
-				const name = type;
-				if (type === "viewer") if (toolsData && Array.isArray(listObjectSchema)) {
-					listSources = listObjectSchema;
-				}
+					listSources.forEach((nameSource) => {
+						var target = name + "_" + nameSource;
+						const id = target;
+						const { x, y } = getCoordinatesFromSavedOrIndex(
+							id,
+							savePositionData,
+							indexBox,
+							boxW,
+							boxH,
+							margin
+						);
 
-				listSources.forEach(nameSource => {
-					var target = name + "_" + nameSource;	
+						indexBox++;
 
-					const col = whereAreWe % cols;
-					const row = Math.floor(whereAreWe / cols) % rows;
-					const x = margin + col * (boxW + margin);
-					const y = margin + row * (boxH + margin);
-					whereAreWe++;
+						const boxType = (type === "bridge") ? "Box" : "Box2";
+						const obje = {
+							x,
+							y,
+							w: boxW,
+							h: boxH,
+							color: "lightgray",
+							showEye: false,
+							showArrowDown: false,
+							showArrowUp: false,
+							showArrowRight: false,
+							cutColor: "blue",
+							id: id,
+							type: boxType,
+							objectName: target,
+							otherFieldObjectMAYDELETE: otherFields,
+						};
+						objects.push(obje);
 
-					const boxType = type === "bridge" ? "Box": "Box2";
-					const obje = {
-						x,
-						y,
-						w: boxW,
-						h: boxH,
-						color: "lightgray",
-						showEye: false,
-						showArrowDown: false,
-						showArrowUp: false,
-						showArrowRight: false,
-						cutColor: "blue",
-						id: target,
-						type: boxType,
-						objectName: target,
-						otherFieldsObjectMAYDELETE: otherFields,
-					};
-					 objects.push(obje);
-/////////
-/////////
-///////// Check source exists.... if not make a dummy ?
-/////////
-///////// Give a name to export...
-/////////
-/////////
-/////////
-			const link = {
-				id: target,
-				from: nameSource,
-				to: target,
-				type: "LineConnector",
-				arrowFrom: false,
-				arrowTo: true,
-				otherFieldsCoonectorMAYDELETE: otherFields,
-			};
-			if (true) connectors.push(link);
-			//console.log("link type object ", link,type ,object);
-				}
-				);
-			}
-			);
+						const objAlreadIn = objects.find(o => o.id === target);
+						if (!objAlreadIn) {
+        					console.warn(`Object with id "${o.id }" not found for pair `);
+    					}
+						/////////
+						/////////
+						///////// Check source exists.... if not make a dummy ?
+						/////////
+						///////// Give a name to export...
+						/////////
+						/////////
+						/////////
+						const link = {
+							id: target,
+							from: nameSource,
+							to: target,
+							type: "LineConnector",
+							arrowFrom: false,
+							arrowTo: true,
+							otherFieldConnectorMAYDELETE: otherFields,
+						};
+						if (true) connectors.push(link);
+						//console.log("link type object ", link,type ,object);
+					});
+				});
 			}
 		});
 	}
@@ -379,13 +963,21 @@ export async function loadDiagramData(replaceWithObjects) {
 	console.log("test2");
 	if (derivData && Array.isArray(derivData.derivations)) {
 		derivData.derivations.forEach((obj, index) => {
-			const col = whereAreWe % cols;
-			const row = Math.floor(whereAreWe / cols) % rows;
-			const x = margin + col * (boxW + margin);
-			const y = margin + row * (boxH + margin);
-			whereAreWe++;
 			const { base, derived, ...otherFields } = obj;
 			const name = derived;
+			const id = name;
+
+			const { x, y } = getCoordinatesFromSavedOrIndex(
+				id,
+				savePositionData,
+				indexBox,
+				boxW,
+				boxH,
+				margin
+			);
+
+			indexBox++;
+
 			const obje = {
 				x,
 				y,
@@ -397,10 +989,10 @@ export async function loadDiagramData(replaceWithObjects) {
 				showArrowUp: false,
 				showArrowRight: false,
 				cutColor: "green",
-				id: name,
+				id: id,
 				type: "Box",
 				objectName: name,
-				otherFieldsObjectMAYDELETE: otherFields,
+				otherFieldObjectMAYDELETE: otherFields,
 			};
 			if (true) objects.push(obje);
 
@@ -411,7 +1003,7 @@ export async function loadDiagramData(replaceWithObjects) {
 				type: "LineConnector",
 				arrowFrom: false,
 				arrowTo: true,
-				otherFieldsCoonectorMAYDELETE: otherFields,
+				otherFieldConnectorMAYDELETE: otherFields,
 			};
 			connectors.push(link);
 			console.log("link", link);
