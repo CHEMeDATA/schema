@@ -4,6 +4,7 @@ import {
 	createNewTypeSchema,
 	deriveSchema,
 	createInstance,
+	createNewSetTrueFromRef,
 } from "../src/createSchemaSomeInstances.js";
 
 export function createSchemaAndInstances() {
@@ -25,8 +26,7 @@ type: "baseType",
 
 	// required : name, required, array, type and ref (for objects) are used for the schema
 	// optional : "userRequest", "defaultValue", "randomFrom", "randomTo", (only for float, double and int) "show" may be used for forms to create instances in file objects.json
-
-	createNewTypeSchema("obj1", [
+	const obj1 = [
 		{
 			name: "name",
 			required: true,
@@ -47,25 +47,10 @@ type: "baseType",
 			randomTo: 99,
 			show: true,
 		},
-	]);
+	];
+	createNewTypeSchema("obj1", obj1);
 
-	createNewTypeSchema("obj2", [
-		{ name: "name", required: true, array: false, type: "string",
-			userRequest: "Enter the name (first of last or both)",
-			defaultValue: "John",
-			show: true,},
-		{
-			name: "age",
-			required: true,
-			array: false,
-			type: "integer",
-			userRequest: "Enter the age in years",
-			defaultValue: 49,
-			randomFrom: 1,
-			randomTo: 99,
-			show: true,
-		},
-	]);
+	createNewSetTrueFromRef("obj1", "obj2", obj1, ["age"]);
 
 	deriveSchema("obj1", "obj1size", [
 		{
@@ -171,6 +156,18 @@ type: "baseType",
 			type: "double",
 		},
 		// { name: "dateSHoulsBeHereNotSUre", required: false, array: false, type: "string"}
+	]);
+
+	deriveSchema("nmrSpectrumObject", "simNmrSpectrum", [
+		{
+			// maybe should be in source/origin
+			name: "simulator",
+			mandatory: true,
+			type: "string",
+			userRequest: "Enter information about the simluator (will be improved)",
+			defaultValue: "Gausian GIAO calculations",
+			show: true,
+		},
 	]);
 
 	createInstance("miniSpectrum", "nmrSpectrumObject", {

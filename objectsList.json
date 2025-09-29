@@ -36,7 +36,7 @@
                     "array": false,
                     "type": "string",
                     "userRequest": "Enter the name (first of last or both)",
-                    "defaultValue": "John",
+                    "defaultValue": "Alice",
                     "show": true
                 },
                 {

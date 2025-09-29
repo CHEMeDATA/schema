@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "$id": "https://chemedata.github.io/schema/v1/schema/simNmrSpectrum.json",
+    "properties": {
+        "values": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            }
+        },
+        "firstPoint": {
+            "type": "number"
+        },
+        "lastPoint": {
+            "type": "number"
+        },
+        "frequency": {
+            "type": "number"
+        },
+        "simulator": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "values",
+        "firstPoint",
+        "lastPoint",
+        "frequency",
+        "simulator"
+    ]
+}

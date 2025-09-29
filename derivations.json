@@ -3,6 +3,13 @@
     "derivations": [
         {
             "base": "obj1",
+            "derived": "obj2",
+            "fieldsSetTrue": [
+                "age"
+            ]
+        },
+        {
+            "base": "obj1",
             "derived": "obj1size",
             "fieldsToAdd": [
                 {
@@ -45,6 +52,20 @@
                     "defaultValue": 5,
                     "randomFrom": 5,
                     "randomTo": 5,
+                    "show": true
+                }
+            ]
+        },
+        {
+            "base": "nmrSpectrumObject",
+            "derived": "simNmrSpectrum",
+            "fieldsToAdd": [
+                {
+                    "name": "simulator",
+                    "mandatory": true,
+                    "type": "string",
+                    "userRequest": "Enter information about the simluator (will be improved)",
+                    "defaultValue": "Gausian GIAO calculations",
                     "show": true
                 }
             ]
