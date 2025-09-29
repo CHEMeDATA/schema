@@ -62,6 +62,16 @@ export function setFieldTrue(array, fieldName) {
 	);
 }
 
+export function createNewSetTrueFromRef(base, derived, fields, listStringSetTrue) {
+			const propDer = setFieldTrue(fields, listStringSetTrue[0]);
+			const derivationsFileNameIn = path.join(".", derivationsFile);
+
+			addDerivation(derivationsFileNameIn, base, derived, listStringSetTrue, false);
+
+			createNewTypeSchema(derived, propDer);
+}
+
+
 // Throw error helper
 function generateError(message) {
 	throw new Error("❌ " + message);
@@ -150,10 +160,14 @@ function ensureDerivationsFile(derivationsFileNameIn) {
 	}
 }
 
-function addDerivation(derivationsFileNameIn, base, derived, fieldsToAdd) {
+function addDerivation(derivationsFileNameIn, base, derived, fieldsToAdd, isFiedlToAdd = true) {
 	ensureDerivationsFile(derivationsFileNameIn);
 	const content = JSON.parse(fs.readFileSync(derivationsFileNameIn, "utf8"));
-	content.derivations.push({ base, derived, fieldsToAdd });
+	if (isFiedlToAdd) {
+		content.derivations.push({ base, derived, fieldsToAdd });
+	} else {
+		content.derivations.push({ base, derived, fieldsSetTrue: fieldsToAdd });
+	}
 	fs.writeFileSync(
 		derivationsFileNameIn,
 		JSON.stringify(content, null, 4),

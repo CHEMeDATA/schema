@@ -5,6 +5,7 @@ import {
 	deriveSchema,
 	createInstance,
 	setFieldTrue,
+	createNewSetTrueFromRef,
 } from "../src/createSchemaSomeInstances.js";
 
 export function createSpinSystemSchema(also_Range_and_Match_schema = false) {
@@ -15,7 +16,7 @@ export function createSpinSystemSchema(also_Range_and_Match_schema = false) {
 		"\n****** Create the schema for the objects in v1/schema createSpinSystemSchema\n"
 	);
 
-createNewTypeSchema("intPair", [
+	createNewTypeSchema("intPair", [
 		{
 			name: "first",
 			required: true,
@@ -28,7 +29,7 @@ createNewTypeSchema("intPair", [
 			array: false,
 			type: "integer",
 		},
-]);
+	]);
 
 	createInstance(
 		"aIntPair",
@@ -176,15 +177,29 @@ createNewTypeSchema("intPair", [
 			type: "string",
 		},
 	];
+	///////
+	if (false) {
+		createNewTypeSchema("atomicPropertySpin", atomicPropertySpin);
 
-	createNewTypeSchema("atomicPropertySpin", atomicPropertySpin);
+		const atomicPropertySpinCSA = setFieldTrue(
+			atomicPropertySpin,
+			"diagTensorValues"
+		);
 
-	const atomicPropertySpinCSA = setFieldTrue(
-		atomicPropertySpin,
-		"diagTensorValues"
-	);
+		createNewTypeSchema("atomicPropertySpin_CSA", atomicPropertySpinCSA);
+		///////
+	} else {
+		
 
-	createNewTypeSchema("atomicPropertySpin_CSA", atomicPropertySpinCSA);
+		createNewSetTrueFromRef(
+			"atomicPropertySpin",
+			"atomicPropertySpin_CSA",
+			atomicPropertySpin,
+			["diagTensorValues"]
+		);
+	}
+
+	///////
 
 	const atomicPropertySpinLiquid = setFieldTrue(atomicPropertySpin, "value");
 
@@ -210,7 +225,6 @@ const spins = [
 ];
 */
 
-	 
 	if (also_Range_and_Match_schema) {
 		deriveSchema("atomicPropertySpin", "atomicPropertySpinPredRange", [
 			{
@@ -422,7 +436,7 @@ const interactions = [
 	} // also_Range_and_Match_schema
 
 	// Three NMRspinSystems
-createNewTypeSchema("NMRspinSystemModel", [
+	createNewTypeSchema("NMRspinSystemModel", [
 		{
 			name: "spins",
 			required: false,
