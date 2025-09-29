@@ -11,49 +11,49 @@ import {
 } from "../scripts/config.js";
 
 export function checkSchemaTypes(obj, path = "") {
-  const allowedTypes = [
-	"object",
-	"array",
-	"string",
-	"number",
-	"integer",
-	"boolean",
-	"null"
-  ];
+	const allowedTypes = [
+		"object",
+		"array",
+		"string",
+		"number",
+		"integer",
+		"boolean",
+		"null",
+	];
 
-  for (const key in obj) {
-	const value = obj[key];
-	const currentPath = path ? `${path}.${key}` : key;
+	for (const key in obj) {
+		const value = obj[key];
+		const currentPath = path ? `${path}.${key}` : key;
 
-	if (key === "type") {
-	  if (typeof value === "string") {
-		if (!allowedTypes.includes(value)) {
-		  throw new Error(
-			`Invalid type "${value}" found at path "${currentPath}". ` +
-			`Allowed types: ${allowedTypes.join(", ")}`
-		  );
+		if (key === "type") {
+			if (typeof value === "string") {
+				if (!allowedTypes.includes(value)) {
+					throw new Error(
+						`Invalid type "${value}" found at path "${currentPath}". ` +
+							`Allowed types: ${allowedTypes.join(", ")}`
+					);
+				}
+			} else if (Array.isArray(value)) {
+				for (const v of value) {
+					if (!allowedTypes.includes(v)) {
+						throw new Error(
+							`Invalid type "${v}" found in array at path "${currentPath}". ` +
+								`Allowed types: ${allowedTypes.join(", ")}`
+						);
+					}
+				}
+			} else {
+				throw new Error(
+					`Invalid "type" value (not string/array) at path "${currentPath}".`
+				);
+			}
 		}
-	  } else if (Array.isArray(value)) {
-		for (const v of value) {
-		  if (!allowedTypes.includes(v)) {
-			throw new Error(
-			  `Invalid type "${v}" found in array at path "${currentPath}". ` +
-			  `Allowed types: ${allowedTypes.join(", ")}`
-			);
-		  }
-		}
-	  } else {
-		throw new Error(
-		  `Invalid "type" value (not string/array) at path "${currentPath}".`
-		);
-	  }
-	}
 
-	// Recurse into nested objects/arrays
-	if (typeof value === "object" && value !== null) {
-	  checkSchemaTypes(value, currentPath);
+		// Recurse into nested objects/arrays
+		if (typeof value === "object" && value !== null) {
+			checkSchemaTypes(value, currentPath);
+		}
 	}
-  }
 }
 
 export function setFieldTrue(array, fieldName) {
@@ -62,15 +62,21 @@ export function setFieldTrue(array, fieldName) {
 	);
 }
 
-export function createNewSetTrueFromRef(base, derived, fields, listStringSetTrue) {
-			const propDer = setFieldTrue(fields, listStringSetTrue[0]);
-			const derivationsFileNameIn = path.join(".", derivationsFile);
-
-			addDerivation(derivationsFileNameIn, base, derived, listStringSetTrue, false);
-
-			createNewTypeSchema(derived, propDer);
+// Allows to create a object type with only the mandatory fields 
+export function createNewSetTrueFromRef(
+	base,
+	derived,
+	fields,
+	listStringSetTrue
+) {
+	var propDer = fields;
+	listStringSetTrue.forEach((prop) => {
+		propDer = setFieldTrue(propDer, prop);
+	});
+	const derivationsFileNameIn = path.join(".", derivationsFile);
+	createNewTypeSchema(derived, propDer);
+	addDerivation(derivationsFileNameIn, base, derived, listStringSetTrue, false);
 }
-
 
 // Throw error helper
 function generateError(message) {
@@ -160,7 +166,13 @@ function ensureDerivationsFile(derivationsFileNameIn) {
 	}
 }
 
-function addDerivation(derivationsFileNameIn, base, derived, fieldsToAdd, isFiedlToAdd = true) {
+function addDerivation(
+	derivationsFileNameIn,
+	base,
+	derived,
+	fieldsToAdd,
+	isFiedlToAdd = true
+) {
 	ensureDerivationsFile(derivationsFileNameIn);
 	const content = JSON.parse(fs.readFileSync(derivationsFileNameIn, "utf8"));
 	if (isFiedlToAdd) {
@@ -193,12 +205,8 @@ function ensureObjectsFile(ObjectsFileNameIn) {
 function addObject(ObjectsFileNameIn, base, fields) {
 	ensureObjectsFile(ObjectsFileNameIn);
 	const content = JSON.parse(fs.readFileSync(ObjectsFileNameIn, "utf8"));
-	content.objects.push({ "name": base, "fields": fields });
-	fs.writeFileSync(
-		ObjectsFileNameIn,
-		JSON.stringify(content, null, 4),
-		"utf8"
-	);
+	content.objects.push({ name: base, fields: fields });
+	fs.writeFileSync(ObjectsFileNameIn, JSON.stringify(content, null, 4), "utf8");
 }
 
 // Derive a schema

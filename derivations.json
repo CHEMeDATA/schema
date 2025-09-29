@@ -48,6 +48,20 @@
                     "show": true
                 }
             ]
+        },
+        {
+            "base": "atomicPropertySpin",
+            "derived": "atomicPropertySpin_CSA",
+            "fieldsSetTrue": [
+                "diagTensorValues"
+            ]
+        },
+        {
+            "base": "atomicPropertySpin",
+            "derived": "atomicPropertySpin_Liquid",
+            "fieldsSetTrue": [
+                "value"
+            ]
         }
     ]
 }

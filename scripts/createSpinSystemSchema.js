@@ -177,33 +177,21 @@ export function createSpinSystemSchema(also_Range_and_Match_schema = false) {
 			type: "string",
 		},
 	];
-	///////
-	if (false) {
-		createNewTypeSchema("atomicPropertySpin", atomicPropertySpin);
 
-		const atomicPropertySpinCSA = setFieldTrue(
-			atomicPropertySpin,
-			"diagTensorValues"
-		);
+	createNewTypeSchema("atomicPropertySpin", atomicPropertySpin);
 
-		createNewTypeSchema("atomicPropertySpin_CSA", atomicPropertySpinCSA);
-		///////
-	} else {
-		
-
-		createNewSetTrueFromRef(
-			"atomicPropertySpin",
-			"atomicPropertySpin_CSA",
-			atomicPropertySpin,
-			["diagTensorValues"]
-		);
-	}
-
-	///////
-
-	const atomicPropertySpinLiquid = setFieldTrue(atomicPropertySpin, "value");
-
-	createNewTypeSchema("atomicPropertySpin_Liquid", atomicPropertySpinLiquid);
+	createNewSetTrueFromRef(
+		"atomicPropertySpin",
+		"atomicPropertySpin_CSA",
+		atomicPropertySpin,
+		["diagTensorValues"]
+	);
+	createNewSetTrueFromRef(
+		"atomicPropertySpin",
+		"atomicPropertySpin_Liquid",
+		atomicPropertySpin,
+		["value"]
+	);
 
 	/*
 const spins = [
