@@ -14,8 +14,112 @@ export class DiagramObject extends DiagramElement {
 		const { id, svg, ...rest } = param;
 		this.param = rest;
 	}
+
 	getCoordinates() {
 		return { id: this.id, x: this.param.x, y: this.param.y };
+	}
+
+	center() {
+		return { cx: this.x + this.w / 2, cy: this.y + this.h / 2 };
+	}
+
+	getSidePoint(targetX, targetY, targetW, targetH) {
+		const cx = this.x + this.w / 2;
+		const cy = this.y + this.h / 2;
+
+		const dx = targetX - cx;
+		const dy = targetY - cy;
+
+		const factor = 2;
+		// Decide horizontal vs vertical connection
+		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
+		const deltaY = Math.abs(dy) - targetH / 2 - this.h / 2;
+		if (deltaX > deltaY) {
+			var deltay = dy * (this.w / Math.abs(factor * dx));
+			if (deltay > this.h / 2) deltay = this.h / 2;
+			if (deltay < -this.h / 2) deltay = -this.h / 2;
+			// Connect from left or right side
+			if (dx > 0) {
+				return { x: cx + this.w / 2, y: cy + deltay }; // right side
+			} else {
+				return { x: cx - this.w / 2, y: cy + deltay }; // left side
+			}
+		} else {
+			var deltax = dx * (this.h / Math.abs(factor * dy));
+			if (deltax > this.w / 2) deltax = this.w / 2;
+			if (deltax < -this.w / 2) deltax = -this.w / 2;
+			// Connect from top or bottom side
+			if (dy > 0) {
+				return { x: cx + deltax, y: cy + this.h / 2 }; // bottom
+			} else {
+				return { x: cx + deltax, y: cy - this.h / 2 }; // top
+			}
+		}
+	}
+
+	enableDragging(diagram) {
+		let isDragging = false;
+		let lastX, lastY;
+
+		this.shape.addEventListener("mousedown", (e) => {
+			if (diagram.mode === "move") {
+				isDragging = true;
+				lastX = e.clientX;
+				lastY = e.clientY;
+				diagram.objectLayer.appendChild(this.group);
+			} else if (diagram.mode === "view") {
+				//alert("Box: " + this.id);
+			}
+		});
+
+		window.addEventListener("mousemove", (e) => {
+			if (!isDragging) return;
+			if (diagram.mode !== "move") return;
+
+			let dx = e.clientX - lastX;
+			let dy = e.clientY - lastY;
+			this.move(dx, dy);
+
+			// Shift grid snap SHIFT KEY
+			if (e.shiftKey) {
+				const step = 20;
+				this.x = Math.round((this.x - this.w / 2) / step) * step + this.w / 2;
+				this.y = Math.round((this.y - this.h / 2) / step) * step + this.h / 2;
+				this.updateShape();
+			}
+
+			lastX = e.clientX;
+			lastY = e.clientY;
+
+			diagram.updateAll();
+		});
+
+		window.addEventListener("mouseup", () => {
+			isDragging = false;
+		});
+	}
+
+	setMode(mode) {
+		this.mode = mode;
+
+		// tooltip: only in view mode
+		if (this.title)
+			this.title.textContent = mode === "view" ? "Add object ..." : "";
+
+		// only enable click menu in view mode
+		this.menuEnabled = mode === "view";
+
+		// remove any open menu if leaving view
+		if (mode !== "view") {
+			let oldMenu = document.getElementById("contextMenu");
+			if (oldMenu) oldMenu.remove();
+		}
+	}
+
+	move(dx, dy) {
+		this.x += dx;
+		this.y += dy;
+		this.updateShape();
 	}
 }
 
@@ -60,11 +164,29 @@ export class DiagramConnector extends DiagramElement {
 			"http://www.w3.org/2000/svg",
 			"text"
 		);
-		this.tooltipText.setAttribute("x", 0);
-		this.tooltipText.setAttribute("y", -10);
+
 		this.tooltipText.setAttribute("fill", "black");
 		this.tooltipText.setAttribute("font-size", "12");
-		this.tooltipText.textContent = text;
+
+		// split the string into lines
+		text.split("\n").forEach((line, i) => {
+			const tspan = document.createElementNS(
+				"http://www.w3.org/2000/svg",
+				"tspan"
+			);
+			tspan.setAttribute("x", 0);
+			tspan.setAttribute("dy", i === 0 ? "0" : "1.2em");
+
+			// simple formatting convention: **bold**
+			if (line.startsWith("**") && line.endsWith("**")) {
+				tspan.setAttribute("font-weight", "bold");
+				tspan.textContent = line.replace(/\*\*/g, "");
+			} else {
+				tspan.textContent = line;
+			}
+
+			this.tooltipText.appendChild(tspan);
+		});
 
 		// measure text AFTER appending it
 		this.svg.appendChild(this.tooltipGroup);
@@ -80,8 +202,11 @@ export class DiagramConnector extends DiagramElement {
 
 		this.tooltipGroup.appendChild(this.tooltipRect);
 		this.tooltipGroup.appendChild(this.tooltipText);
-		this.tooltipGroup.setAttribute("transform", `translate(${this.x + 10}, ${this,y - 10})`);
-	
+		this.tooltipGroup.setAttribute(
+			"transform",
+			`translate(${this.x + 10}, ${(this, y - 30)})`
+		);
+
 		this.svg.appendChild(this.midCircle);
 		this.svg.appendChild(this.tooltipGroup);
 
@@ -101,8 +226,8 @@ export class DiagramConnector extends DiagramElement {
 		});
 	}
 
-	setVisibilityText(status){
-		this.tooltipGroup.style.visibility =status;
+	setVisibilityText(status) {
+		this.tooltipGroup.style.visibility = status;
 	}
 }
 
@@ -441,57 +566,6 @@ export class Box extends DiagramObject {
 		this.group.appendChild(this.label);
 	}
 
-	setMode(mode) {
-		this.mode = mode;
-
-		// tooltip: only in view mode
-		if (this.title)
-			this.title.textContent = mode === "view" ? "Add object ..." : "";
-
-		// only enable click menu in view mode
-		this.menuEnabled = mode === "view";
-
-		// remove any open menu if leaving view
-		if (mode !== "view") {
-			let oldMenu = document.getElementById("contextMenu");
-			if (oldMenu) oldMenu.remove();
-		}
-	}
-
-	getSidePoint(targetX, targetY, targetW, targetH) {
-		const cx = this.x + this.w / 2;
-		const cy = this.y + this.h / 2;
-
-		const dx = targetX - cx;
-		const dy = targetY - cy;
-
-		const factor = 2;
-		// Decide horizontal vs vertical connection
-		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
-		const deltaY = Math.abs(dy) - targetH / 2 - this.h / 2;
-		if (deltaX > deltaY) {
-			var deltay = dy * (this.w / Math.abs(factor * dx));
-			if (deltay > this.h / 2) deltay = this.h / 2;
-			if (deltay < -this.h / 2) deltay = -this.h / 2;
-			// Connect from left or right side
-			if (dx > 0) {
-				return { x: cx + this.w / 2, y: cy + deltay }; // right side
-			} else {
-				return { x: cx - this.w / 2, y: cy + deltay }; // left side
-			}
-		} else {
-			var deltax = dx * (this.h / Math.abs(factor * dy));
-			if (deltax > this.w / 2) deltax = this.w / 2;
-			if (deltax < -this.w / 2) deltax = -this.w / 2;
-			// Connect from top or bottom side
-			if (dy > 0) {
-				return { x: cx + deltax, y: cy + this.h / 2 }; // bottom
-			} else {
-				return { x: cx + deltax, y: cy - this.h / 2 }; // top
-			}
-		}
-	}
-
 	showMenu(x, y, items) {
 		// remove any old menu
 		let old = document.getElementById("contextMenu");
@@ -523,58 +597,6 @@ export class Box extends DiagramObject {
 
 		// close on click elsewhere
 		document.addEventListener("click", () => menu.remove(), { once: true });
-	}
-
-	move(dx, dy) {
-		this.x += dx;
-		this.y += dy;
-		this.updateShape();
-	}
-
-	center() {
-		return { cx: this.x + this.w / 2, cy: this.y + this.h / 2 };
-	}
-
-	enableDragging(diagram) {
-		let isDragging = false;
-		let lastX, lastY;
-
-		this.shape.addEventListener("mousedown", (e) => {
-			if (diagram.mode === "move") {
-				isDragging = true;
-				lastX = e.clientX;
-				lastY = e.clientY;
-				diagram.objectLayer.appendChild(this.group);
-			} else if (diagram.mode === "view") {
-				//alert("Box: " + this.id);
-			}
-		});
-
-		window.addEventListener("mousemove", (e) => {
-			if (!isDragging) return;
-			if (diagram.mode !== "move") return;
-
-			let dx = e.clientX - lastX;
-			let dy = e.clientY - lastY;
-			this.move(dx, dy);
-
-			// Shift grid snap SHIFT KEY
-			if (e.shiftKey) {
-				const step = 20;
-				this.x = Math.round((this.x - this.w / 2) / step) * step + this.w / 2;
-				this.y = Math.round((this.y - this.h / 2) / step) * step + this.h / 2;
-				this.updateShape();
-			}
-
-			lastX = e.clientX;
-			lastY = e.clientY;
-
-			diagram.updateAll();
-		});
-
-		window.addEventListener("mouseup", () => {
-			isDragging = false;
-		});
 	}
 }
 export class Box2 extends DiagramObject {
@@ -683,109 +705,6 @@ export class Box2 extends DiagramObject {
 				this.icon.setAttribute("height", String(this.iconSizeHeight));
 				this.group.appendChild(this.icon);
 			}
-		});
-	}
-
-	setMode(mode) {
-		this.mode = mode;
-
-		// tooltip: only in view mode
-		if (this.title)
-			this.title.textContent = mode === "view" ? "Add object ..." : "";
-
-		// only enable click menu in view mode
-		this.menuEnabled = mode === "view";
-
-		// remove any open menu if leaving view
-		if (mode !== "view") {
-			let oldMenu = document.getElementById("contextMenu");
-			if (oldMenu) oldMenu.remove();
-		}
-	}
-
-	getSidePoint(targetX, targetY, targetW, targetH) {
-		const cx = this.x + this.w / 2;
-		const cy = this.y + this.h / 2;
-
-		const dx = targetX - cx;
-		const dy = targetY - cy;
-
-		const factor = 2;
-		// Decide horizontal vs vertical connection
-		const deltaX = Math.abs(dx) - targetW / 2 - this.w / 2;
-		const deltaY = Math.abs(dy) - targetH / 2 - this.h / 2;
-		if (deltaX > deltaY) {
-			var deltay = dy * (this.w / Math.abs(factor * dx));
-			if (deltay > this.h / 2) deltay = this.h / 2;
-			if (deltay < -this.h / 2) deltay = -this.h / 2;
-			// Connect from left or right side
-			if (dx > 0) {
-				return { x: cx + this.w / 2, y: cy + deltay }; // right side
-			} else {
-				return { x: cx - this.w / 2, y: cy + deltay }; // left side
-			}
-		} else {
-			var deltax = dx * (this.h / Math.abs(factor * dy));
-			if (deltax > this.w / 2) deltax = this.w / 2;
-			if (deltax < -this.w / 2) deltax = -this.w / 2;
-			// Connect from top or bottom side
-			if (dy > 0) {
-				return { x: cx + deltax, y: cy + this.h / 2 }; // bottom
-			} else {
-				return { x: cx + deltax, y: cy - this.h / 2 }; // top
-			}
-		}
-	}
-
-	move(dx, dy) {
-		this.x += dx;
-		this.y += dy;
-		this.updateShape();
-	}
-
-	center() {
-		return { cx: this.x + this.w / 2, cy: this.y + this.h / 2 };
-	}
-
-	enableDragging(diagram) {
-		let isDragging = false;
-		let lastX, lastY;
-
-		this.shape.addEventListener("mousedown", (e) => {
-			if (diagram.mode === "move") {
-				isDragging = true;
-				lastX = e.clientX;
-				lastY = e.clientY;
-				diagram.objectLayer.appendChild(this.group);
-			} else if (diagram.mode === "view") {
-				//alert("Box: " + this.id);
-			}
-		});
-
-		window.addEventListener("mousemove", (e) => {
-			if (!isDragging) return;
-			if (diagram.mode !== "move") return;
-
-			let dx = e.clientX - lastX;
-			let dy = e.clientY - lastY;
-			this.move(dx, dy);
-
-			// Shift grid snap SHIFT KEY
-			if (e.shiftKey) {
-				const step = 20;
-				this.x = Math.round((this.x - this.w / 2) / step) * step + this.w / 2;
-				this.y = Math.round((this.y - this.h / 2) / step) * step + this.h / 2;
-				this.updateShape();
-			}
-
-			lastX = e.clientX;
-			lastY = e.clientY;
-
-			diagram.updateAll();
-		});
-
-		window.addEventListener("mouseup", () => {
-			isDragging = false;
 		});
 	}
 }
@@ -908,7 +827,36 @@ export class LineConnector extends DiagramConnector {
 		this.group.appendChild(this.side2);
 
 		this.update();
-		this.makeCircleWithTooltip(color, "text");
+		console.log("this", this);
+		if (this.param.typeTool === "derivation") {
+			if (this.param.fieldsToAdd) {
+				const str = this.param.fieldsToAdd
+					.map(
+						(obj) =>
+							`${obj.name}(${obj.defaultValue})${obj.mandatory ? "*" : ""}`
+					)
+					.join("\n");
+
+				//this.makeCircleWithTooltip(color,"==>**Bold line**\n" + JSON.stringify(this.param.fieldsToAdd, null, 2) );
+				this.makeCircleWithTooltip(color, "**Added fields**\n" + str);
+			} else {
+				if (this.param.fieldsSetTrue) {
+					const str = this.param.fieldsSetTrue.join("\n");
+					this.makeCircleWithTooltip(color, "**Mandatory fields**\n" + str);
+				} else {
+					this.makeCircleWithTooltip(
+						color,
+						"**derivation**\n" + JSON.stringify(this.param, null, 2)
+					);
+				}
+			}
+		} else {
+			this.makeCircleWithTooltip(
+				color,
+				"**NOT derivation NOr implemented**\n" +
+					JSON.stringify(this.param, null, 2)
+			);
+		}
 		this.update();
 	}
 
@@ -980,7 +928,7 @@ export class LineConnector extends DiagramConnector {
 		if (this.tooltipGroup) {
 			this.tooltipGroup.setAttribute(
 				"transform",
-				`translate(${mx + 3}, ${my - 1})`
+				`translate(${mx + 10}, ${my - 30})`
 			);
 		}
 		this.x = mx;
@@ -1090,7 +1038,33 @@ export class LineConnectorImEx extends DiagramConnector {
 		this.svg.appendChild(this.group);
 
 		this.update();
-		this.makeCircleWithTooltip(color, "text");
+		if (this.param.typeTool === "derivation") {
+			if (this.param.fieldsToAdd) {
+				const str = this.param.fieldsToAdd
+					.map((obj) => `${obj.name}(${obj.defaultValue})`)
+					.join("\n");
+				//this.makeCircleWithTooltip(color,"==>**Bold line**\n" + JSON.stringify(this.param.fieldsToAdd, null, 2) );
+				this.makeCircleWithTooltip(color, "**Added fields**\n" + str);
+			} else if (this.param.fieldsSetTrue) {
+				const str = this.param.fieldsSetTrue
+					.map((obj) => `${obj.name}(${obj.defaultValue})`)
+					.join("\n");
+				//this.makeCircleWithTooltip(color,"==>**Bold line**\n" + JSON.stringify(this.param.fieldsToAdd, null, 2) );
+				this.makeCircleWithTooltip(color, "**Mandatory fields**\n" + str);
+			} else {
+				this.makeCircleWithTooltip(
+					color,
+					"**derivation**\n" + JSON.stringify(this.param, null, 2)
+				);
+			}
+		} else {
+			this.makeCircleWithTooltip(
+				color,
+				"**NOT derivation NOr implemented**\n" +
+					JSON.stringify(this.param, null, 2)
+			);
+		}
+		//this.makeCircleWithTooltip(color, JSON.stringify(this.param, null, 2));
 		this.update();
 	}
 
@@ -1188,7 +1162,7 @@ export class LineConnectorImEx extends DiagramConnector {
 			if (this.tooltipGroup) {
 				this.tooltipGroup.setAttribute(
 					"transform",
-					`translate(${mx + 3}, ${my - 1})`
+					`translate(${mx + 10}, ${my - 30})`
 				);
 			}
 		}

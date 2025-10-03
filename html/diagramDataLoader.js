@@ -1411,7 +1411,14 @@ export async function loadDiagramData(replaceWithObjects) {
 			/////$ creatorParam
 			if (objInnerList && Array.isArray(objInnerList.listObject)) {
 				objInnerList.listObject.forEach((obj) => {
-					const { object, type, listObjectSchema, ...otherFields } = obj;
+					const {
+						object,
+						type,
+						listObjectSchema,
+						fieldsToAdd,
+						fieldsSetTrue,
+						...otherFields
+					} = obj;
 
 					var listSources = [object];
 					const name = type;
@@ -1464,6 +1471,7 @@ export async function loadDiagramData(replaceWithObjects) {
 								objects.push(objeInCase);
 							}
 						} else {
+							// Normal addition of import export viewer
 							const obje = {
 								x,
 								y,
@@ -1498,7 +1506,6 @@ export async function loadDiagramData(replaceWithObjects) {
 							if (type === "export") {
 								objAlreadIn.showArrowUp = true;
 								importExportArrow = true;
-
 							}
 							if (type === "bridge") {
 								objAlreadIn.showArrowRight = true;
@@ -1526,15 +1533,19 @@ export async function loadDiagramData(replaceWithObjects) {
 							};
 							objects.push(objeInCase);
 						}
-						const lineConnectorType = importExportArrow ? "LineConnectorImEx" : "LineConnector";
+						const lineConnectorType = importExportArrow
+							? "LineConnectorImEx"
+							: "LineConnector";
 						const link = {
 							id: target,
 							from: nameSource,
 							to: target,
 							type: lineConnectorType,
 							typeTool: type, // derivation, bridge, export, import, viewer
-							arrowFrom: ! directionArrorPointToNew,
+							arrowFrom: !directionArrorPointToNew,
 							arrowTo: directionArrorPointToNew,
+							fieldsToAdd: fieldsToAdd,
+							fieldsSetTrue: fieldsSetTrue,
 							otherFieldConnectorMAYDELETE: otherFields,
 						};
 						connectors.push(link);
@@ -1573,7 +1584,7 @@ export async function loadDiagramData(replaceWithObjects) {
 	console.log("test2");
 	if (derivData && Array.isArray(derivData.derivations)) {
 		derivData.derivations.forEach((obj, index) => {
-			const { base, derived, ...otherFields } = obj;
+			const { base, derived, fieldsToAdd, fieldsSetTrue, ...otherFields } = obj;
 			const name = derived;
 			const id = name;
 
@@ -1628,6 +1639,8 @@ export async function loadDiagramData(replaceWithObjects) {
 				typeTool: "derivation", // derivation, bridge, export, import, viewer
 				arrowFrom: false,
 				arrowTo: true,
+				fieldsToAdd: fieldsToAdd,
+				fieldsSetTrue: fieldsSetTrue,
 				otherFieldConnectorMAYDELETE: otherFields,
 			};
 			connectors.push(link);
