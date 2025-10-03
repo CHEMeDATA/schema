@@ -229,6 +229,41 @@ export class DiagramConnector extends DiagramElement {
 	setVisibilityText(status) {
 		this.tooltipGroup.style.visibility = status;
 	}
+
+	setTip(color) {
+		if (this.param.typeTool === "derivation") {
+			if (this.param.fieldsToAdd) {
+				const str = this.param.fieldsToAdd
+					.map(
+						(obj) =>
+							`${obj.name}(${obj.defaultValue})${obj.mandatory ? "*" : ""}`
+					)
+					.join("\n");
+
+				//this.makeCircleWithTooltip(color,"==>**Bold line**\n" + JSON.stringify(this.param.fieldsToAdd, null, 2) );
+				this.makeCircleWithTooltip(
+					color,
+					"**Added fields (default value) *Req.**\n" + str
+				);
+			} else {
+				if (this.param.fieldsSetTrue) {
+					const str = this.param.fieldsSetTrue.join("\n");
+					this.makeCircleWithTooltip(color, "**Required fields:**\n" + str);
+				} else {
+					this.makeCircleWithTooltip(
+						color,
+						"**derivation**\n" + JSON.stringify(this.param, null, 2)
+					);
+				}
+			}
+		} else {
+			this.makeCircleWithTooltip(
+				color,
+				"**NOT derivation NOr implemented**\n" +
+					JSON.stringify(this.param, null, 2)
+			);
+		}
+	}
 }
 
 // ===== DERIVED CLASSES =====
@@ -827,36 +862,7 @@ export class LineConnector extends DiagramConnector {
 		this.group.appendChild(this.side2);
 
 		this.update();
-		console.log("this", this);
-		if (this.param.typeTool === "derivation") {
-			if (this.param.fieldsToAdd) {
-				const str = this.param.fieldsToAdd
-					.map(
-						(obj) =>
-							`${obj.name}(${obj.defaultValue})${obj.mandatory ? "*" : ""}`
-					)
-					.join("\n");
-
-				//this.makeCircleWithTooltip(color,"==>**Bold line**\n" + JSON.stringify(this.param.fieldsToAdd, null, 2) );
-				this.makeCircleWithTooltip(color, "**Added fields**\n" + str);
-			} else {
-				if (this.param.fieldsSetTrue) {
-					const str = this.param.fieldsSetTrue.join("\n");
-					this.makeCircleWithTooltip(color, "**Mandatory fields**\n" + str);
-				} else {
-					this.makeCircleWithTooltip(
-						color,
-						"**derivation**\n" + JSON.stringify(this.param, null, 2)
-					);
-				}
-			}
-		} else {
-			this.makeCircleWithTooltip(
-				color,
-				"**NOT derivation NOr implemented**\n" +
-					JSON.stringify(this.param, null, 2)
-			);
-		}
+		this.setTip(color);
 		this.update();
 	}
 
@@ -1038,32 +1044,8 @@ export class LineConnectorImEx extends DiagramConnector {
 		this.svg.appendChild(this.group);
 
 		this.update();
-		if (this.param.typeTool === "derivation") {
-			if (this.param.fieldsToAdd) {
-				const str = this.param.fieldsToAdd
-					.map((obj) => `${obj.name}(${obj.defaultValue})`)
-					.join("\n");
-				//this.makeCircleWithTooltip(color,"==>**Bold line**\n" + JSON.stringify(this.param.fieldsToAdd, null, 2) );
-				this.makeCircleWithTooltip(color, "**Added fields**\n" + str);
-			} else if (this.param.fieldsSetTrue) {
-				const str = this.param.fieldsSetTrue
-					.map((obj) => `${obj.name}(${obj.defaultValue})`)
-					.join("\n");
-				//this.makeCircleWithTooltip(color,"==>**Bold line**\n" + JSON.stringify(this.param.fieldsToAdd, null, 2) );
-				this.makeCircleWithTooltip(color, "**Mandatory fields**\n" + str);
-			} else {
-				this.makeCircleWithTooltip(
-					color,
-					"**derivation**\n" + JSON.stringify(this.param, null, 2)
-				);
-			}
-		} else {
-			this.makeCircleWithTooltip(
-				color,
-				"**NOT derivation NOr implemented**\n" +
-					JSON.stringify(this.param, null, 2)
-			);
-		}
+		this.setTip(color);
+
 		//this.makeCircleWithTooltip(color, JSON.stringify(this.param, null, 2));
 		this.update();
 	}
