@@ -72,6 +72,9 @@ function getCoordinatesFromSavedOrIndex(
 }
 
 export async function loadDiagramData(replaceWithObjects) {
+	const box2W = 100;
+	const box2H = 80;
+
 	const boxW = 120;
 	const boxH = 80;
 	const margin = 20;
@@ -1464,8 +1467,8 @@ export async function loadDiagramData(replaceWithObjects) {
 							const obje = {
 								x,
 								y,
-								w: boxW,
-								h: boxH,
+								w: box2W,
+								h: box2H,
 								color: "lightgray",
 								showEye: false,
 								showArrowDown: false,
@@ -1481,15 +1484,21 @@ export async function loadDiagramData(replaceWithObjects) {
 						}
 
 						const objAlreadIn = objects.find((o) => o.id === nameSource);
+						var directionArrorPointToNew = true;
+						var importExportArrow = false;
 						if (objAlreadIn) {
 							if (type === "viewer") {
 								objAlreadIn.showEye = true;
 							}
 							if (type === "import") {
 								objAlreadIn.showArrowDown = true;
+								directionArrorPointToNew = false;
+								importExportArrow = true;
 							}
 							if (type === "export") {
 								objAlreadIn.showArrowUp = true;
+								importExportArrow = true;
+
 							}
 							if (type === "bridge") {
 								objAlreadIn.showArrowRight = true;
@@ -1517,15 +1526,15 @@ export async function loadDiagramData(replaceWithObjects) {
 							};
 							objects.push(objeInCase);
 						}
-
+						const lineConnectorType = importExportArrow ? "LineConnectorImEx" : "LineConnector";
 						const link = {
 							id: target,
 							from: nameSource,
 							to: target,
-							type: "LineConnector",
+							type: lineConnectorType,
 							typeTool: type, // derivation, bridge, export, import, viewer
-							arrowFrom: false,
-							arrowTo: true,
+							arrowFrom: ! directionArrorPointToNew,
+							arrowTo: directionArrorPointToNew,
 							otherFieldConnectorMAYDELETE: otherFields,
 						};
 						connectors.push(link);

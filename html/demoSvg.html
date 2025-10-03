@@ -32,7 +32,7 @@
 	<button id="toggleDarkBtn">Toggle Dark/Light Mode</button>
 	<button id="exportSvgBtn">Export SVG</button>
 	<script type="module">
-		import { Diagram, Box, Box2, LineConnector } from './drawClass.js';
+		import { Diagram, Box, Box2, LineConnector, LineConnectorImEx } from './drawClass.js';
 		import { loadDiagramData } from './diagramDataLoader.js';
 
 		const svg = document.getElementById("diagram");
@@ -59,15 +59,29 @@
 
 			for (let c of diagramData.connectors) {
 				const { id, from, to, ...rest } = c;
-				diagram.addConnector(
-					new LineConnector({
-						svg: svg,
-						id: c.id,
-						fromObj: objMap[c.from],
-						toObj: objMap[c.to],
-						...rest
-					})
-				);
+				if (c.type === "LineConnector") {
+					diagram.addConnector(
+						new LineConnector({
+							svg: svg,
+							id: c.id,
+							fromObj: objMap[c.from],
+							toObj: objMap[c.to],
+							...rest
+						})
+					);
+				}
+				if (c.type === "LineConnectorImEx") {
+					diagram.addConnector(
+						new LineConnectorImEx({
+							svg: svg,
+							id: c.id,
+							fromObj: objMap[c.from],
+							toObj: objMap[c.to],
+							...rest
+						})
+					);
+				}
+				//
 			}
 		})();
 

@@ -801,8 +801,9 @@ export class LineConnector extends DiagramConnector {
 			"http://www.w3.org/2000/svg",
 			"circle"
 		);
-		this.midCircle.setAttribute("r", 5);
-		this.midCircle.setAttribute("fill", isDark ? "#ff6666" : "red");
+
+		this.midCircle.setAttribute("r", 8);
+		this.midCircle.setAttribute("fill", color);
 
 		this.side1 = document.createElementNS(
 			"http://www.w3.org/2000/svg",
@@ -866,35 +867,239 @@ export class LineConnector extends DiagramConnector {
 			this.fromObj.h
 		);
 
+		// top line
 		this.line.setAttribute("x1", p1.x);
 		this.line.setAttribute("y1", p1.y);
 		this.line.setAttribute("x2", p2.x);
 		this.line.setAttribute("y2", p2.y);
 
+		// offset vector for double line
+		const dx = p2.y - p1.y;
+		const dy = -(p2.x - p1.x);
+		const len = Math.sqrt(dx * dx + dy * dy) || 1;
+
+		const offsetLength1 = this.param.arrowFrom ? 20 : 0;
+		const lendgthOffsetX1 = (dy / len) * offsetLength1;
+		const lendgthOffsetY1 = -(dx / len) * offsetLength1;
+		const offsetLength2 = this.param.arrowTo ? 20 : 0;
+		const lendgthOffsetX2 = (dy / len) * offsetLength2;
+		const lendgthOffsetY2 = -(dx / len) * offsetLength2;
+
 		// Midpoint for red circle
-		const mx = (p1.x + p2.x) / 2;
-		const my = (p1.y + p2.y) / 2;
+		const mx = (p1.x - lendgthOffsetX1 + p2.x + lendgthOffsetX2) / 2;
+		const my = (p1.y - lendgthOffsetY1 + p2.y + lendgthOffsetY2) / 2;
 
 		this.midCircle.setAttribute("cx", mx);
 		this.midCircle.setAttribute("cy", my);
-
-		{
-			// Midpoint for red circle
-			const mx = p1.x / 1;
-			const my = p1.y / 1;
-			this.side1.setAttribute("cx", mx);
-			this.side1.setAttribute("cy", my);
-		}
-		{
-			// Midpoint for red circle
-			const mx = p2.x / 1;
-			const my = p2.y / 1;
-			this.side2.setAttribute("cx", mx);
-			this.side2.setAttribute("cy", my);
-		}
 	}
 }
 
+export class LineConnectorImEx extends DiagramConnector {
+	constructor(params) {
+		super(params);
+		this.type = "LineConnectorImEx"; /// SAME AS CLASS NAME
+
+		const { id, svg, fromObj, toObj, ...rest } = params;
+		console.log("rest", rest);
+		console.log("params", params);
+		this.param = rest;
+		const isDark =
+			window.matchMedia &&
+			window.matchMedia("(prefers-color-scheme: dark)").matches;
+		this.group = document.createElementNS("http://www.w3.org/2000/svg", "g");
+		this.line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		const defaultColor = isDark ? "#ccc" : "black";
+		const color = this.param.lineColor ? this.param.lineColor : defaultColor;
+
+		if (this.param.arrowTo) {
+			const defs =
+				this.svg.querySelector("defs") ||
+				document.createElementNS("http://www.w3.org/2000/svg", "defs");
+			if (!this.svg.querySelector("defs")) this.svg.appendChild(defs);
+
+			if (!defs.querySelector("#arrowEnd")) {
+				const markerEnd = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"marker"
+				);
+				markerEnd.setAttribute("id", "arrowEnd");
+				markerEnd.setAttribute("markerWidth", "10");
+				markerEnd.setAttribute("markerHeight", "7");
+				markerEnd.setAttribute("refX", "10");
+				markerEnd.setAttribute("refY", "3.5");
+				markerEnd.setAttribute("orient", "auto");
+				markerEnd.setAttribute("markerUnits", "strokeWidth");
+
+				const path = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"path"
+				);
+				path.setAttribute("d", "M0,0 L0,7 L10,3.5 z");
+				path.setAttribute("fill", color);
+
+				markerEnd.appendChild(path);
+				defs.appendChild(markerEnd);
+			}
+
+			this.line.setAttribute("marker-end", "url(#arrowEnd)");
+		}
+
+		if (this.param.arrowFrom) {
+			const defs =
+				this.svg.querySelector("defs") ||
+				document.createElementNS("http://www.w3.org/2000/svg", "defs");
+			if (!this.svg.querySelector("defs")) this.svg.appendChild(defs);
+
+			if (!defs.querySelector("#arrowStart")) {
+				const markerStart = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"marker"
+				);
+				markerStart.setAttribute("id", "arrowStart");
+				markerStart.setAttribute("markerWidth", "10");
+				markerStart.setAttribute("markerHeight", "7");
+				markerStart.setAttribute("refX", "0");
+				markerStart.setAttribute("refY", "3.5");
+				markerStart.setAttribute("orient", "auto");
+				markerStart.setAttribute("markerUnits", "strokeWidth");
+
+				const path = document.createElementNS(
+					"http://www.w3.org/2000/svg",
+					"path"
+				);
+				path.setAttribute("d", "M10,0 L10,7 L0,3.5 z");
+				path.setAttribute("fill", color);
+
+				markerStart.appendChild(path);
+				defs.appendChild(markerStart);
+			}
+
+			this.line.setAttribute("marker-start", "url(#arrowStart)");
+		}
+
+		this.line.setAttribute("stroke", "none");
+		this.line.setAttribute("stroke-width", "2");
+
+		// --- visible double lines ---
+		this.line1 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+		this.line2 = document.createElementNS("http://www.w3.org/2000/svg", "line");
+
+		[this.line1, this.line2].forEach((line) => {
+			line.setAttribute("stroke", color);
+			line.setAttribute("stroke-width", "2");
+		});
+
+		// add to SVG in correct order: arrows line first (invisible), then visible lines
+		this.group.appendChild(this.line1);
+		this.group.appendChild(this.line2);
+
+		this.midCircle = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"circle"
+		);
+		this.midCircle.setAttribute("r", 8);
+		this.midCircle.setAttribute("fill", color);
+
+		this.group.appendChild(this.line);
+		this.group.appendChild(this.midCircle);
+		this.svg.appendChild(this.group);
+
+		this.update();
+	}
+
+	update() {
+		// Find side points instead of centers
+		if (!this.toObj) {
+			console.warning(
+				"problem with one of the objects of the connector with id:<",
+				this.id,
+				"> this:",
+				this,
+				" in particular this.toObj:",
+				this.toObj
+			);
+			return;
+		}
+		if (!this.fromObj) {
+			console.warning(
+				"problem with one of the objects of the connector with id:<",
+				this.id,
+				"> this:",
+				this,
+				" in particular this.fromObj:",
+				this.fromObj
+			);
+			return;
+		}
+		const fromCenter = this.toObj.center();
+		const toCenter = this.fromObj.center();
+
+		const p1 = this.fromObj.getSidePoint(
+			fromCenter.cx,
+			fromCenter.cy,
+			this.toObj.w,
+			this.toObj.h
+		);
+		const p2 = this.toObj.getSidePoint(
+			toCenter.cx,
+			toCenter.cy,
+			this.fromObj.w,
+			this.fromObj.h
+		);
+
+		this.line.setAttribute("x1", p1.x);
+		this.line.setAttribute("y1", p1.y);
+		this.line.setAttribute("x2", p2.x);
+		this.line.setAttribute("y2", p2.y);
+
+		this.updateLine(p1, p2);
+	}
+
+	updateLine(p1, p2) {
+		// offset vector for double line
+		const dx = p2.y - p1.y;
+		const dy = -(p2.x - p1.x);
+		const len = Math.sqrt(dx * dx + dy * dy) || 1;
+		const offset = 2; // distance between lines
+
+		const ox = (dx / len) * offset;
+		const oy = (dy / len) * offset;
+
+		// make short lines by 10 pt to avoid averwriting the eventual arrow
+
+		const offsetLength1 = this.param.arrowFrom ? 8 : 0;
+		const lendgthOffsetX1 = -(dy / len) * offsetLength1;
+		const lendgthOffsetY1 = (dx / len) * offsetLength1;
+		const offsetLength2 = this.param.arrowTo ? 8 : 0;
+		const lendgthOffsetX2 = -(dy / len) * offsetLength2;
+		const lendgthOffsetY2 = (dx / len) * offsetLength2;
+		// top line
+		this.line1.setAttribute("x1", p1.x + ox + lendgthOffsetX1);
+		this.line1.setAttribute("y1", p1.y + oy + lendgthOffsetY1);
+		this.line1.setAttribute("x2", p2.x + ox - lendgthOffsetX2);
+		this.line1.setAttribute("y2", p2.y + oy - lendgthOffsetY2);
+
+		// bottom line
+		this.line2.setAttribute("x1", p1.x - ox + lendgthOffsetX1);
+		this.line2.setAttribute("y1", p1.y - oy + lendgthOffsetY1);
+		this.line2.setAttribute("x2", p2.x - ox - lendgthOffsetX2);
+		this.line2.setAttribute("y2", p2.y - oy - lendgthOffsetY2);
+		{
+			const offsetLength1 = this.param.arrowFrom ? 20 : 0;
+			const lendgthOffsetX1 = -(dy / len) * offsetLength1;
+			const lendgthOffsetY1 = (dx / len) * offsetLength1;
+			const offsetLength2 = this.param.arrowTo ? 20 : 0;
+			const lendgthOffsetX2 = -(dy / len) * offsetLength2;
+			const lendgthOffsetY2 = (dx / len) * offsetLength2;
+			// Midpoint for red circle
+			const mx = (p1.x + lendgthOffsetX1 + p2.x - lendgthOffsetX2) / 2;
+			const my = (p1.y + lendgthOffsetY1 + p2.y - lendgthOffsetY2) / 2;
+
+			this.midCircle.setAttribute("cx", mx);
+			this.midCircle.setAttribute("cy", my);
+		}
+	}
+}
 // ===== DIAGRAM MANAGER =====
 export class Diagram {
 	constructor(svg) {
