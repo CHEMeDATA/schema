@@ -26,6 +26,81 @@ export class DiagramConnector extends DiagramElement {
 		this.toObj = param.toObj;
 	}
 	update() {}
+
+	makeCircleWithTooltip(color, text) {
+		const x = this.x;
+		const y = this.y;
+		this.midCircle = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"circle"
+		);
+		this.midCircle.setAttribute("cx", x);
+		this.midCircle.setAttribute("cy", y);
+		this.midCircle.setAttribute("r", 6);
+		this.midCircle.setAttribute("fill", color);
+		this.midCircle.style.pointerEvents = "all";
+		this.midCircle.style.cursor = "pointer";
+
+		// group for tooltip (rect + text)
+		this.tooltipGroup = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"g"
+		);
+		this.tooltipGroup.style.visibility = "hidden";
+
+		this.tooltipRect = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"rect"
+		);
+		this.tooltipRect.setAttribute("fill", "lightyellow");
+		this.tooltipRect.setAttribute("stroke", "black");
+		this.tooltipRect.setAttribute("rx", "4"); // rounded corners
+
+		this.tooltipText = document.createElementNS(
+			"http://www.w3.org/2000/svg",
+			"text"
+		);
+		this.tooltipText.setAttribute("x", 0);
+		this.tooltipText.setAttribute("y", -10);
+		this.tooltipText.setAttribute("fill", "black");
+		this.tooltipText.setAttribute("font-size", "12");
+		this.tooltipText.textContent = text;
+
+		// measure text AFTER appending it
+		this.svg.appendChild(this.tooltipGroup);
+		this.tooltipGroup.appendChild(this.tooltipText);
+		const bbox = this.tooltipText.getBBox();
+
+		this.tooltipRect.setAttribute("x", bbox.x - 4);
+		this.tooltipRect.setAttribute("y", bbox.y - 2);
+		this.tooltipRect.setAttribute("width", bbox.width + 8);
+		this.tooltipRect.setAttribute("height", bbox.height + 4);
+
+		this.tooltipGroup.appendChild(this.tooltipRect);
+		this.tooltipGroup.appendChild(this.tooltipText);
+
+		this.svg.appendChild(this.midCircle);
+		this.svg.appendChild(this.tooltipGroup);
+
+		// show/hide on hover or touch
+		this.midCircle.addEventListener("mouseenter", () => {
+			this.setVisibilityText("visible");
+		});
+		this.midCircle.addEventListener("mouseleave", () => {
+			this.setVisibilityText("hidden");
+		});
+		this.midCircle.addEventListener("touchstart", (e) => {
+			e.preventDefault();
+			this.setVisibilityText("visible");
+		});
+		this.midCircle.addEventListener("touchend", () => {
+			this.setVisibilityText("hidden");
+		});
+	}
+
+	setVisibilityText(status){
+		this.tooltipGroup.style.visibility =status;
+	}
 }
 
 // ===== DERIVED CLASSES =====
@@ -805,6 +880,12 @@ export class LineConnector extends DiagramConnector {
 		this.midCircle.setAttribute("r", 8);
 		this.midCircle.setAttribute("fill", color);
 
+		// click handler
+		this.midCircle.addEventListener("click", (e) => {
+			e.stopPropagation(); // stop bubbling if needed
+			alert("Circle clicked on connector " + this.id);
+		});
+
 		this.side1 = document.createElementNS(
 			"http://www.w3.org/2000/svg",
 			"circle"
@@ -822,8 +903,9 @@ export class LineConnector extends DiagramConnector {
 		this.group.appendChild(this.line);
 		this.group.appendChild(this.side1);
 		this.group.appendChild(this.side2);
-		this.group.appendChild(this.midCircle);
 
+		this.update();
+		this.makeCircleWithTooltip(color, "text");
 		this.update();
 	}
 
@@ -888,9 +970,18 @@ export class LineConnector extends DiagramConnector {
 		// Midpoint for red circle
 		const mx = (p1.x - lendgthOffsetX1 + p2.x + lendgthOffsetX2) / 2;
 		const my = (p1.y - lendgthOffsetY1 + p2.y + lendgthOffsetY2) / 2;
-
-		this.midCircle.setAttribute("cx", mx);
-		this.midCircle.setAttribute("cy", my);
+		if (this.midCircle) {
+			this.midCircle.setAttribute("cx", mx);
+			this.midCircle.setAttribute("cy", my);
+		}
+		if (this.tooltipGroup) {
+			this.tooltipGroup.setAttribute(
+				"transform",
+				`translate(${mx + 3}, ${my - 1})`
+			);
+		}
+		this.x = mx;
+		this.y = my;
 	}
 }
 
@@ -992,18 +1083,11 @@ export class LineConnectorImEx extends DiagramConnector {
 		// add to SVG in correct order: arrows line first (invisible), then visible lines
 		this.group.appendChild(this.line1);
 		this.group.appendChild(this.line2);
-
-		this.midCircle = document.createElementNS(
-			"http://www.w3.org/2000/svg",
-			"circle"
-		);
-		this.midCircle.setAttribute("r", 8);
-		this.midCircle.setAttribute("fill", color);
-
 		this.group.appendChild(this.line);
-		this.group.appendChild(this.midCircle);
 		this.svg.appendChild(this.group);
 
+		this.update();
+		this.makeCircleWithTooltip(color, "text");
 		this.update();
 	}
 
@@ -1094,9 +1178,16 @@ export class LineConnectorImEx extends DiagramConnector {
 			// Midpoint for red circle
 			const mx = (p1.x + lendgthOffsetX1 + p2.x - lendgthOffsetX2) / 2;
 			const my = (p1.y + lendgthOffsetY1 + p2.y - lendgthOffsetY2) / 2;
-
-			this.midCircle.setAttribute("cx", mx);
-			this.midCircle.setAttribute("cy", my);
+			if (this.midCircle) {
+				this.midCircle.setAttribute("cx", mx);
+				this.midCircle.setAttribute("cy", my);
+			}
+			if (this.tooltipGroup) {
+				this.tooltipGroup.setAttribute(
+					"transform",
+					`translate(${mx + 3}, ${my - 1})`
+				);
+			}
 		}
 	}
 }
