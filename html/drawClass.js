@@ -76,9 +76,12 @@ export class DiagramConnector extends DiagramElement {
 		this.tooltipRect.setAttribute("width", bbox.width + 8);
 		this.tooltipRect.setAttribute("height", bbox.height + 4);
 
+		this.tooltipGroup.setAttribute("pointer-events", "none");
+
 		this.tooltipGroup.appendChild(this.tooltipRect);
 		this.tooltipGroup.appendChild(this.tooltipText);
-
+		this.tooltipGroup.setAttribute("transform", `translate(${this.x + 10}, ${this,y - 10})`);
+	
 		this.svg.appendChild(this.midCircle);
 		this.svg.appendChild(this.tooltipGroup);
 
